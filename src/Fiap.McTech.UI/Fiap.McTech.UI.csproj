@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Fiap.McTech.Application\Fiap.McTech.Application.csproj" />
+    <ProjectReference Include="..\Fiap.McTech.CrossCutting.Ioc\Fiap.McTech.CrossCutting.Ioc.csproj" />
   </ItemGroup>
 
 </Project>
