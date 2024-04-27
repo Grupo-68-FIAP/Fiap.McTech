@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Fiap.McTech.Domain.Entities.Users
+namespace Fiap.McTech.Domain.Entities.Clients
 {
-	public class User : EntityBase
+	public class Client : EntityBase
 	{
        //TODO
 	}

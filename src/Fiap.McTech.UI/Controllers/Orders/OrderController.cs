@@ -1,12 +1,22 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Fiap.McTech.Application.ViewModels.Orders;
+using Fiap.McTech.Domain.Interfaces.AppServices;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Fiap.McTech.Api.Controllers.Orders
 {
 	public class OrderController : Controller
 	{
-		public IActionResult Index()
+		public readonly IOrderAppService _OrderAppService;
+
+		public OrderController(IOrderAppService OrderAppService)
 		{
-			return View();
+			_OrderAppService = OrderAppService;
+		}
+
+		[HttpGet("Orders")]
+		public async Task<OrderOutputViewModel> GetOrders()
+		{
+			return new OrderOutputViewModel();
 		}
 	}
 }

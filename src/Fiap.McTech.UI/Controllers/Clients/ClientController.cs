@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace Fiap.McTech.Api.Controllers.Payment
+namespace Fiap.McTech.Api.Controllers.Clients
 {
-	public class PaymentController : Controller
+	public class ClientController : Controller
 	{
 		public IActionResult Index()
 		{
