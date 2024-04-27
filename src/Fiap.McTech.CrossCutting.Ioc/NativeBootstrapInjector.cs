@@ -1,5 +1,5 @@
-﻿using Fiap.McTech.Application.Interfaces;
-using Fiap.McTech.Application.Services;
+﻿using Fiap.McTech.Application.Services;
+using Fiap.McTech.Domain.Interfaces.AppServices;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 

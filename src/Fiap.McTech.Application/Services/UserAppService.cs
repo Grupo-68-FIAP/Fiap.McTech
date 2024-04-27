@@ -1,4 +1,5 @@
-﻿using Fiap.McTech.Application.Interfaces; 
+﻿using Fiap.McTech.Domain.Interfaces.AppServices;
+
 namespace Fiap.McTech.Application.Services
 {
 	public class UserAppService : IUserAppService

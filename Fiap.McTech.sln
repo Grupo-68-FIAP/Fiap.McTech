@@ -7,17 +7,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{1E7A28C7-545
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{AF9D3E99-46C2-496E-894D-2F59EA1D7A9F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fiap.McTech.UI", "src\Fiap.McTech.UI\Fiap.McTech.UI.csproj", "{D342B300-5183-4BA4-8E8D-5E04EC75D338}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fiap.McTech.Api", "src\Fiap.McTech.UI\Fiap.McTech.Api.csproj", "{D342B300-5183-4BA4-8E8D-5E04EC75D338}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fiap.McTech.Domain", "src\Fiap.McTech.Domain\Fiap.McTech.Domain.csproj", "{C3FB6D11-E857-4E95-9133-926324F6DAFC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fiap.McTech.Domain", "src\Fiap.McTech.Domain\Fiap.McTech.Domain.csproj", "{C3FB6D11-E857-4E95-9133-926324F6DAFC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fiap.McTech.Infra", "src\Fiap.McTech.Infra\Fiap.McTech.Infra.csproj", "{49FD8DF3-225D-433D-94B9-D61508AC3427}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fiap.McTech.Infra", "src\Fiap.McTech.Infra\Fiap.McTech.Infra.csproj", "{49FD8DF3-225D-433D-94B9-D61508AC3427}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fiap.McTech.Application", "src\Fiap.McTech.Application\Fiap.McTech.Application.csproj", "{D4D2A5EA-E376-476C-B11F-8BA2A8A7AA0D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fiap.McTech.Application", "src\Fiap.McTech.Application\Fiap.McTech.Application.csproj", "{D4D2A5EA-E376-476C-B11F-8BA2A8A7AA0D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fiap.McTech.CrossCutting.Ioc", "src\Fiap.McTech.CrossCutting.Ioc\Fiap.McTech.CrossCutting.Ioc.csproj", "{3850682D-F84E-46C8-BF97-CE6985302AB6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fiap.McTech.CrossCutting.Ioc", "src\Fiap.McTech.CrossCutting.Ioc\Fiap.McTech.CrossCutting.Ioc.csproj", "{3850682D-F84E-46C8-BF97-CE6985302AB6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fiap.McTech.UnitTests", "tests\Fiap.McTech.UnitTests\Fiap.McTech.UnitTests.csproj", "{8FB5A7D3-90EE-45D6-B86D-48235639D40A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fiap.McTech.UnitTests", "tests\Fiap.McTech.UnitTests\Fiap.McTech.UnitTests.csproj", "{8FB5A7D3-90EE-45D6-B86D-48235639D40A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

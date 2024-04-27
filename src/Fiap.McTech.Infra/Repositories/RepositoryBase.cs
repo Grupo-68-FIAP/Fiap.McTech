@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Fiap.McTech.Domain.Interfaces.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace Fiap.McTech.Infra.Repositories
 {

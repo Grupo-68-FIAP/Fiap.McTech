@@ -1,12 +1,12 @@
 ﻿using System;
-namespace Fiap.McTech.Infra.Repositories
+
+namespace Fiap.McTech.Domain.Interfaces.Repositories
 {
 	public interface IRepositoryBase<TEntity> where TEntity : class
 	{
 		void Add(TEntity obj);
 		Task<TEntity> AddAsync(TEntity obj);
 		Task<List<TEntity>> AddRangeAsync(List<TEntity> obj);
-
 		TEntity GetById(Guid id);
 		Task<TEntity> GetByIdAsync(Guid id);
 		Task<TEntity> GetByCrmAsync(string crm);
