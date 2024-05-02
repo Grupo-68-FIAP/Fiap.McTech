@@ -15,6 +15,11 @@ namespace Fiap.McTech.Domain.Entities.Cart
 		public decimal AllValue { get; private set; } = 0;
 		public List<CartItem> Items { get; private set; } = new List<CartItem>();
 
+		public override bool IsValid()
+		{
+			throw new NotImplementedException();
+		}
+
 		internal void CalculateValueCart()
 		{
 			AllValue = Items.Sum(p => p.CalculateValue());

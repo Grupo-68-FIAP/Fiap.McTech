@@ -1,9 +1,10 @@
 ﻿using System;
 
-namespace Fiap.McTech.Domain.Entities.Catalogs
+namespace Fiap.McTech.Domain.ValuesObjects
 {
-	public class Catalog : EntityBase
+	public class Cpf : ValueObject
 	{
+		//TODO 
 
 		public override bool IsValid()
 		{

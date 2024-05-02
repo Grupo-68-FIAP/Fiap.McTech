@@ -40,5 +40,10 @@ namespace Fiap.McTech.Domain.Entities.Cart
 		{
 			Quantity = unities;
 		}
+
+		public override bool IsValid()
+		{
+			throw new NotImplementedException();
+		}
 	}
 }
