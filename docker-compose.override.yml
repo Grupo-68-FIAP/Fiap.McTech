@@ -6,13 +6,14 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=pws4mctech!
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/root/.aspnet/https/cert.pfx
       - MYSQL_CONNECTION_STRING="Server=sqlserver;Port=1433;Database=mctech;User=mctech;Password=pws4mctech!"
     ports:
       - "8080:80"
       - "8443:443"
     volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
-      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+      - ./src/Fiap.McTech.UI/cert.pfx:/root/.aspnet/https/cert.pfx:ro
 
   sqlserver:
     container_name: sqlserver
