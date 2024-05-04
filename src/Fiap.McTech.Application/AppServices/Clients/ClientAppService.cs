@@ -1,11 +1,11 @@
-﻿using Fiap.McTech.Application.Interfaces.AppServices;
+﻿using Fiap.McTech.Application.Interfaces;
 using Fiap.McTech.Application.ViewModels.Clients;
 using Fiap.McTech.Domain.Interfaces.Repositories.Clients;
 using Microsoft.Extensions.Logging;
 
 namespace Fiap.McTech.Application.AppServices.Clients
 {
-	public class ClientAppService : IClientAppService
+    public class ClientAppService : IClientAppService
 	{
 		private readonly IClientRepository _clientRepository;
 		private readonly ILogger<ClientAppService> _logger;

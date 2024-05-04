@@ -1,10 +1,10 @@
 ﻿using Fiap.McTech.Application.ViewModels.Payments;
-using Fiap.McTech.Application.Interfaces.AppServices;
 using Microsoft.AspNetCore.Mvc;
+using Fiap.McTech.Application.Interfaces;
 
 namespace Fiap.McTech.Api.Controllers.Payments
 {
-	public class PaymentController : Controller
+    public class PaymentController : Controller
 	{
 		public readonly IPaymentAppService _PaymentAppService;
 

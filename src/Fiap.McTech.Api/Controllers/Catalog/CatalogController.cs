@@ -1,10 +1,10 @@
 ﻿using Fiap.McTech.Application.ViewModels.Catalog;
-using Fiap.McTech.Application.Interfaces.AppServices;
 using Microsoft.AspNetCore.Mvc;
+using Fiap.McTech.Application.Interfaces;
 
 namespace Fiap.McTech.Api.Controllers.Catalog
 {
-	public class CatalogController : Controller
+    public class CatalogController : Controller
 	{
 		public readonly ICatalogAppService _CatalogAppService;
 

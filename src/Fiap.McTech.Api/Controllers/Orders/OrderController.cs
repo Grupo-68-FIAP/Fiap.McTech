@@ -1,10 +1,10 @@
 ﻿using Fiap.McTech.Application.ViewModels.Orders;
-using Fiap.McTech.Application.Interfaces.AppServices;
 using Microsoft.AspNetCore.Mvc;
+using Fiap.McTech.Application.Interfaces;
 
 namespace Fiap.McTech.Api.Controllers.Orders
 {
-	public class OrderController : Controller
+    public class OrderController : Controller
 	{
 		public readonly IOrderAppService _OrderAppService;
 

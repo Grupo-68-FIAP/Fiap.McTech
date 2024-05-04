@@ -1,4 +1,4 @@
-﻿using Fiap.McTech.Application.Interfaces.AppServices;
+﻿using Fiap.McTech.Application.Interfaces;
 
 namespace Fiap.McTech.Application.AppServices.Payment
 {

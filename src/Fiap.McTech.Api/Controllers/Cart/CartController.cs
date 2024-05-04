@@ -1,7 +1,7 @@
 ﻿using Fiap.McTech.Application.ViewModels.Cart;
 using Fiap.McTech.Domain.Entities.Cart;
-using Fiap.McTech.Application.Interfaces.AppServices;
 using Microsoft.AspNetCore.Mvc;
+using Fiap.McTech.Application.Interfaces;
 
 namespace Fiap.McTech.Api.Controllers.Cart
 {
