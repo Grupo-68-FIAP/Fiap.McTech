@@ -7,7 +7,7 @@ services:
     image: ${DOCKER_REGISTRY-}fiapmctechapi
     build:
       context: .
-      dockerfile: src/Fiap.McTech.UI/Dockerfile
+      dockerfile: src/Fiap.McTech.Api/Dockerfile
 
   sqlserver:
     image: mcr.microsoft.com/mssql/server:latest

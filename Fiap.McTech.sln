@@ -7,7 +7,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{1E7A28C7-545
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{AF9D3E99-46C2-496E-894D-2F59EA1D7A9F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fiap.McTech.Api", "src\Fiap.McTech.UI\Fiap.McTech.Api.csproj", "{D342B300-5183-4BA4-8E8D-5E04EC75D338}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fiap.McTech.Api", "src\Fiap.McTech.Api\Fiap.McTech.Api.csproj", "{D342B300-5183-4BA4-8E8D-5E04EC75D338}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fiap.McTech.Domain", "src\Fiap.McTech.Domain\Fiap.McTech.Domain.csproj", "{C3FB6D11-E857-4E95-9133-926324F6DAFC}"
 EndProject
