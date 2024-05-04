@@ -1,4 +1,4 @@
-﻿using Fiap.McTech.Domain.Interfaces.AppServices;
+﻿using Fiap.McTech.Application.Interfaces.AppServices;
 
 namespace Fiap.McTech.Application.AppServices.Cart
 {

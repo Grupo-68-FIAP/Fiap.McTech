@@ -3,7 +3,7 @@ using Fiap.McTech.Application.AppServices.Catalog;
 using Fiap.McTech.Application.AppServices.Clients;
 using Fiap.McTech.Application.AppServices.Orders;
 using Fiap.McTech.Application.AppServices.Payment;
-using Fiap.McTech.Domain.Interfaces.AppServices; 
+using Fiap.McTech.Application.Interfaces.AppServices; 
 using Fiap.McTech.Infra.Context; 
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

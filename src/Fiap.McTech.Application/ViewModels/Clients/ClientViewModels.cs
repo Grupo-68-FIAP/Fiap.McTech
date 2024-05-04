@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace Fiap.McTech.Application.Dtos.Clients
+namespace Fiap.McTech.Application.ViewModels.Clients
 {
-	public class ClientViewModels
+	public class ClientViewModel
 	{
 
 	}

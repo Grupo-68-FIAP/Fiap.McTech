@@ -17,7 +17,9 @@ namespace Fiap.McTech.Domain.Entities.Clients
 
 		public override bool IsValid()
 		{
-			throw new NotImplementedException();
+			return !string.IsNullOrEmpty(Name) &&
+				   Cpf.IsValid() &&
+				   Email.IsValid();
 		}
 	}
 }

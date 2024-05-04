@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Fiap.McTech.Domain.Interfaces.AppServices
+namespace Fiap.McTech.Application.Interfaces.AppServices
 {
 	public interface IPaymentAppService
 	{

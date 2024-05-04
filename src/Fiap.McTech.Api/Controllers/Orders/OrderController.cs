@@ -1,5 +1,5 @@
 ﻿using Fiap.McTech.Application.ViewModels.Orders;
-using Fiap.McTech.Domain.Interfaces.AppServices;
+using Fiap.McTech.Application.Interfaces.AppServices;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Fiap.McTech.Api.Controllers.Orders

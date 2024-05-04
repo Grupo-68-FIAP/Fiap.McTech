@@ -1,14 +1,16 @@
-﻿using System;
+﻿using Fiap.McTech.Domain.Utils.Extensions;
 
 namespace Fiap.McTech.Domain.ValuesObjects
 {
 	public class Cpf : ValueObject
 	{
-		//TODO 
-
-		public override bool IsValid()
+		public Cpf(string document)
 		{
-			throw new NotImplementedException();
+			Document = document;
 		}
+
+		public string Document { get; set; } = string.Empty;
+
+		public override bool IsValid() => Document.IsValidCpf();
 	}
 }

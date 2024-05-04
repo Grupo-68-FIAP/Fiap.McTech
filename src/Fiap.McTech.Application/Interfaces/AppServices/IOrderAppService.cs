@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace Fiap.McTech.Domain.Interfaces.AppServices
+namespace Fiap.McTech.Application.Interfaces.AppServices
 {
 	public interface IOrderAppService
 	{
