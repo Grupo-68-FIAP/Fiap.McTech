@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 
 namespace Fiap.McTech.Domain.Utils.Extensions
 {
@@ -51,6 +52,29 @@ namespace Fiap.McTech.Domain.Utils.Extensions
 			catch
 			{
 				return false; 
+			}
+		}
+
+		public static bool IsValidEmail(this string email)
+		{
+			if (string.IsNullOrWhiteSpace(email))
+				return false;
+
+			try
+			{
+				// Regex pattern para validar o formato do e-mail
+				string pattern = @"^(?!\.)(""([^""\r\\]|\\[""\r\\])*""|"
+							   + @"([-a-z0-9!#$%&'*+/=?^_`{|}~]|(?<!\.)\.)*)(?<!\.)"
+							   + @"([a-z0-9](?:[-a-z0-9]*[a-z0-9])?\.)*"
+							   + @"[a-z0-9](?:[-a-z0-9]*[a-z0-9])?$"
+							   + @"(@[a-z0-9](?:[-a-z0-9]*[a-z0-9])?\.)*"
+							   + @"[a-z0-9](?:[-a-z0-9]*[a-z0-9])?)$";
+
+				return Regex.IsMatch(email, pattern, RegexOptions.IgnoreCase);
+			}
+			catch (RegexMatchTimeoutException)
+			{
+				return false;
 			}
 		}
 	}

@@ -1,14 +1,16 @@
-﻿using System;
+﻿using Fiap.McTech.Domain.Utils.Extensions;
 
 namespace Fiap.McTech.Domain.ValuesObjects
 {
 	public class Email : ValueObject
 	{
-		//TODO 
+        public string Address { get; set; }
 
-		public override bool IsValid()
+        public Email(string email)
 		{
-			throw new NotImplementedException();
+			Address = email;
 		}
+
+		public override bool IsValid() => Address.IsValidEmail();
 	}
 }
