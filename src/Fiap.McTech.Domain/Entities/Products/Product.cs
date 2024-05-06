@@ -17,11 +17,14 @@ namespace Fiap.McTech.Domain.Entities.Products
         public decimal Value { get; private set; }
         public string Description { get; private set; }
         public string Image { get; private set; }
-        public ProductCategory Category { get; private set; } 
+        public ProductCategory Category { get; private set; }
 
 		public override bool IsValid()
 		{
-			throw new NotImplementedException();
+			return !string.IsNullOrWhiteSpace(Name) &&
+				   Value > 0 &&
+				   !string.IsNullOrWhiteSpace(Description) &&
+				   !string.IsNullOrWhiteSpace(Image);
 		}
 	}
 }

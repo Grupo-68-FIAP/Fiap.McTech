@@ -16,8 +16,8 @@ namespace Fiap.McTech.Domain.Entities.Cart
 		public List<CartItem> Items { get; private set; } = new List<CartItem>();
 
 		public override bool IsValid()
-		{
-			throw new NotImplementedException();
+		{	 
+			return ClientId != Guid.Empty && Items != null && Items.Count > 0;
 		}
 
 		internal void CalculateValueCart()

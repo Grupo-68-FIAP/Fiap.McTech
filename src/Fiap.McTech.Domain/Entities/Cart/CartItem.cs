@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace Fiap.McTech.Domain.Entities.Cart
 {
@@ -19,9 +14,9 @@ namespace Fiap.McTech.Domain.Entities.Cart
 			CartClient = cartClient;
 		}
 
-		public string Name { get; private set; }
-		public int Quantity { get; private set; }
-		public decimal Value { get; private set; }
+		public string Name { get; private set; } = string.Empty;
+		public int Quantity { get; private set; } = 0;
+		public decimal Value { get; private set; } = 0;
 		public Guid ProductId { get; private set; }
 		public Guid CartId { get; private set; }
 		public CartClient CartClient { get; private set; }
@@ -43,7 +38,12 @@ namespace Fiap.McTech.Domain.Entities.Cart
 
 		public override bool IsValid()
 		{
-			throw new NotImplementedException();
+			return !string.IsNullOrWhiteSpace(Name) &&
+				   Quantity > 0 &&
+				   Value > 0 &&
+				   ProductId != Guid.Empty &&
+				   CartId != Guid.Empty &&
+				   CartClient != null;
 		}
 	}
 }
