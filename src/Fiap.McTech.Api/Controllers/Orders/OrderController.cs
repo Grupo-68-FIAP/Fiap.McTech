@@ -14,9 +14,9 @@ namespace Fiap.McTech.Api.Controllers.Orders
 		}
 
 		[HttpGet("Orders")]
-		public async Task<OrderOutputViewModel> GetOrders()
+		public async Task<OrderOutputDto> GetOrders()
 		{
-			return new OrderOutputViewModel();
+			return new OrderOutputDto();
 		}
 	}
 }

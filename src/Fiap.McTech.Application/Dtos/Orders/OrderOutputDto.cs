@@ -2,7 +2,7 @@
 
 namespace Fiap.McTech.Application.ViewModels.Orders
 {
-	public class OrderOutputViewModel
+	public class OrderOutputDto
 	{
 	   
 	}

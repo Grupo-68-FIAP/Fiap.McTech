@@ -14,9 +14,9 @@ namespace Fiap.McTech.Api.Controllers.Catalog
 		}
 
 		[HttpGet("Catalog")]
-		public async Task<CatalogOutputViewModel> GetCatalog()
+		public async Task<CatalogOutputDto> GetCatalog()
 		{
-			return new CatalogOutputViewModel();
+			return new CatalogOutputDto();
 		}
 	}
 }

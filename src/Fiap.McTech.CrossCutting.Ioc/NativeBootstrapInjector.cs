@@ -3,11 +3,11 @@ using Fiap.McTech.Application.AppServices.Catalog;
 using Fiap.McTech.Application.AppServices.Clients;
 using Fiap.McTech.Application.AppServices.Orders;
 using Fiap.McTech.Application.AppServices.Payment;
+using Fiap.McTech.Application.AppServices.Product;
 using Fiap.McTech.Application.Interfaces;
 using Fiap.McTech.Infra.Context;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.DependencyInjection; 
 
 namespace Fiap.McTech.CrossCutting.Ioc
 {
@@ -24,7 +24,8 @@ namespace Fiap.McTech.CrossCutting.Ioc
             services.AddScoped<ICartAppService, CartAppService>();
             services.AddScoped<ICatalogAppService, CatalogAppService>();
             services.AddScoped<IOrderAppService, OrderAppService>();
-            services.AddScoped<IPaymentAppService, PaymentAppService>();        
+            services.AddScoped<IPaymentAppService, PaymentAppService>();
+            services.AddScoped<IProductAppService, ProductAppService>();
         }
     }
 }

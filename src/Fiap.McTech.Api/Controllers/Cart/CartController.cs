@@ -15,9 +15,9 @@ namespace Fiap.McTech.Api.Controllers.Cart
 		}
 
 		[HttpGet("cart")]
-		public async Task<CartOutputViewModel> GetCart()
+		public async Task<CartOutputDto> GetCart()
 		{
-			return new CartOutputViewModel();
+			return new CartOutputDto();
 		}
 	}
 }

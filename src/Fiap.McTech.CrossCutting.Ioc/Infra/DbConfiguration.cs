@@ -1,5 +1,9 @@
 ﻿using Fiap.McTech.Domain.Interfaces.Repositories.Cart;
+using Fiap.McTech.Domain.Interfaces.Repositories.Clients;
+using Fiap.McTech.Domain.Interfaces.Repositories.Products;
 using Fiap.McTech.Infra.Repositories.Cart;
+using Fiap.McTech.Infra.Repositories.Clients;
+using Fiap.McTech.Infra.Repositories.Products;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection; 
@@ -36,7 +40,10 @@ namespace Fiap.McTech.Infra.Context
 			try
 			{
 				//TODO - ADD REPOSITORIES HERE
-				services.AddScoped<ICartRepository, CartRepository>();
+				services.AddScoped<ICartClientRepository, CartClientRepository>();
+				services.AddScoped<ICartItemRepository, CartItemRepository>();
+				services.AddScoped<IProductRepository, ProductRepository>();
+				services.AddScoped<IClientRepository, ClientRepository>();
 			}
 			catch (Exception ex)
 			{

@@ -14,9 +14,9 @@ namespace Fiap.McTech.Api.Controllers.Payments
 		}
 
 		[HttpGet("Payment")]
-		public async Task<PaymentOutputViewModel> GetPayments()
+		public async Task<PaymentOutputDto> GetPayments()
 		{
-			return new PaymentOutputViewModel();
+			return new PaymentOutputDto();
 		}
 	}
 }

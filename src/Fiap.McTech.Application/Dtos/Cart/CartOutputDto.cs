@@ -2,7 +2,7 @@
 
 namespace Fiap.McTech.Application.ViewModels.Cart
 {
-	public class CartOutputViewModel
+	public class CartOutputDto
 	{
 	   
 	}

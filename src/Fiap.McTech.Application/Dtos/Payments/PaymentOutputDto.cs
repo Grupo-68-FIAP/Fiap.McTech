@@ -2,7 +2,7 @@
 
 namespace Fiap.McTech.Application.ViewModels.Payments
 {
-	public class PaymentOutputViewModel
+	public class PaymentOutputDto
 	{
 	   
 	}

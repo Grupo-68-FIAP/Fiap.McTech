@@ -2,7 +2,7 @@
 
 namespace Fiap.McTech.Domain.Interfaces.Repositories.Cart
 {
-	public interface ICartRepository : IRepositoryBase<CartClient>
+	public interface ICartClientRepository : IRepositoryBase<CartClient>
 	{
 		
 	}

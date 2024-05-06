@@ -43,15 +43,9 @@ namespace Fiap.McTech.Infra.Repositories
 			return await _dbSet.FindAsync(id);
 		}
 
-
-		public virtual async Task<TEntity> GetByCrmAsync(string crm)
+		public async Task<IEnumerable<TEntity>> GetAll()
 		{
-			return await _dbSet.FindAsync(crm);
-		}
-
-		public IEnumerable<TEntity> GetAll()
-		{
-			return _dbSet.ToList();
+			return await _dbSet.ToListAsync();
 		}
 
 		public void Update(TEntity obj)
