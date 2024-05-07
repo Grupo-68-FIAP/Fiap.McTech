@@ -18,7 +18,8 @@ namespace Fiap.McTech.Infra.Context
 		{
 			try
 			{
-				var connectionString = configuration.GetConnectionString("DefaultConnection");
+				var connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING")
+					?? configuration.GetConnectionString("DefaultConnection");
 
 				if (string.IsNullOrWhiteSpace(connectionString))
 				{

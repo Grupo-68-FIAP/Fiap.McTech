@@ -4,11 +4,11 @@ services:
   fiap.mctech.api:
     container_name: mctech_api
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=https://+:443;http://+:80
-      - ASPNETCORE_Kestrel__Certificates__Default__Password=pws4mctech!
-      - ASPNETCORE_Kestrel__Certificates__Default__Path=/app/cert.pfx
-      - MYSQL_CONNECTION_STRING="Server=sqlserver;Port=1433;Database=mctech;User=mctech;Password=pws4mctech!"
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: https://+:443;http://+:80
+      ASPNETCORE_Kestrel__Certificates__Default__Password: pws4mctech!
+      ASPNETCORE_Kestrel__Certificates__Default__Path: /app/cert.pfx
+      CONNECTION_STRING: Server=sqlserver;Port=1433;Database=mctech;User=mctech;Password=pws4mctech!
     ports:
       - "8080:80"
       - "8443:443"
@@ -16,11 +16,11 @@ services:
   sqlserver:
     container_name: sqlserver
     environment:
-      - ACCEPT_EULA=Y
-      - SA_PASSWORD=pws4mctech!
-      - MSSQL_PASSWORD=pws4mctech!
-      - MSSQL_USER=mctech
-      - MSSQL_DATABASE=mctech
+      ACCEPT_EULA: Y
+      SA_PASSWORD: pws4mctech!
+      MSSQL_PASSWORD: pws4mctech!
+      MSSQL_USER: mctech
+      MSSQL_DATABASE: mctech
     ports:
       - "1433:1433"
     volumes:
