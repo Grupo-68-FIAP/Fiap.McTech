@@ -29,7 +29,7 @@ namespace Fiap.McTech.Infra.Context
 
 				services.AddDbContext<DataContext>(options => options.UseSqlServer(connectionString));
 			}
-			catch (Exception ex)
+			catch (Exception)
 			{
 				Console.WriteLine("Erro durante a configuração do banco de dados.");
 				throw;
@@ -46,10 +46,9 @@ namespace Fiap.McTech.Infra.Context
 				services.AddScoped<IProductRepository, ProductRepository>();
 				services.AddScoped<IClientRepository, ClientRepository>();
 			}
-			catch (Exception ex)
+			catch (Exception)
 			{
 				Console.WriteLine("Erro durante a configuração do banco de dados.");
-
 				throw;
 			}
 		}

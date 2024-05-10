@@ -7,8 +7,8 @@ namespace Fiap.McTech.Domain.Interfaces.Repositories
 		void Add(TEntity obj);
 		Task<TEntity> AddAsync(TEntity obj);
 		Task<List<TEntity>> AddRangeAsync(List<TEntity> obj);
-		TEntity GetById(Guid id);
-		Task<TEntity> GetByIdAsync(Guid id);
+		TEntity? GetById(Guid id);
+		Task<TEntity?> GetByIdAsync(Guid id);
 		Task<IEnumerable<TEntity>> GetAll();
 		void Update(TEntity obj);
 		Task UpdateAsync(TEntity obj);
