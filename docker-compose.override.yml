@@ -8,7 +8,7 @@ services:
       ASPNETCORE_URLS: https://+:443;http://+:80
       ASPNETCORE_Kestrel__Certificates__Default__Password: pws4mctech!
       ASPNETCORE_Kestrel__Certificates__Default__Path: /app/cert.pfx
-      CONNECTION_STRING: Server=sqlserver;Port=1433;Database=mctech;User=mctech;Password=pws4mctech!
+      CONNECTION_STRING: Server=sqlserver,1433;User Id=sa;Password=pws4mctech!;
     ports:
       - "8080:80"
       - "8443:443"
@@ -17,10 +17,7 @@ services:
     container_name: sqlserver
     environment:
       ACCEPT_EULA: Y
-      SA_PASSWORD: pws4mctech!
-      MSSQL_PASSWORD: pws4mctech!
-      MSSQL_USER: mctech
-      MSSQL_DATABASE: mctech
+      MSSQL_SA_PASSWORD: pws4mctech!
     ports:
       - "1433:1433"
     volumes:

@@ -4,6 +4,7 @@ using Fiap.McTech.Domain.Interfaces.Repositories.Products;
 using Fiap.McTech.Infra.Repositories.Cart;
 using Fiap.McTech.Infra.Repositories.Clients;
 using Fiap.McTech.Infra.Repositories.Products;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection; 
@@ -28,7 +29,9 @@ namespace Fiap.McTech.Infra.Context
 				}
 
 				services.AddDbContext<DataContext>(options => options.UseSqlServer(connectionString));
-			}
+
+				_ = TestConnection(connectionString);
+            }
 			catch (Exception)
 			{
 				Console.WriteLine("Erro durante a configuração do banco de dados.");
@@ -52,5 +55,20 @@ namespace Fiap.McTech.Infra.Context
 				throw;
 			}
 		}
-	}
+
+        public static async Task TestConnection(string connectionString)
+        {
+            try
+            {
+                using var connection = new SqlConnection(connectionString);
+                await connection.OpenAsync();
+                Console.WriteLine("Conexão com o banco de dados bem-sucedida.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Erro ao testar a conexão: {ex.Message}");
+                Environment.Exit(1);
+            }
+        }
+    }
 }
