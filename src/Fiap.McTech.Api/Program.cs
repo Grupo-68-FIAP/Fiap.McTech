@@ -1,5 +1,5 @@
 using Fiap.McTech.CrossCutting.Ioc;
-using Microsoft.AspNetCore.Hosting;
+using Fiap.McTech.Infra.Context;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +17,9 @@ builder.Services.AddCors(options =>
 });
 
 var app = builder.Build();
+
+using var scope = app.Services.CreateScope();
+scope.DbStart();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
