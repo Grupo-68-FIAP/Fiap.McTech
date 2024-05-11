@@ -11,15 +11,17 @@ namespace Fiap.McTech.Infra.EntityMapper
         {
             builder.ToTable(nameof(DataContext.Clients));
             builder.HasKey(c => c.Id);
-            builder.Property(c => c.Name).IsRequired();
+            builder.Property(c => c.Name)
+                .HasMaxLength(100)
+                .IsRequired();
             builder.Property(c => c.Cpf)
-                .IsRequired()
-                .HasColumnType("varchar(14)")
-                .HasConversion(cpf => cpf.ToString(), strCpf => new Domain.ValuesObjects.Cpf(strCpf));
+                .HasMaxLength(14)
+                .HasConversion(cpf => cpf.ToString(), strCpf => new Domain.ValuesObjects.Cpf(strCpf))
+                .IsRequired();
             builder.Property(c => c.Email)
-                .IsRequired()
-                .HasColumnType("varchar(150)")
-                .HasConversion(email => email.ToString(), strEmail => new Domain.ValuesObjects.Email(strEmail));
+                .HasMaxLength(150)
+                .HasConversion(email => email.ToString(), strEmail => new Domain.ValuesObjects.Email(strEmail))
+                .IsRequired();
         }
     }
 }
