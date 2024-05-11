@@ -12,5 +12,7 @@ namespace Fiap.McTech.Domain.ValuesObjects
 		}
 
 		public override bool IsValid() => Address.IsValidEmail();
+
+		public override string ToString() => IsValid() ? Address : "";
 	}
 }
