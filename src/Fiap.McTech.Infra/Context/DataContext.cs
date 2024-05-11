@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Fiap.McTech.Domain.Entities.Clients;
 using Fiap.McTech.Domain.Entities.Products;
+using Fiap.McTech.Infra.EntityMapper;
 
 namespace Fiap.McTech.Infra.Context
 {
@@ -18,15 +19,11 @@ namespace Fiap.McTech.Infra.Context
         //public DbSet<Order>? Orders { get; set; }
         //public DbSet<OrderItem>? OrderItems { get; set; }
         //public DbSet<Payment>? Payments { get; set; }
-        public DbSet<Product>? Products { get; set; }
+        //public DbSet<Product>? Products { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Client>()
-                .Ignore(c => c.Name)
-                .Ignore(c => c.Cpf)
-                .Ignore(c => c.Email)
-                .ToTable(nameof(Clients));
+            modelBuilder.ApplyConfiguration(new ClientMap());
         }
     }
 }
