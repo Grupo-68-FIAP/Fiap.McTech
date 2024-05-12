@@ -1,15 +1,19 @@
 using Fiap.McTech.CrossCutting.Ioc;
+using Fiap.McTech.CrossCutting.Ioc.Mappers;
 using Fiap.McTech.Infra.Context;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddControllers(); 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// Configurando o AutoMapper
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+AutoMapperConfiguration.RegisterMappings();
+
 builder.Services.RegisterServices(builder.Configuration);
-builder.Services.AddAutoMapper(typeof(Program));
 
 builder.Services.AddCors(options =>
 {
