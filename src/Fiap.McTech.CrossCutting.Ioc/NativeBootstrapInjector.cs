@@ -4,7 +4,9 @@ using Fiap.McTech.Application.AppServices.Orders;
 using Fiap.McTech.Application.AppServices.Payment;
 using Fiap.McTech.Application.AppServices.Product;
 using Fiap.McTech.Application.Interfaces;
+using Fiap.McTech.Domain.Interfaces.Services;
 using Fiap.McTech.Infra.Context;
+using Fiap.McTech.Infra.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection; 
 
@@ -18,12 +20,15 @@ namespace Fiap.McTech.CrossCutting.Ioc
 			services.ConfigureSqlServer(configuration);
             services.RegisterRepositories();
 
+			//SERVICES
+			services.AddScoped<IPayPalPaymentService, PayPalPaymentService>();
+
 			//APP Services
 			services.AddScoped<IClientAppService, ClientAppService>();
             services.AddScoped<ICartAppService, CartAppService>(); 
             services.AddScoped<IOrderAppService, OrderAppService>();
             services.AddScoped<IPaymentAppService, PaymentAppService>();
-            services.AddScoped<IProductAppService, ProductAppService>();
+			services.AddScoped<IProductAppService, ProductAppService>();
         }
     }
 }
