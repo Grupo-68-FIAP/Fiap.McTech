@@ -12,9 +12,9 @@ namespace Fiap.McTech.Domain.Entities.Payments
 			string clientEmail,
 			PaymentMethod method,
 			PaymentStatus status,
-			string notes, 
-			decimal discount,
-			decimal additionalFees)
+			string notes = "", 
+			decimal discount = 0,
+			decimal additionalFees = 0)
 		{
 			ClientId = clientId;
 			OrderId = orderId;
@@ -41,6 +41,12 @@ namespace Fiap.McTech.Domain.Entities.Payments
 		public string BillingName { get; private set; } = string.Empty;
 		public string BillingCnpj { get; private set; } = string.Empty;
 		public string BillingAddress { get; private set; } = string.Empty;
+
+		public void UpdateStatus(PaymentStatus status)
+		{
+			Status = status;
+			UpdatedDate = DateTime.UtcNow;
+		}
 
 		public override bool IsValid()
 		{

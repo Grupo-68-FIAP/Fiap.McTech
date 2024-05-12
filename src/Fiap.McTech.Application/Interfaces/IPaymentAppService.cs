@@ -6,6 +6,6 @@ namespace Fiap.McTech.Application.Interfaces
 	public interface IPaymentAppService
 	{
 		Task<GenerateQRCodeResultDto> GenerateQRCodeAsync(Guid orderId);
-		Task<PaymentOutputDto> PayAsync(Guid orderId, string qrCode);
+		Task<PaymentOutputDto> PayAsync(Guid paymentId, string qrCode);
 	}
 }

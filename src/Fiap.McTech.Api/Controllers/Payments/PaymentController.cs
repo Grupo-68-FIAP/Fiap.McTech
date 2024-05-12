@@ -17,17 +17,18 @@ namespace Fiap.McTech.Api.Controllers.Payments
 		{
 			var qrCodeUrl = await _paymentAppService.GenerateQRCodeAsync(orderId);
 
-			//TODO - MELHORAR RETORNO
+			if(qrCodeUrl == null)
+				return BadRequest(new { Message = "Error to generate Qr Code" });
 
 			return Ok(new { QRCodeUrl = qrCodeUrl });
 		}
 
-		[HttpPost("Pay/{orderId}")]
-		public async Task<IActionResult> Pay([FromRoute] Guid orderId, [FromBody] string qrCode)
+		[HttpPost("Pay/{paymentId}")]
+		public async Task<IActionResult> Pay([FromRoute] Guid paymentId, [FromBody] string qrCode)
 		{
-			var paymentResult = await _paymentAppService.PayAsync(orderId, qrCode);
-
-			//TODO - MELHORAR RETORNO
+			var paymentResult = await _paymentAppService.PayAsync(paymentId, qrCode);
+			if (!paymentResult.Success)
+				return BadRequest(new { Message = paymentResult.Message });
 
 			return Ok(paymentResult);
 		}
