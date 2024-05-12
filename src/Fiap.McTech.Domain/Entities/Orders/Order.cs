@@ -4,15 +4,11 @@ namespace Fiap.McTech.Domain.Entities.Orders
 {
 	public class Order : EntityBase
 	{
-		//EF
-        public Order() { }
-
-        public Order(Guid clientId, decimal totalAmount, OrderStatus status, List<OrderItem> items)
+		public Order(Guid clientId, decimal totalAmount, OrderStatus status)
 		{
 			ClientId = clientId; 
 			TotalAmount = totalAmount;
 			Status = status;
-			Items = items;
 		}
 
 		public Guid ClientId { get; private set; }

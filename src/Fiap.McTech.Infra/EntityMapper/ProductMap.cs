@@ -1,10 +1,7 @@
-﻿using Fiap.McTech.Domain.Entities.Clients;
-using Fiap.McTech.Infra.Context;
+﻿using Fiap.McTech.Infra.Context;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
 using Fiap.McTech.Domain.Entities.Products;
-using static System.Net.Mime.MediaTypeNames;
-using System.Xml.Linq;
 
 namespace Fiap.McTech.Infra.EntityMapper
 {

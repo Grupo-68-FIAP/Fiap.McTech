@@ -4,14 +4,9 @@ namespace Fiap.McTech.Domain.Entities.Cart
 {
 	public class CartClient : EntityBase
 	{
-		//EF
-        public CartClient() { }
-
-        public CartClient(Guid clientId, decimal allValue, List<CartItem> items)
+		public CartClient(Guid clientId)
 		{
 			ClientId = clientId;
-			AllValue = allValue;
-			Items = items;
 		}
 
 		public Guid ClientId { get; private set; }

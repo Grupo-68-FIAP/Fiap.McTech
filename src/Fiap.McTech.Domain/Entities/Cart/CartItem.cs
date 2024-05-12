@@ -4,25 +4,21 @@ namespace Fiap.McTech.Domain.Entities.Cart
 {
 	public class CartItem : EntityBase
 	{
-		//EF
-        public CartItem() { }
-
-        public CartItem(string name, int quantity, decimal value, Guid productId, Guid cartId, CartClient cartClient)
+		public CartItem(string name, int quantity, decimal value, Guid productId, Guid cartClientId)
 		{
 			Name = name;
 			Quantity = quantity;
 			Value = value;
 			ProductId = productId;
-			CartId = cartId;
-			CartClient = cartClient;
+            CartClientId = cartClientId;
 		}
 
 		public string Name { get; private set; } = string.Empty;
 		public int Quantity { get; private set; } = 0;
 		public decimal Value { get; private set; } = 0;
 		public Guid ProductId { get; private set; }
-		public Guid CartId { get; private set; }
-		public CartClient CartClient { get; private set; }
+		public Guid CartClientId { get; private set; }
+		public CartClient? CartClient { get; private set; }
 
 		internal decimal CalculateValue()
 		{
@@ -45,7 +41,7 @@ namespace Fiap.McTech.Domain.Entities.Cart
 				   Quantity > 0 &&
 				   Value > 0 &&
 				   ProductId != Guid.Empty &&
-				   CartId != Guid.Empty &&
+				   CartClientId != Guid.Empty &&
 				   CartClient != null;
 		}
 	}

@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Fiap.McTech.Application\Fiap.McTech.Application.csproj" />
+    <ProjectReference Include="..\Fiap.McTech.Domain\Fiap.McTech.Domain.csproj" />
     <ProjectReference Include="..\Fiap.McTech.Infra\Fiap.McTech.Infra.csproj" />
   </ItemGroup>
 

@@ -8,7 +8,7 @@ using Fiap.McTech.Domain.Interfaces.Services;
 using Fiap.McTech.Infra.Context;
 using Fiap.McTech.Infra.Services;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection; 
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Fiap.McTech.CrossCutting.Ioc
 {
@@ -25,7 +25,7 @@ namespace Fiap.McTech.CrossCutting.Ioc
 
 			//APP Services
 			services.AddScoped<IClientAppService, ClientAppService>();
-            services.AddScoped<ICartAppService, CartAppService>(); 
+            services.AddScoped<ICartAppService, CartAppService>();
             services.AddScoped<IOrderAppService, OrderAppService>();
             services.AddScoped<IPaymentAppService, PaymentAppService>();
 			services.AddScoped<IProductAppService, ProductAppService>();

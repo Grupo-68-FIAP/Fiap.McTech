@@ -1,11 +1,7 @@
 ﻿using AutoMapper;
-using Fiap.McTech.Application.Dtos.Products;
-using Fiap.McTech.Application.Dtos.Products.Delete;
-using Fiap.McTech.Application.Dtos.Products.Update;
 using Fiap.McTech.Application.Interfaces;
 using Fiap.McTech.Application.ViewModels.Clients;
 using Fiap.McTech.Domain.Entities.Clients;
-using Fiap.McTech.Domain.Entities.Products;
 using Fiap.McTech.Domain.Exceptions;
 using Fiap.McTech.Domain.Interfaces.Repositories.Clients;
 using Fiap.McTech.Domain.ValuesObjects;

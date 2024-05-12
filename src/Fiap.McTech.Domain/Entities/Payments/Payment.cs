@@ -4,10 +4,17 @@ namespace Fiap.McTech.Domain.Entities.Payments
 {
     public class Payment : EntityBase
 	{
-		//EF
-        public Payment() {  }
-
-		public Payment(Guid clientId, Guid orderId, decimal value, string clientName, string clientEmail, PaymentMethod method, PaymentStatus status, string notes, decimal discount, decimal additionalFees, string billingName, string billingCnpj, string billingAddress)
+        public Payment(
+			Guid clientId, 
+			Guid orderId, 
+			decimal value, 
+			string clientName,
+			string clientEmail,
+			PaymentMethod method,
+			PaymentStatus status,
+			string notes, 
+			decimal discount,
+			decimal additionalFees)
 		{
 			ClientId = clientId;
 			OrderId = orderId;
@@ -19,9 +26,6 @@ namespace Fiap.McTech.Domain.Entities.Payments
 			Notes = notes;
 			Discount = discount;
 			AdditionalFees = additionalFees;
-			BillingName = billingName;
-			BillingCnpj = billingCnpj;
-			BillingAddress = billingAddress;
 		}
 
 		public Guid ClientId { get; private set; }
