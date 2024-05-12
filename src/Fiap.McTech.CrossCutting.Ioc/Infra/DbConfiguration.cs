@@ -14,7 +14,7 @@ namespace Fiap.McTech.Infra.Context
     {
         private const string DATABASE_NOT_FOUND_ERROR_MESSAGE = "Database connection not found.";
 
-        public static void ConfigureMySql(this IServiceCollection services, IConfiguration configuration)
+        public static void ConfigureSqlServer(this IServiceCollection services, IConfiguration configuration)
         {
             try
             {

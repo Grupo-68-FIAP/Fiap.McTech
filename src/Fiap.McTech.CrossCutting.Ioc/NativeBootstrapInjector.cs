@@ -15,7 +15,7 @@ namespace Fiap.McTech.CrossCutting.Ioc
         public static void RegisterServices(this IServiceCollection services, IConfiguration configuration)
         {
 			// Infra 
-			services.ConfigureMySql(configuration);
+			services.ConfigureSqlServer(configuration);
             services.RegisterRepositories();
 
 			//APP Services
