@@ -58,8 +58,16 @@ namespace Fiap.McTech.Domain.Utils.Extensions
 		public static bool IsValidEmail(this string email)
 		{
 			if (string.IsNullOrWhiteSpace(email)) return false;
-            var addr = new System.Net.Mail.MailAddress(email);
-            return addr.Address == email;
+
+			try
+			{
+				var addr = new System.Net.Mail.MailAddress(email);
+				return addr.Address == email;
+			}
+			catch (FormatException)
+			{
+				return false;
+			}
 		}
 	}
 }
