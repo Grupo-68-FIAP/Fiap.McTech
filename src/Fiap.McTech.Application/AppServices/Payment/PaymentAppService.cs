@@ -38,6 +38,8 @@ namespace Fiap.McTech.Application.AppServices.Payment
 
 				var paymentLink = await _payPalPaymentService.GeneratePaymentLinkAsync(order.TotalAmount);
 
+				//TODO - ADICIONAR PAGAMENTO NO BANCO
+
 				return new GenerateQRCodeResultDto(success: true, message: "QR code generated successfully.", qRCode: paymentLink);
 			}
 			catch (Exception ex)
@@ -70,7 +72,7 @@ namespace Fiap.McTech.Application.AppServices.Payment
 
 				_logger.LogInformation("Payment processed successfully for order with ID {OrderId}.", orderId);
 
-				//TODO - SALVAR PAGAMENTO NO BANCO
+				//TODO - ADICIONAR PAGAMENTO NO BANCO
 
 				return new PaymentOutputDto(success: true, message: "Payment processed successfully.");
 			}

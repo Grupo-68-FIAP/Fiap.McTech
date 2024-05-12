@@ -21,4 +21,10 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Fiap.McTech.Application\Fiap.McTech.Application.csproj" />
+    <ProjectReference Include="..\..\src\Fiap.McTech.Domain\Fiap.McTech.Domain.csproj" />
+    <ProjectReference Include="..\..\src\Fiap.McTech.Infra\Fiap.McTech.Infra.csproj" />
+  </ItemGroup>
+
 </Project>

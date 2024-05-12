@@ -18,7 +18,6 @@ namespace Fiap.McTech.Infra.Context
         public DbSet<Product>? Products { get; set; }
         public DbSet<Payment>? Payments { get; set; }
 
-#if DEBUG
         public DataContext() { }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -29,7 +28,6 @@ namespace Fiap.McTech.Infra.Context
             Console.WriteLine("Connected: {0}", connectionString);
             base.OnConfiguring(optionsBuilder);
         }
-#endif
 
         public DataContext(DbContextOptions<DataContext> options)
            : base(options)
