@@ -19,90 +19,61 @@ namespace Fiap.McTech.Api.Controllers.Product
 		[HttpGet("{id}")]
 		public async Task<ActionResult<ProductOutputDto>> GetProduct(Guid id)
 		{
-			try
+			var product = await _productAppService.GetProductByIdAsync(id);
+			if (product == null)
 			{
-				var product = await _productAppService.GetProductByIdAsync(id);
-				if (product == null)
-				{
-					return NotFound(); 
-				}
+				return NotFound();
+			}
 
-				return Ok(product); 
-			}
-			catch (Exception ex)
-			{
-				return StatusCode(500, ex.Message); 
-			}
+			return Ok(product);
 		}
 
 		[HttpGet]
 		public async Task<ActionResult<List<ProductOutputDto>>> GetAllProducts()
 		{
-			try
+			var products = await _productAppService.GetAllProductsAsync();
+			if (products == null || !products.Any())
 			{
-				var products = await _productAppService.GetAllProductsAsync();
-				return Ok(products);  
+				return NotFound("No products found.");
 			}
-			catch (Exception ex)
-			{
-				return StatusCode(500, ex.Message); 
-			}
+
+			return Ok(products);
 		}
 
 		[HttpPost]
 		public async Task<ActionResult<ProductOutputDto>> CreateProduct(ProductOutputDto productDto)
 		{
-			try
+			var createdProduct = await _productAppService.CreateProductAsync(productDto);
+			if (createdProduct == null)
 			{
-				var createdProduct = await _productAppService.CreateProductAsync(productDto);
-				return CreatedAtAction(nameof(GetProduct), new { id = createdProduct.ProductId }, createdProduct);
+				return BadRequest("Unable to create product.");
 			}
-			catch (Exception ex)
-			{
-				return StatusCode(500, ex.Message); 
-			}
+
+			return CreatedAtAction(nameof(GetProduct), new { id = createdProduct.ProductId }, createdProduct);
 		}
 
 		[HttpPut("{id}")]
 		public async Task<IActionResult> UpdateProduct(Guid id, UpdateProductInputDto productDto)
 		{
-			try
+			var updatedProduct = await _productAppService.UpdateProductAsync(id, productDto);
+			if (updatedProduct == null)
 			{
-				var updatedProduct = await _productAppService.UpdateProductAsync(id, productDto);
-				if (updatedProduct == null)
-				{
-					return NotFound(); 
-				}
+				return NotFound("Product not found.");
+			}
 
-				return Ok(); 
-			}
-			catch (InvalidOperationException)
-			{
-				return NotFound();  
-			}
-			catch (Exception ex)
-			{
-				return StatusCode(500, ex.Message); 
-			}
+			return Ok();
 		}
 
 		[HttpDelete("{id}")]
 		public async Task<IActionResult> DeleteProduct(Guid id)
 		{
-			try
+			var deleted = await _productAppService.DeleteProductAsync(id);
+			if (!deleted.IsSuccess)
 			{
-				await _productAppService.DeleteProductAsync(id);
+				return BadRequest("Error to delete product");
+			}
 
-				return NoContent(); 
-			}
-			catch (InvalidOperationException)
-			{
-				return NotFound(); 
-			}
-			catch (Exception ex)
-			{
-				return StatusCode(500, ex.Message); 
-			}
+			return NoContent();
 		}
 	}
 }
