@@ -4,6 +4,9 @@ namespace Fiap.McTech.Domain.Entities.Products
 {
 	public class Product : EntityBase
 	{
+		//EF
+        public Product() { }
+
         public Product(string name, decimal value, string description, string image, ProductCategory category)
 		{
 			Name = name;
