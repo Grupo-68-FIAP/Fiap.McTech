@@ -14,5 +14,6 @@ services:
     restart: always
     environment:
       ACCEPT_EULA: "Y"
-      SA_PASSWORD: "McTech.Fiap"
+      MSSQL_USER: sa
+      MSSQL_SA_PASSWORD: "McTech.Fiap"
       MSSQL_PID: "Developer"
