@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Fiap.McTech.Application.ViewModels.Cart;
+using Fiap.McTech.Application.Dtos.Cart;
 using Fiap.McTech.Application.ViewModels.Clients;
 using Fiap.McTech.Application.ViewModels.Orders;
 using Fiap.McTech.Application.ViewModels.Payments;
@@ -16,8 +16,8 @@ namespace Fiap.McTech.CrossCutting.Ioc.Mappers
 		{
 			MapperConfiguration config = new MapperConfiguration(cfg =>
 			{
-				cfg.CreateMap<CartClient, CartInputDto>();
-				cfg.CreateMap<CartItem, CartOutputDto>();
+				cfg.CreateMap<CartClient, CartClientOutputDto>();
+				cfg.CreateMap<CartItem, CartItemOutputDto>();
 				cfg.CreateMap<Client, ClientOutputDto>();
 				cfg.CreateMap<Order, OrderOutputDto>();
 				cfg.CreateMap<Payment, PaymentOutputDto>();
