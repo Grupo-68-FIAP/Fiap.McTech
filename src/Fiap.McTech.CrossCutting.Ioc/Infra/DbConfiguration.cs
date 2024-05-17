@@ -50,7 +50,7 @@ namespace Fiap.McTech.Infra.Context
                 services.AddScoped<IClientRepository, ClientRepository>();
                 services.AddScoped<IPaymentRepository, PaymentRepository>();
                 services.AddScoped<IOrderRepository, OrderRepository>();
-			}
+            }
             catch (Exception)
             {
                 Console.WriteLine("Erro durante a configuração do banco de dados.");
@@ -61,11 +61,17 @@ namespace Fiap.McTech.Infra.Context
         public static void DbStart(this IServiceScope scope)
         {
             var dbContext = scope.ServiceProvider.GetRequiredService<DataContext>();
+            var pendingMigrations = dbContext.Database.GetPendingMigrations();
 
             // Verifica se o banco de dados existe e aplica migrações
             if (!dbContext.Database.CanConnect())
             {
-                dbContext.Database.EnsureCreated();
+                Console.WriteLine("Database {0} not found! Waiting while creating...", dbContext.Database.GetDbConnection().Database);
+                dbContext.Database.Migrate();
+            }
+            else if (pendingMigrations.Any())
+            {
+                Console.WriteLine("There are {0} migrations that haven't been run yet. Waiting while your database is updated.", pendingMigrations.Count());
                 dbContext.Database.Migrate();
             }
         }
