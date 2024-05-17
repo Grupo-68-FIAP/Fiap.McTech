@@ -19,7 +19,7 @@ namespace Fiap.McTech.Infra.Services
 				_logger.LogInformation("Generating payment link for amount {Amount}.", amount);
 
 				//MOCK VALUE
-				return $"https://www.paypal.com/payment?amount={amount}";
+				return await Task.Run(() => { return $"https://www.paypal.com/payment?amount={amount}"; });
 			}
 			catch (Exception ex)
 			{
@@ -35,13 +35,13 @@ namespace Fiap.McTech.Infra.Services
 				_logger.LogInformation("Processing payment from QR code: {QRCode}.", qrCode);
 
 				//MOCK VALUE
-				return true;
+				return await Task.Run(() => { return true; });
 			}
 			catch (Exception ex)
 			{
 				_logger.LogError(ex, "Failed to process payment from QR code: {QRCode}.", qrCode);
 
-				return false;
+				return await Task.Run(() => { return false; });
 			}
 		}
 	}

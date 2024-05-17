@@ -3,6 +3,7 @@ using Fiap.McTech.CrossCutting.Ioc.Mappers;
 using Fiap.McTech.Infra.Context;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Configuration.AddCommandLine(args);
 
 // Add services to the container.
 builder.Services.AddControllers(); 
@@ -23,7 +24,7 @@ builder.Services.AddCors(options =>
 var app = builder.Build();
 
 using var scope = app.Services.CreateScope();
-scope.DbStart();
+scope.McTechDatabaseInitialize();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
