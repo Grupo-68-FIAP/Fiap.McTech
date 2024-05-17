@@ -75,5 +75,17 @@ namespace Fiap.McTech.Api.Controllers.Product
 
 			return NoContent();
 		}
-	}
+
+        [HttpGet("{category}")]
+        public async Task<ActionResult<List<ProductOutputDto>>> GetProductsByCategory(string category)
+        {
+            var products = await _productAppService.GetProductsByCategoryAsync(category);
+            if (products == null || !products.Any())
+            {
+                return NotFound($"No products found in category {category}.");
+            }
+
+            return Ok(products);
+        }
+    }
 }

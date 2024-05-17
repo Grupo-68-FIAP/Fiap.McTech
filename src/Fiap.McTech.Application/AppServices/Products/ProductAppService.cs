@@ -144,5 +144,29 @@ namespace Fiap.McTech.Application.AppServices.Product
 				throw;
 			}
 		}
-	}
+
+        public async Task<List<ProductOutputDto>> GetProductsByCategoryAsync(string category)
+        {
+            try
+            {
+                _logger.LogInformation("Retrieving products by category {Category}.", category);
+
+                var products = await _productRepository.GetProductsByCategoryAsync(category);
+                if (products == null || !products.Any())
+                {
+                    _logger.LogInformation("No products found in category {Category}.", category);
+                    return new List<ProductOutputDto>();
+                }
+
+                _logger.LogInformation("Retrieved products in category {Category} successfully.", category);
+
+                return _mapper.Map<List<ProductOutputDto>>(products);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to retrieve products in category {Category}.", category);
+                throw;
+            }
+        }
+    }
 }
