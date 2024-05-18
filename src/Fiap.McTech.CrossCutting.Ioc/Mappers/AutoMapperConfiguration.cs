@@ -20,8 +20,9 @@ namespace Fiap.McTech.CrossCutting.Ioc.Mappers
 				cfg.CreateMap<Client, ClientOutputDto>();
 				cfg.CreateMap<Payment, PaymentOutputDto>();
 
-				// Register the OrderProfile
+				// Register Profiles
 				cfg.AddProfile<OrderProfile>();
+				cfg.AddProfile<ProductProfile>();
 			});
 
 			IMapper mapper = config.CreateMapper();
