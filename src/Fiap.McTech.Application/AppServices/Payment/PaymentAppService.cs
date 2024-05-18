@@ -3,8 +3,8 @@ using Fiap.McTech.Application.Interfaces;
 using Fiap.McTech.Application.ViewModels.Payments;
 using Fiap.McTech.Domain.Enums;
 using Fiap.McTech.Domain.Interfaces.Repositories.Orders;
-using Fiap.McTech.Domain.Interfaces.Repositories.Payments;
-using Fiap.McTech.Domain.Interfaces.Services;
+using Fiap.McTech.Domain.Interfaces.Repositories.Payments; 
+using Fiap.McTech.Infra.Services.Interfaces;
 using Microsoft.Extensions.Logging;
 
 namespace Fiap.McTech.Application.AppServices.Payment

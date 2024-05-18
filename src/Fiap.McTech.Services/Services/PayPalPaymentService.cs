@@ -1,4 +1,4 @@
-﻿using Fiap.McTech.Domain.Interfaces.Services;
+﻿using Fiap.McTech.Infra.Services.Interfaces;
 using Microsoft.Extensions.Logging;
 
 namespace Fiap.McTech.Infra.Services
