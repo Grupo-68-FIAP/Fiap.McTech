@@ -6,7 +6,7 @@ namespace Fiap.McTech.Api.Controllers.Cart
 {
 
 	[ApiController]
-	[Route("api/[controller]")]
+	[Route("api/cart")]
     public class CartController : Controller
     {
         public readonly ICartAppService _cartAppService;
@@ -16,10 +16,10 @@ namespace Fiap.McTech.Api.Controllers.Cart
 			_cartAppService = cartAppService;
 		}
 
-		[HttpGet("{clientId}")]
+		[HttpGet("{id}")]
 		public async Task<ActionResult<CartClientOutputDto>> GetCart(Guid clientId)
 		{
-			return Ok(await _cartAppService.GetCartByClientIdAsync(clientId));
+			return Ok(await _cartAppService.GetCartByIdAsync(clientId));
 		}
 
 		[HttpPost]
@@ -34,7 +34,7 @@ namespace Fiap.McTech.Api.Controllers.Cart
 			return CreatedAtAction(nameof(cartClientDto), new { id = createdCart.ClientId }, createdCart);
 		}
 
-		[HttpPut("{clientId}")]
+		[HttpPut("{id}")]
 		public async Task<IActionResult> UpdateCart(Guid id, CartClientOutputDto cartClientDto)
 		{
 			var updatedCart = await _cartAppService.UpdateCartClientAsync(id, cartClientDto);
@@ -46,10 +46,16 @@ namespace Fiap.McTech.Api.Controllers.Cart
 			return Ok();
 		}
 
-		[HttpDelete("{clientId}")]
+		[HttpDelete("{id}")]
 		public async Task<IActionResult> DeleteCart(Guid id)
 		{
-			return Ok(await _cartAppService.DeleteCartClientAsync(id));
+			var deleted = await _cartAppService.DeleteCartClientAsync(id);
+			
+			if (!deleted.IsSuccess) {
+				return BadRequest(deleted.Message);
+			}
+
+			return NoContent();
 		}
 	}
 }

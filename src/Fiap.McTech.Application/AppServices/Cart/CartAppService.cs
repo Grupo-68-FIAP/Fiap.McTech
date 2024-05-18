@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Fiap.McTech.Application.Dtos.Cart;
+using Fiap.McTech.Application.Dtos.Message;
 using Fiap.McTech.Application.Interfaces;
 using Fiap.McTech.Domain.Interfaces.Repositories.Cart;
 using Microsoft.Extensions.Logging;
@@ -24,26 +25,26 @@ namespace Fiap.McTech.Application.AppServices.Cart
 		}
 
         // Evoluir para vincular o carrinho ao cliente e buscar o carrinho por um identificador exclusivo, seja o Guid ou cpf/email
-        public async Task<CartClientOutputDto?> GetCartByClientIdAsync(Guid clientId)
+        public async Task<CartClientOutputDto?> GetCartByIdAsync(Guid id)
 		{
 			try
 			{
-				_logger.LogInformation("Retrieving cart with Client ID {ClientId}.", clientId);
+				_logger.LogInformation("Retrieving cart with Client ID {Id}.", id);
 
-				var cartClient = await _cartClientRepository.GetByClientIdAsync(clientId);
+				var cartClient = await _cartClientRepository.GetByIdAsync(id);
 				if (cartClient == null)
 				{
-					_logger.LogInformation("Cart with ID {ClientId} not found. Creating new.", clientId);
-					return new CartClientOutputDto(clientId); 
+					_logger.LogInformation("Cart with ID {Id} not found. Creating new.", id);
+					return null; 
 				}
 
-				_logger.LogInformation("Cart with ID {ClientId} retrieved successfully.", clientId);
+				_logger.LogInformation("Cart with ID {Id} retrieved successfully.", id);
 
 				return _mapper.Map<CartClientOutputDto>(cartClient);
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError(ex, "Failed to retrieve cart with client ID {ClientId}.", clientId);
+				_logger.LogError(ex, "Failed to retrieve cart with client ID {Id}.", id);
 				throw;
 			}
 		}
@@ -58,7 +59,7 @@ namespace Fiap.McTech.Application.AppServices.Cart
 
 				var createdCartClient = await _cartClientRepository.AddAsync(cartClient);
 
-				_logger.LogInformation("Cart created successfully with ID {ClientId}.", createdCartClient.Id);
+				_logger.LogInformation("Cart created successfully with ID {Id}.", createdCartClient.Id);
 
 				return _mapper.Map<CartClientOutputDto>(createdCartClient);
 			}
@@ -69,57 +70,57 @@ namespace Fiap.McTech.Application.AppServices.Cart
 			}
 		}
 
-        public async Task<CartClientOutputDto> UpdateCartClientAsync(Guid clientId, CartClientOutputDto cartClientDto)
+        public async Task<CartClientOutputDto> UpdateCartClientAsync(Guid id, CartClientOutputDto cartClientDto)
 		{
 			try
 			{
-				var existingCart = await _cartClientRepository.GetByIdAsync(clientId);
+				var existingCart = await _cartClientRepository.GetByIdAsync(id);
 				if (existingCart == null)
 				{
-					_logger.LogWarning("Cart with ID {ClientId} not found. Update aborted.", clientId);
+					_logger.LogWarning("Cart with ID {Id} not found. Update aborted.", id);
 					throw new InvalidOperationException("Cart not found.");
 				}
 
-				_logger.LogInformation("Updating cart with ID {ClientId}.", clientId);
+				_logger.LogInformation("Updating cart with ID {Id}.", id);
 
 				_mapper.Map(cartClientDto, existingCart);
 
 				await _cartClientRepository.UpdateAsync(existingCart);
 
-				_logger.LogInformation("Cart with ID {ClientId} updated successfully.", clientId);
+				_logger.LogInformation("Cart with ID {Id} updated successfully.", id);
 
 				return _mapper.Map<CartClientOutputDto>(existingCart);
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError(ex, "Failed to update cart with ID {ClientId}.", clientId);
+				_logger.LogError(ex, "Failed to update cart with ID {Id}.", id);
 				throw;
 			}
 		}
 
-		public async Task<String> DeleteCartClientAsync(Guid clientId)
+		public async Task<MessageDto> DeleteCartClientAsync(Guid id)
 		{
 			try
 			{
-				_logger.LogInformation("Attempting to delete product with ID: {ClientId}", clientId);
+				_logger.LogInformation("Attempting to delete product with ID: {Id}", id);
 
-				var existingCart = await _cartClientRepository.GetByIdAsync(clientId);
+				var existingCart = await _cartClientRepository.GetByIdAsync(id);
 				if (existingCart == null)
 				{
-					_logger.LogWarning("Cart with ID {ClientId} not found. Deletion aborted.", clientId);
+					_logger.LogWarning("Cart with ID {Id} not found. Deletion aborted.", id);
 
-					return "Cart not found.";
+					return new MessageDto(false, "Cart not found.");
 				}
 
 				await _cartClientRepository.RemoveAsync(existingCart);
 
-				_logger.LogInformation("Cart with ID {ClientId} deleted successfully.", clientId);
+				_logger.LogInformation("Cart with ID {Id} deleted successfully.", id);
 
-				return "Cart deleted successfully.";
+				return new MessageDto(true, "Cart deleted successfully.");
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError(ex, "Failed to delete cart with ID: {ClientId}", clientId);
+				_logger.LogError(ex, "Failed to delete cart with ID: {Id}", id);
 				throw;
 			}
 		}
