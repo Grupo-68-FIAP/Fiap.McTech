@@ -40,7 +40,7 @@ namespace Fiap.McTech.Api.Controllers.Clients
         /// <returns>Return client</returns>
         /// <response code="200">Returns item</response>
         /// <response code="404">If client isn't exists</response>
-        [HttpGet("{id}")]
+        [HttpGet("id/{id}")]
         [ProducesResponseType(typeof(ClientOutputDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetClient(Guid id)
