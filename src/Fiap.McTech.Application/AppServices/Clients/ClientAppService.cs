@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Fiap.McTech.Application.Interfaces;
-using Fiap.McTech.Application.ViewModels.Clients;
+using Fiap.McTech.Application.Dtos.Clients;
 using Fiap.McTech.Domain.Entities.Clients;
 using Fiap.McTech.Domain.Exceptions;
 using Fiap.McTech.Domain.Interfaces.Repositories.Clients;
@@ -45,7 +45,7 @@ namespace Fiap.McTech.Application.AppServices.Clients
             {
                 _logger.LogInformation("Retrieving all clients.");
                 var clients = await _clientRepository.GetAll();
-                if (clients == null || clients.Any()) return new List<ClientOutputDto>();
+                if (clients == null || !clients.Any()) return new List<ClientOutputDto>();
                 _logger.LogInformation("Retrieved products successfully.");
                 return _mapper.Map<List<ClientOutputDto>>(clients);
             }

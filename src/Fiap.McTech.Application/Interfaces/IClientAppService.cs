@@ -1,5 +1,4 @@
-﻿using Fiap.McTech.Application.ViewModels.Clients;
-using Fiap.McTech.Domain.Entities.Clients;
+﻿using Fiap.McTech.Application.Dtos.Clients;
 
 namespace Fiap.McTech.Application.Interfaces
 {

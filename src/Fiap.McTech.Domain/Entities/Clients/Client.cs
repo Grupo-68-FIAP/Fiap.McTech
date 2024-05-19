@@ -4,9 +4,6 @@ namespace Fiap.McTech.Domain.Entities.Clients
 {
 	public class Client : EntityBase
 	{
-		//EF
-        public Client() { }
-
         public Client(string name, Cpf cpf, Email email)
 		{
 			Name = name;

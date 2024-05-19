@@ -6,7 +6,7 @@ namespace Fiap.McTech.Application.Interfaces
 {
 	public interface IProductAppService
 	{
-		Task<ProductOutputDto> GetProductByIdAsync(Guid productId);
+		Task<ProductOutputDto?> GetProductByIdAsync(Guid productId);
 		Task<List<ProductOutputDto>> GetAllProductsAsync();
 		Task<ProductOutputDto> CreateProductAsync(ProductOutputDto productDto);
 		Task<ProductOutputDto> UpdateProductAsync(Guid productId, UpdateProductInputDto productDto);
