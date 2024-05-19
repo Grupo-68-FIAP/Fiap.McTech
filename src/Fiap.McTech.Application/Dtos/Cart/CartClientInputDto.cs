@@ -1,12 +1,12 @@
-﻿using System;
+using System;
 
 namespace Fiap.McTech.Application.Dtos.Cart
 {
-	public class CartClientOutputDto
+	public class CartClientInputDto
 	{
 		public Guid Id { get; set; }
 		public Guid ClientId { get; set; }
 		public decimal AllValue { get; set; }
-		public List<CartItemOutputDto> Items { get; set; } = new List<CartItemOutputDto>();
+		public List<CartItemInputDto> Items { get; set; } = new List<CartItemInputDto>();
 	}
 }

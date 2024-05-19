@@ -11,6 +11,7 @@ namespace Fiap.McTech.CrossCutting.Ioc.Mappers.Profiles
 		public ProductProfile()
 		{
 			CreateMap<Product, ProductOutputDto>();
+			CreateMap<ProductOutputDto, Product>();
 			CreateMap<CreateProductInputDto, Product>();
 			CreateMap<UpdateProductInputDto, Product>();
 		}

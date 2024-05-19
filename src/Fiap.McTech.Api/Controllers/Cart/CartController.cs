@@ -1,6 +1,7 @@
 ﻿using Fiap.McTech.Application.Dtos.Cart;
 using Microsoft.AspNetCore.Mvc;
 using Fiap.McTech.Application.Interfaces;
+using Fiap.McTech.Domain.Exceptions;
 
 namespace Fiap.McTech.Api.Controllers.Cart
 {
@@ -17,21 +18,37 @@ namespace Fiap.McTech.Api.Controllers.Cart
 		}
 
 		[HttpGet("{id}")]
-		public async Task<ActionResult<CartClientOutputDto>> GetCart(Guid clientId)
+		public async Task<ActionResult<CartClientOutputDto>> GetCart(Guid id)
 		{
-			return Ok(await _cartAppService.GetCartByIdAsync(clientId));
+			return Ok(await _cartAppService.GetCartByIdAsync(id));
 		}
 
 		[HttpPost]
-		public async Task<ActionResult<CartClientOutputDto>> CreateCart(CartClientOutputDto cartClientDto)
+		public async Task<ActionResult<CartClientOutputDto>> CreateCart(CartClientInputDto cartClientDto)
 		{
-			var createdCart = await _cartAppService.CreateCartClientAsync(cartClientDto);
+			CartClientOutputDto createdCart;
+			try
+			{
+				createdCart = await _cartAppService.CreateCartClientAsync(cartClientDto);
+			}
+			catch(Exception ex)
+			{
+				if (ex is EntityNotFoundException)
+				{
+					return NotFound("Client not found.");
+				}
+				else 
+				{
+					throw;
+				}
+			}
+
 			if (createdCart == null)
 			{
 				return BadRequest("Unable to create cart.");
 			}
 
-			return CreatedAtAction(nameof(cartClientDto), new { id = createdCart.ClientId }, createdCart);
+			return CreatedAtAction(nameof(GetCart), new { id = createdCart.Id }, createdCart);
 		}
 
 		[HttpPut("{id}")]

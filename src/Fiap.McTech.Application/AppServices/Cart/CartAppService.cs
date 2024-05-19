@@ -11,14 +11,15 @@ namespace Fiap.McTech.Application.AppServices.Cart
     {
 
         private readonly ILogger<CartAppService> _logger;
+		private readonly IClientAppService _clientAppService;
 		private readonly ICartClientRepository _cartClientRepository;
-
         private readonly ICartItemRepository _cartItemRepository;
 		private readonly IMapper _mapper;
 
-        public CartAppService(ILogger<CartAppService> logger, ICartClientRepository cartClientRepository, ICartItemRepository cartItemRepository, IMapper mapper)
+        public CartAppService(ILogger<CartAppService> logger, IClientAppService clientAppService, ICartClientRepository cartClientRepository, ICartItemRepository cartItemRepository, IMapper mapper)
 		{
 			_logger = logger;
+			_clientAppService = clientAppService;
 			_cartClientRepository = cartClientRepository;
             _cartItemRepository = cartItemRepository;
 			_mapper = mapper;
@@ -34,7 +35,7 @@ namespace Fiap.McTech.Application.AppServices.Cart
 				var cartClient = await _cartClientRepository.GetByIdAsync(id);
 				if (cartClient == null)
 				{
-					_logger.LogInformation("Cart with ID {Id} not found. Creating new.", id);
+					_logger.LogInformation("Cart with ID {Id} not found.", id);
 					return null; 
 				}
 
@@ -49,10 +50,14 @@ namespace Fiap.McTech.Application.AppServices.Cart
 			}
 		}
 
-        public async Task<CartClientOutputDto> CreateCartClientAsync(CartClientOutputDto cartClientDto)
+        public async Task<CartClientOutputDto> CreateCartClientAsync(CartClientInputDto cartClientDto)
 		{
 			try
 			{
+				_logger.LogInformation("Checking client existence.");
+
+				await _clientAppService.GetClientByIdAsync(cartClientDto.ClientId);
+
 				_logger.LogInformation("Creating a new cart.");
 
 				var cartClient = _mapper.Map<Domain.Entities.Cart.CartClient>(cartClientDto);
@@ -66,6 +71,7 @@ namespace Fiap.McTech.Application.AppServices.Cart
 			catch (Exception ex)
 			{
 				_logger.LogError(ex, "Failed to create cart");
+
 				throw;
 			}
 		}
