@@ -2,12 +2,13 @@
 using Fiap.McTech.Application.Dtos.Clients;
 using Fiap.McTech.Domain.Exceptions;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Formatters;
+using System.Net.Mime;
 
 namespace Fiap.McTech.Api.Controllers.Clients
 {
     [ApiController]
     [Route("api/client")]
+    [Produces(MediaTypeNames.Application.Json)]
     public class ClientController : Controller
     {
         private readonly IClientAppService _clientAppService;
@@ -24,9 +25,9 @@ namespace Fiap.McTech.Api.Controllers.Clients
         /// <response code="200">Returns all items</response>
         /// <response code="204">If there are nothing</response>
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(List<ClientOutputDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public async Task<ActionResult<List<ClientOutputDto>>> GetAllClients()
+        public async Task<IActionResult> GetAllClients()
         {
             var clients = await _clientAppService.GetAllClientsAsync();
             return (clients == null || !clients.Any()) ? new NoContentResult() : Ok(clients);
@@ -40,9 +41,9 @@ namespace Fiap.McTech.Api.Controllers.Clients
         /// <response code="200">Returns item</response>
         /// <response code="404">If client isn't exists</response>
         [HttpGet("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ClientOutputDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<ClientOutputDto>> GetClient(Guid id)
+        public async Task<IActionResult> GetClient(Guid id)
         {
             try
             {
@@ -63,10 +64,10 @@ namespace Fiap.McTech.Api.Controllers.Clients
         /// <response code="400">If there validations issues</response>
         /// <response code="404">If client isn't exists</response>
         [HttpGet("cpf/{cpf}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ClientOutputDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<ClientOutputDto>> GetClientByCpf(string cpf)
+        [ProducesResponseType(typeof(NotFoundResult), StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetClientByCpf(string cpf)
         {
             try
             {
@@ -86,9 +87,9 @@ namespace Fiap.McTech.Api.Controllers.Clients
         /// <response code="201">Return new client</response>
         /// <response code="400">If there validations issues</response>
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(ClientOutputDto), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<ClientOutputDto>> CreateClient(ClientInputDto client)
+        public async Task<IActionResult> CreateClient(ClientInputDto client)
         {
             try
             {
@@ -110,7 +111,7 @@ namespace Fiap.McTech.Api.Controllers.Clients
         /// <response code="400">If there validations issues</response>
         /// <response code="404">If client isn't exists</response>
         [HttpPut("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ClientOutputDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateClient(Guid id, ClientInputDto client)

@@ -15,6 +15,7 @@ namespace Fiap.McTech.Application.Dtos.Clients
         [Required]
         public string Name { get; set; }
         [Required]
+        [MaxLength(11)]
         [CustomValidation(typeof(ClientInputDto), nameof(Validate))]
         public string Cpf { get; set; }
 
