@@ -9,7 +9,8 @@ namespace Fiap.McTech.Application.Interfaces
 	{
 		Task<OrderOutputDto?> GetOrderByIdAsync(Guid id);
 		Task<OrderOutputDto> CreateOrderAsync(CreateOrderInputDto orderDto);
-		Task<OrderOutputDto> UpdateOrderAsync(Guid orderId, UpdateOrderInputDto orderDto);
+		Task<OrderOutputDto> CreateOrderByCartAsync(Guid cartId);
+        Task<OrderOutputDto> UpdateOrderAsync(Guid orderId, UpdateOrderInputDto orderDto);
 		Task<DeleteOrderOutputDto> DeleteOrderAsync(Guid orderId);
 	}
 }
