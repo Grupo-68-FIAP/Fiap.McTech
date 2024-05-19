@@ -51,7 +51,7 @@ namespace Fiap.McTech.Api.Controllers.Clients
             }
             catch (EntityNotFoundException ex)
             {
-                return NotFound(new { message = ex.Message });
+                return NotFound(new ProblemDetails() { Detail = ex.Message });
             }
         }
 
@@ -66,7 +66,7 @@ namespace Fiap.McTech.Api.Controllers.Clients
         [HttpGet("cpf/{cpf}")]
         [ProducesResponseType(typeof(ClientOutputDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(NotFoundResult), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetClientByCpf(string cpf)
         {
             try
@@ -75,7 +75,7 @@ namespace Fiap.McTech.Api.Controllers.Clients
             }
             catch (EntityNotFoundException ex)
             {
-                return NotFound(new { message = ex.Message });
+                return NotFound(new ProblemDetails() { Detail = ex.Message });
             }
         }
 
@@ -98,7 +98,7 @@ namespace Fiap.McTech.Api.Controllers.Clients
             }
             catch (EntityNotFoundException ex)
             {
-                return NotFound(new { message = ex.Message });
+                return NotFound(new ProblemDetails() { Detail = ex.Message });
             }
         }
 
@@ -113,7 +113,7 @@ namespace Fiap.McTech.Api.Controllers.Clients
         [HttpPut("{id}")]
         [ProducesResponseType(typeof(ClientOutputDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(NotFoundResult), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateClient(Guid id, ClientInputDto client)
         {
             try
@@ -122,7 +122,7 @@ namespace Fiap.McTech.Api.Controllers.Clients
             }
             catch (EntityNotFoundException ex)
             {
-                return NotFound(new { message = ex.Message });
+                return NotFound(new ProblemDetails() { Detail = ex.Message });
             }
         }
 
@@ -135,7 +135,7 @@ namespace Fiap.McTech.Api.Controllers.Clients
         /// <response code="404">If client isn't exists</response>
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(typeof(NotFoundResult), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteProduct(Guid id)
         {
             try
@@ -145,7 +145,7 @@ namespace Fiap.McTech.Api.Controllers.Clients
             }
             catch (EntityNotFoundException ex)
             {
-                return NotFound(new { message = ex.Message });
+                return NotFound(new ProblemDetails() { Detail = ex.Message });
             }
         }
     }

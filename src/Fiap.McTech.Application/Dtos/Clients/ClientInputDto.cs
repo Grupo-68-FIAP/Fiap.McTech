@@ -12,10 +12,11 @@ namespace Fiap.McTech.Application.Dtos.Clients
             Cpf = cpf;
             Email = email;
         }
+
         [Required]
         public string Name { get; set; }
         [Required]
-        [MaxLength(11)]
+        [MaxLength(11), MinLength(11)]
         [CustomValidation(typeof(ClientInputDto), nameof(Validate))]
         public string Cpf { get; set; }
 
