@@ -4,7 +4,6 @@ using Fiap.McTech.Application.Dtos.Products.Delete;
 using Fiap.McTech.Application.Dtos.Products.Update;
 using Fiap.McTech.Application.Interfaces;
 using Fiap.McTech.Domain.Enums;
-using Fiap.McTech.Domain.Exceptions;
 using Fiap.McTech.Domain.Interfaces.Repositories.Products;
 using Microsoft.Extensions.Logging;
 
