@@ -49,7 +49,7 @@ namespace Fiap.McTech.Api.Controllers.Product
 				return BadRequest("Unable to create product.");
 			}
 
-			return CreatedAtAction(nameof(GetProduct), new { id = createdProduct.ProductId }, createdProduct);
+			return CreatedAtAction(nameof(GetProduct), new { id = createdProduct.Id }, createdProduct);
 		}
 
 		[HttpPut("{id}")]

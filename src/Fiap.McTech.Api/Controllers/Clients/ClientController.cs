@@ -1,14 +1,14 @@
-﻿using Fiap.McTech.Application.AppServices.Product;
-using Fiap.McTech.Application.Dtos.Products;
-using Fiap.McTech.Application.Dtos.Products.Update;
-using Fiap.McTech.Application.Interfaces;
-using Fiap.McTech.Application.ViewModels.Clients;
+﻿using Fiap.McTech.Application.Interfaces;
+using Fiap.McTech.Application.Dtos.Clients;
+using Fiap.McTech.Domain.Exceptions;
 using Microsoft.AspNetCore.Mvc;
+using System.Net.Mime;
 
 namespace Fiap.McTech.Api.Controllers.Clients
 {
     [ApiController]
     [Route("api/client")]
+    [Produces(MediaTypeNames.Application.Json)]
     public class ClientController : Controller
     {
         private readonly IClientAppService _clientAppService;
@@ -18,45 +18,135 @@ namespace Fiap.McTech.Api.Controllers.Clients
             _clientAppService = clientAppService;
         }
 
+        /// <summary>
+        /// Obtain all clients.
+        /// </summary>
+        /// <returns>List of clients</returns>
+        /// <response code="200">Returns all items</response>
+        /// <response code="204">If there are nothing</response>
         [HttpGet]
-        public async Task<ActionResult<ClientOutputDto>> GetAllClients()
+        [ProducesResponseType(typeof(List<ClientOutputDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<IActionResult> GetAllClients()
         {
-            return Ok(await _clientAppService.GetAllClientsAsync());
+            var clients = await _clientAppService.GetAllClientsAsync();
+            return (clients == null || !clients.Any()) ? new NoContentResult() : Ok(clients);
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<ClientOutputDto>> GetClient(Guid id)
+        /// <summary>
+        /// Obtain client by id
+        /// </summary>
+        /// <param name="id">Guid of reference that client</param>
+        /// <returns>Return client</returns>
+        /// <response code="200">Returns item</response>
+        /// <response code="404">If client isn't exists</response>
+        [HttpGet("id/{id}")]
+        [ProducesResponseType(typeof(ClientOutputDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetClient(Guid id)
         {
-            var client = await _clientAppService.GetClientByIdAsync(id);
-            return client == null ? NotFound() : Ok(client);
+            try
+            {
+                return Ok(await _clientAppService.GetClientByIdAsync(id));
+            }
+            catch (EntityNotFoundException ex)
+            {
+                return NotFound(new ProblemDetails() { Detail = ex.Message });
+            }
         }
 
+        /// <summary>
+        /// Obtain client by CPF
+        /// </summary>
+        /// <param name="cpf">CPF of client</param>
+        /// <returns>Return client</returns>
+        /// <response code="200">Return item</response>
+        /// <response code="400">If there validations issues</response>
+        /// <response code="404">If client isn't exists</response>
         [HttpGet("cpf/{cpf}")]
-        public async Task<ActionResult<ClientOutputDto>> GetClientByCpf(string cpf)
+        [ProducesResponseType(typeof(ClientOutputDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetClientByCpf(string cpf)
         {
-            var client = await _clientAppService.GetClientByCpfAsync(cpf);
-            return client == null ? NotFound() : Ok(client);
+            try
+            {
+                return Ok(await _clientAppService.GetClientByCpfAsync(cpf));
+            }
+            catch (EntityNotFoundException ex)
+            {
+                return NotFound(new ProblemDetails() { Detail = ex.Message });
+            }
         }
 
+        /// <summary>
+        /// Create a new client
+        /// </summary>
+        /// <param name="client">Input data of client</param>
+        /// <returns>Return client</returns>
+        /// <response code="201">Return new client</response>
+        /// <response code="400">If there validations issues</response>
         [HttpPost]
-        public async Task<ActionResult<ClientOutputDto>> CreateClient(ClientInputDto id)
+        [ProducesResponseType(typeof(ClientOutputDto), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> CreateClient(ClientInputDto client)
         {
-            var createdClient = await _clientAppService.CreateClientAsync(id);
-            return CreatedAtAction(nameof(GetClient), new { id = createdClient.Id }, createdClient);
+            try
+            {
+                var createdClient = await _clientAppService.CreateClientAsync(client);
+                return CreatedAtAction(nameof(GetClient), new { id = createdClient.Id }, createdClient);
+            }
+            catch (EntityNotFoundException ex)
+            {
+                return NotFound(new ProblemDetails() { Detail = ex.Message });
+            }
         }
 
+        /// <summary>
+        /// Update an existing client
+        /// </summary>
+        /// <param name="client">Input data of client</param>
+        /// <returns>Return client</returns>
+        /// <response code="200">Return new client</response>
+        /// <response code="400">If there validations issues</response>
+        /// <response code="404">If client isn't exists</response>
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateClient(Guid id, ClientInputDto dto)
+        [ProducesResponseType(typeof(ClientOutputDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> UpdateClient(Guid id, ClientInputDto client)
         {
-            var updated = await _clientAppService.UpdateClientAsync(id, dto);
-            return updated == null ? NotFound() : Ok();
+            try
+            {
+                return Ok(await _clientAppService.UpdateClientAsync(id, client));
+            }
+            catch (EntityNotFoundException ex)
+            {
+                return NotFound(new ProblemDetails() { Detail = ex.Message });
+            }
         }
 
+        /// <summary>
+        /// Remove an existing client
+        /// </summary>
+        /// <param name="client">Input data of client</param>
+        /// <returns>Return client</returns>
+        /// <response code="204">Return new client</response>
+        /// <response code="404">If client isn't exists</response>
         [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteProduct(Guid id)
         {
-            await _clientAppService.DeleteClientAsync(id);
-            return NoContent();
+            try
+            {
+                await _clientAppService.DeleteClientAsync(id);
+                return NoContent();
+            }
+            catch (EntityNotFoundException ex)
+            {
+                return NotFound(new ProblemDetails() { Detail = ex.Message });
+            }
         }
     }
 }

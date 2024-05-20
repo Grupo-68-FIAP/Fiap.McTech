@@ -16,8 +16,7 @@ services:
   sqlserver:
     container_name: sqlserver
     environment:
-      ACCEPT_EULA: Y
-      MSSQL_SA_PASSWORD: pws4mctech!
+      SA_PASSWORD: pws4mctech!
     ports:
       - "1433:1433"
     volumes:

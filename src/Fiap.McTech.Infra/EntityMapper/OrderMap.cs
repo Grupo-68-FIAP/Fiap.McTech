@@ -1,8 +1,6 @@
 ﻿using Fiap.McTech.Infra.Context;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
-using Fiap.McTech.Domain.Entities.Cart;
-using Fiap.McTech.Domain.Entities.Clients;
 using Fiap.McTech.Domain.Entities.Orders;
 
 namespace Fiap.McTech.Infra.EntityMapper
@@ -13,22 +11,20 @@ namespace Fiap.McTech.Infra.EntityMapper
         {
             builder.ToTable(nameof(DataContext.Orders));
 
-            builder.HasKey(c => c.Id);
+            builder.HasKey(order => order.Id);
 
-            builder.HasMany(m => m.Items)
-                .WithOne(w => w.Order)
-                .HasForeignKey(c => c.OrderId)
-                .IsRequired();
+            builder.HasMany(order => order.Items)
+                .WithOne(order => order.Order)
+                .HasForeignKey(order => order.OrderId);
 
-            builder.HasOne<Client>()
+            builder.HasOne(order => order.Client)
                 .WithMany()
-                .HasForeignKey(c => c.ClientId)
-                .IsRequired();
+                .HasForeignKey(order => order.ClientId);
 
-            builder.Property(c => c.TotalAmount)
+            builder.Property(order => order.TotalAmount)
                 .HasPrecision(14, 2);
 
-            builder.Property(c => c.Status)
+            builder.Property(order => order.Status)
                 .HasConversion<int>();
         }
     }

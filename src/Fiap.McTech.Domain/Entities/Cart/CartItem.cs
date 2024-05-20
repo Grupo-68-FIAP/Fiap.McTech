@@ -4,6 +4,12 @@ namespace Fiap.McTech.Domain.Entities.Cart
 {
 	public class CartItem : EntityBase
 	{
+
+		public CartItem()
+		{
+			
+		}
+
 		public CartItem(string name, int quantity, decimal value, Guid productId, Guid cartClientId)
 		{
 			Name = name;

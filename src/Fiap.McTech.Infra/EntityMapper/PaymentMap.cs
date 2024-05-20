@@ -17,8 +17,7 @@ namespace Fiap.McTech.Infra.EntityMapper
 
             builder.HasOne<Client>()
                 .WithMany()
-                .HasForeignKey(c => c.ClientId)
-                .IsRequired();
+                .HasForeignKey(c => c.ClientId);
 
             builder.HasOne<Order>()
                 .WithMany()

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Fiap.McTech.Domain.Exceptions
+﻿namespace Fiap.McTech.Domain.Exceptions
 {
     public abstract class McTechException : Exception
     {

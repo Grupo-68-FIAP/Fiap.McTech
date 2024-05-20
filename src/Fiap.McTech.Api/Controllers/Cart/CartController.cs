@@ -1,12 +1,13 @@
 ﻿using Fiap.McTech.Application.Dtos.Cart;
 using Microsoft.AspNetCore.Mvc;
 using Fiap.McTech.Application.Interfaces;
+using Fiap.McTech.Domain.Exceptions;
 
 namespace Fiap.McTech.Api.Controllers.Cart
 {
 
 	[ApiController]
-	[Route("api/[controller]")]
+	[Route("api/cart")]
     public class CartController : Controller
     {
         public readonly ICartAppService _cartAppService;
@@ -16,25 +17,41 @@ namespace Fiap.McTech.Api.Controllers.Cart
 			_cartAppService = cartAppService;
 		}
 
-		[HttpGet("{clientId}")]
-		public async Task<ActionResult<CartClientOutputDto>> GetCart(Guid clientId)
+		[HttpGet("{id}")]
+		public async Task<ActionResult<CartClientOutputDto>> GetCart(Guid id)
 		{
-			return Ok(await _cartAppService.GetCartByClientIdAsync(clientId));
+			return Ok(await _cartAppService.GetCartByIdAsync(id));
 		}
 
 		[HttpPost]
-		public async Task<ActionResult<CartClientOutputDto>> CreateCart(CartClientOutputDto cartClientDto)
+		public async Task<ActionResult<CartClientOutputDto>> CreateCart(CartClientInputDto cartClientDto)
 		{
-			var createdCart = await _cartAppService.CreateCartClientAsync(cartClientDto);
+			CartClientOutputDto createdCart;
+			try
+			{
+				createdCart = await _cartAppService.CreateCartClientAsync(cartClientDto);
+			}
+			catch(Exception ex)
+			{
+				if (ex is EntityNotFoundException)
+				{
+					return NotFound("Client not found.");
+				}
+				else 
+				{
+					throw;
+				}
+			}
+
 			if (createdCart == null)
 			{
 				return BadRequest("Unable to create cart.");
 			}
 
-			return CreatedAtAction(nameof(cartClientDto), new { id = createdCart.ClientId }, createdCart);
+			return CreatedAtAction(nameof(GetCart), new { id = createdCart.Id }, createdCart);
 		}
 
-		[HttpPut("{clientId}")]
+		[HttpPut("{id}")]
 		public async Task<IActionResult> UpdateCart(Guid id, CartClientOutputDto cartClientDto)
 		{
 			var updatedCart = await _cartAppService.UpdateCartClientAsync(id, cartClientDto);
@@ -46,10 +63,16 @@ namespace Fiap.McTech.Api.Controllers.Cart
 			return Ok();
 		}
 
-		[HttpDelete("{clientId}")]
+		[HttpDelete("{id}")]
 		public async Task<IActionResult> DeleteCart(Guid id)
 		{
-			return Ok(await _cartAppService.DeleteCartClientAsync(id));
+			var deleted = await _cartAppService.DeleteCartClientAsync(id);
+			
+			if (!deleted.IsSuccess) {
+				return BadRequest(deleted.Message);
+			}
+
+			return NoContent();
 		}
 	}
 }

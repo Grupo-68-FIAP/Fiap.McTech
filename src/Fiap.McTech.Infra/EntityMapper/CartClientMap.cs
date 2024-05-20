@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
 using Fiap.McTech.Domain.Entities.Cart;
-using Fiap.McTech.Domain.Entities.Clients;
 
 namespace Fiap.McTech.Infra.EntityMapper
 {
@@ -12,19 +11,17 @@ namespace Fiap.McTech.Infra.EntityMapper
         {
             builder.ToTable(nameof(DataContext.CartClients));
 
-            builder.HasKey(c => c.Id);
+            builder.HasKey(cart => cart.Id);
 
-            builder.HasMany(m => m.Items)
-                .WithOne(w => w.CartClient)
-                .HasForeignKey(c => c.CartClientId)
-                .IsRequired();
+            builder.HasMany(cart => cart.Items)
+                .WithOne(cart => cart.CartClient)
+                .HasForeignKey(cart => cart.CartClientId);
 
-            builder.HasOne<Client>()
+            builder.HasOne(cart => cart.Client)
                 .WithMany()
-                .HasForeignKey(c => c.ClientId)
-                .IsRequired();
+                .HasForeignKey(cart => cart.ClientId);
 
-            builder.Property(c => c.AllValue)
+            builder.Property(cart => cart.AllValue)
                 .HasPrecision(14,2);
         }
     }

@@ -5,7 +5,7 @@ namespace Fiap.McTech.Domain.Entities.Payments
     public class Payment : EntityBase
 	{
         public Payment(
-			Guid clientId, 
+			Guid? clientId, 
 			Guid orderId, 
 			decimal value, 
 			string clientName,
@@ -28,7 +28,7 @@ namespace Fiap.McTech.Domain.Entities.Payments
 			AdditionalFees = additionalFees;
 		}
 
-		public Guid ClientId { get; private set; }
+		public Guid? ClientId { get; private set; }
         public Guid OrderId { get; private set; }
 		public decimal Value { get; private set; } = 0;
 		public string ClientName { get; private set; } = string.Empty;
@@ -50,8 +50,7 @@ namespace Fiap.McTech.Domain.Entities.Payments
 
 		public override bool IsValid()
 		{
-			return ClientId != Guid.Empty &&
-				   OrderId != Guid.Empty &&
+			return OrderId != Guid.Empty &&
 				   Value > 0 &&
 				   !string.IsNullOrWhiteSpace(ClientName) &&
 				   !string.IsNullOrWhiteSpace(ClientEmail);

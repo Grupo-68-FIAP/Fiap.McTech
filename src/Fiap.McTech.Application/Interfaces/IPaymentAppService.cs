@@ -1,5 +1,4 @@
 ﻿using Fiap.McTech.Application.Dtos.Payments;
-using Fiap.McTech.Application.ViewModels.Payments;
 
 namespace Fiap.McTech.Application.Interfaces
 {

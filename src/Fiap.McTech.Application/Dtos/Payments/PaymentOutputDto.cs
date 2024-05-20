@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Fiap.McTech.Application.ViewModels.Payments
+namespace Fiap.McTech.Application.Dtos.Payments
 {
 	public class PaymentOutputDto
 	{

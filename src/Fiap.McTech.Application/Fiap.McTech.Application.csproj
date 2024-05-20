@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Fiap.McTech.Domain\Fiap.McTech.Domain.csproj" />
+    <ProjectReference Include="..\Fiap.McTech.Services\Fiap.McTech.Services.csproj" />
   </ItemGroup>
 
 </Project>

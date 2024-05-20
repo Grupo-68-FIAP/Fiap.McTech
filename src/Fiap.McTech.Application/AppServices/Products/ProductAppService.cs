@@ -90,7 +90,7 @@ namespace Fiap.McTech.Application.AppServices.Product
 			}
 		}
 
-		public async Task<UpdateProductOutputDto> UpdateProductAsync(Guid productId, UpdateProductInputDto productDto)
+		public async Task<ProductOutputDto> UpdateProductAsync(Guid productId, UpdateProductInputDto productDto)
 		{
 			try
 			{
@@ -109,7 +109,7 @@ namespace Fiap.McTech.Application.AppServices.Product
 
 				_logger.LogInformation("Product with ID {ProductId} updated successfully.", productId);
 
-				return _mapper.Map<UpdateProductOutputDto>(existingProduct);
+				return _mapper.Map<ProductOutputDto>(existingProduct);
 			}
 			catch (Exception ex)
 			{

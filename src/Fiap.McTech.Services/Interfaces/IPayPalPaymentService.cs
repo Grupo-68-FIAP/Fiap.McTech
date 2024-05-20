@@ -1,4 +1,4 @@
-﻿namespace Fiap.McTech.Domain.Interfaces.Services
+﻿namespace Fiap.McTech.Infra.Services.Interfaces
 {
 	public interface IPayPalPaymentService
 	{

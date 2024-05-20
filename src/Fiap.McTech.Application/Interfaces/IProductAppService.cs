@@ -6,10 +6,10 @@ namespace Fiap.McTech.Application.Interfaces
 {
 	public interface IProductAppService
 	{
-		Task<ProductOutputDto> GetProductByIdAsync(Guid productId);
+		Task<ProductOutputDto?> GetProductByIdAsync(Guid productId);
 		Task<List<ProductOutputDto>> GetAllProductsAsync();
 		Task<ProductOutputDto> CreateProductAsync(ProductOutputDto productDto);
-		Task<UpdateProductOutputDto> UpdateProductAsync(Guid productId, UpdateProductInputDto productDto);
+		Task<ProductOutputDto> UpdateProductAsync(Guid productId, UpdateProductInputDto productDto);
 		Task<DeleteProductOutputDto> DeleteProductAsync(Guid productId);
         Task<List<ProductOutputDto>> GetProductsByCategoryAsync(string category);
     }

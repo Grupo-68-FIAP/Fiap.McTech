@@ -22,6 +22,8 @@ namespace Fiap.McTech.Infra.Context
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            if (optionsBuilder.IsConfigured) return;
+            // configure database to run migrations
             var connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING");
             if (string.IsNullOrEmpty(connectionString)) throw new Exception("Environment variable [CONNECTION_STRING] is null.");
             optionsBuilder.UseSqlServer(connectionString);

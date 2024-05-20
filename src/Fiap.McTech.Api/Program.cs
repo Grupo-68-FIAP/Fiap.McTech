@@ -1,13 +1,34 @@
 using Fiap.McTech.CrossCutting.Ioc;
 using Fiap.McTech.CrossCutting.Ioc.Mappers;
 using Fiap.McTech.Infra.Context;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Configuration.AddCommandLine(args);
 
 // Add services to the container.
 builder.Services.AddControllers(); 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    const string ApiVersion = "v1";
+    c.SwaggerDoc(ApiVersion, new OpenApiInfo
+    {
+        Title = "McTech API",
+        Version = ApiVersion,
+        Description = "Backend API responsible for the operational control of the McTech snack bar. It manages essential functions such as orders, payments, customers, and other operations to ensure efficiency and improvement of the services offered by the McTech snack bar.\n\n" +
+                      "### Contacts\n" +
+                      "- **Ervin Notari Junior**: ervinnotari@hotmail.com\n" +
+                      "- **Guilherme Novaes da silva**: guilherme.novaes233@gmail.com\n" +
+                      "- **José Maria dos Reis Lisboa**: josemrlisboa@gmail.com\n" +
+                      "- **Vanessa Alves do Nascimento**: vanascimento.dev@gmail.com\n",
+        License = new OpenApiLicense
+        {
+            Name = "MIT License",
+            Url = new Uri("https://opensource.org/licenses/MIT")
+        }
+    });
+});
 
 // Configurando o AutoMapper
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
@@ -23,7 +44,7 @@ builder.Services.AddCors(options =>
 var app = builder.Build();
 
 using var scope = app.Services.CreateScope();
-scope.DbStart();
+scope.McTechDatabaseInitialize();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
