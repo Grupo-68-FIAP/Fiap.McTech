@@ -1,7 +1,6 @@
 ﻿using Fiap.McTech.Domain.Entities.Products;
 using Fiap.McTech.Domain.Enums;
 using Fiap.McTech.Domain.Interfaces.Repositories.Products;
-using Fiap.McTech.Domain.ValuesObjects;
 using Fiap.McTech.Infra.Context;
 using Microsoft.EntityFrameworkCore;
 

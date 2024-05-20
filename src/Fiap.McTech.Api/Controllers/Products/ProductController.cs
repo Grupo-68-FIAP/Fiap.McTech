@@ -2,7 +2,6 @@
 using Fiap.McTech.Application.Interfaces; 
 using Fiap.McTech.Application.Dtos.Products.Update;
 using Fiap.McTech.Application.Dtos.Products;
-using Fiap.McTech.Domain.Enums;
 
 namespace Fiap.McTech.Api.Controllers.Product
 {
