@@ -19,7 +19,7 @@ namespace Fiap.McTech.Infra.EntityMapper
                 .HasForeignKey(ci => ci.CartClientId)
                 .IsRequired();
 
-            builder.HasOne<Product>()
+            builder.HasOne(c => c.Product)
                 .WithMany()
                 .HasForeignKey(c => c.ProductId)
                 .IsRequired();

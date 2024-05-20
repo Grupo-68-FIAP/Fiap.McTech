@@ -91,15 +91,8 @@ namespace Fiap.McTech.Api.Controllers.Clients
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> CreateClient(ClientInputDto client)
         {
-            try
-            {
-                var createdClient = await _clientAppService.CreateClientAsync(client);
-                return CreatedAtAction(nameof(GetClient), new { id = createdClient.Id }, createdClient);
-            }
-            catch (EntityNotFoundException ex)
-            {
-                return NotFound(new ProblemDetails() { Detail = ex.Message });
-            }
+            var createdClient = await _clientAppService.CreateClientAsync(client);
+            return CreatedAtAction(nameof(GetClient), new { id = createdClient.Id }, createdClient);
         }
 
         /// <summary>

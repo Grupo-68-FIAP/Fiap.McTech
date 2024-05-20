@@ -6,7 +6,8 @@ namespace Fiap.McTech.Application.Interfaces
 {
     public interface ICartAppService
     {
-        Task<CartClientOutputDto?> GetCartByIdAsync(Guid clientId);
+        Task<CartClientOutputDto?> GetCartByIdAsync(Guid id);
+        Task<CartClientOutputDto?> GetCartByClientIdAsync(Guid clientId);
         Task<CartClientOutputDto> CreateCartClientAsync(CartClientInputDto cart);
         Task<CartClientOutputDto> UpdateCartClientAsync(Guid clientId, CartClientOutputDto cart);
         Task<MessageDto> DeleteCartClientAsync(Guid clientId);

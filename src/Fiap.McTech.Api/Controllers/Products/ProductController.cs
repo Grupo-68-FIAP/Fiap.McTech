@@ -3,11 +3,17 @@ using Fiap.McTech.Application.Interfaces;
 using Fiap.McTech.Application.Dtos.Products.Update;
 using Fiap.McTech.Application.Dtos.Products;
 using Fiap.McTech.Domain.Enums;
+using Fiap.McTech.Application.Dtos.Products.Add;
+using System.Net.Mime;
+using Fiap.McTech.Domain.ValuesObjects;
+using Fiap.McTech.Domain.Exceptions;
+using Fiap.McTech.Application.Dtos.Clients;
 
 namespace Fiap.McTech.Api.Controllers.Product
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Produces(MediaTypeNames.Application.Json)]
     public class ProductController : Controller
     {
         public readonly IProductAppService _productAppService;
@@ -17,16 +23,27 @@ namespace Fiap.McTech.Api.Controllers.Product
             _productAppService = productAppService;
         }
 
+        /// <summary>
+        /// Obtain product by id
+        /// </summary>
+        /// <param name="id">Guid of reference that product</param>
+        /// <returns>Return product</returns>
+        /// <response code="200">Returns item</response>
+        /// <response code="404">If product isn't exists</response>
         [HttpGet("{id}")]
+        [ProducesResponseType(typeof(ProductOutputDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<ProductOutputDto>> GetProduct(Guid id)
         {
-            var product = await _productAppService.GetProductByIdAsync(id);
-            if (product == null)
+            try
             {
-                return NotFound();
+                var product = await _productAppService.GetProductByIdAsync(id);
+                return Ok(product);
             }
-
-            return Ok(product);
+            catch (EntityNotFoundException ex)
+            {
+                return NotFound(new ProblemDetails() { Detail = ex.Message });
+            }
         }
 
         [HttpGet]
@@ -41,15 +58,19 @@ namespace Fiap.McTech.Api.Controllers.Product
             return Ok(products);
         }
 
+        /// <summary>
+        /// Create a new product
+        /// </summary>
+        /// <param name="client">Input data of product</param>
+        /// <returns>Return product</returns>
+        /// <response code="201">Return new product</response>
+        /// <response code="400">If there validations issues</response>
         [HttpPost]
-        public async Task<ActionResult<ProductOutputDto>> CreateProduct(ProductOutputDto productDto)
+        [ProducesResponseType(typeof(ProductOutputDto), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> CreateProduct(CreateProductInputDto productDto)
         {
             var createdProduct = await _productAppService.CreateProductAsync(productDto);
-            if (createdProduct == null)
-            {
-                return BadRequest("Unable to create product.");
-            }
-
             return CreatedAtAction(nameof(GetProduct), new { id = createdProduct.Id }, createdProduct);
         }
 

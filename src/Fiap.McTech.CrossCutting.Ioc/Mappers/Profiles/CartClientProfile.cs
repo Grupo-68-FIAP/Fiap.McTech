@@ -9,9 +9,8 @@ namespace Fiap.McTech.CrossCutting.Ioc.Mappers.Profiles
         public CartClientProfile()
         {
             CreateMap<CartClient, CartClientOutputDto>();
-            CreateMap<CartClientOutputDto, CartClient>();
-            CreateMap<CartClient, CartClientInputDto>();
-            CreateMap<CartClientInputDto, CartClient>();
+            CreateMap<CartClientInputDto, NewCartClientDto>();
+            CreateMap<NewCartClientDto, CartClient>();
         }
     }
 }
