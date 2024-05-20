@@ -3,6 +3,7 @@ using Fiap.McTech.Application.Dtos.Products;
 using Fiap.McTech.Application.Dtos.Products.Delete;
 using Fiap.McTech.Application.Dtos.Products.Update;
 using Fiap.McTech.Application.Interfaces;
+using Fiap.McTech.Domain.Enums;
 using Fiap.McTech.Domain.Interfaces.Repositories.Products;
 using Microsoft.Extensions.Logging; 
 
@@ -145,26 +146,27 @@ namespace Fiap.McTech.Application.AppServices.Product
 			}
 		}
 
-        public async Task<List<ProductOutputDto>> GetProductsByCategoryAsync(string category)
+        public async Task<List<ProductOutputDto>> GetProductsByCategoryAsync(ProductCategory category)
         {
             try
             {
                 _logger.LogInformation("Retrieving products by category {Category}.", category);
 
                 var products = await _productRepository.GetProductsByCategoryAsync(category);
-                if (products == null || !products.Any())
+
+                return products.Select(p => new ProductOutputDto
                 {
-                    _logger.LogInformation("No products found in category {Category}.", category);
-                    return new List<ProductOutputDto>();
-                }
-
-                _logger.LogInformation("Retrieved products in category {Category} successfully.", category);
-
-                return _mapper.Map<List<ProductOutputDto>>(products);
+                    Id = p.Id,
+                    Name = p.Name,
+                    Value = p.Value,
+                    Description = p.Description,
+                    Image = p.Image,
+                    Category = p.Category
+                }).ToList();
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Failed to retrieve products in category {Category}.", category);
+                _logger.LogError(ex, "An error occurred while retrieving products by category {Category}.", category);
                 throw;
             }
         }

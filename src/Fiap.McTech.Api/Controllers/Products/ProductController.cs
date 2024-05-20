@@ -2,6 +2,7 @@
 using Fiap.McTech.Application.Interfaces; 
 using Fiap.McTech.Application.Dtos.Products.Update;
 using Fiap.McTech.Application.Dtos.Products;
+using Fiap.McTech.Domain.Enums;
 
 namespace Fiap.McTech.Api.Controllers.Product
 {
@@ -76,16 +77,22 @@ namespace Fiap.McTech.Api.Controllers.Product
 			return NoContent();
 		}
 
-        [HttpGet("{category}")]
+        [HttpGet("category/{category}")]
         public async Task<ActionResult<List<ProductOutputDto>>> GetProductsByCategory(string category)
         {
-            var products = await _productAppService.GetProductsByCategoryAsync(category);
-            if (products == null || !products.Any())
+            if (Enum.TryParse(typeof(ProductCategory), category, true, out var categoryEnum))
             {
-                return NotFound($"No products found in category {category}.");
+                var products = await _productAppService.GetProductsByCategoryAsync((ProductCategory)categoryEnum);
+                if (products == null || !products.Any())
+                {
+                    return NotFound("No products found in this category.");
+                }
+
+                return Ok(products);
             }
 
-            return Ok(products);
+            return BadRequest("Invalid category.");
         }
+
     }
 }
