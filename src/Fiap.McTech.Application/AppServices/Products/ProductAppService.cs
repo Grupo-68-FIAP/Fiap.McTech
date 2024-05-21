@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using Fiap.McTech.Application.Dtos.Products;
+using Fiap.McTech.Application.Dtos.Products.Add;
 using Fiap.McTech.Application.Dtos.Products.Delete;
 using Fiap.McTech.Application.Dtos.Products.Update;
 using Fiap.McTech.Application.Interfaces;
 using Fiap.McTech.Domain.Enums;
+using Fiap.McTech.Domain.Exceptions;
 using Fiap.McTech.Domain.Interfaces.Repositories.Products;
 using Microsoft.Extensions.Logging;
 
@@ -22,7 +24,7 @@ namespace Fiap.McTech.Application.AppServices.Product
             _mapper = mapper;
         }
 
-        public async Task<ProductOutputDto> CreateProductAsync(ProductOutputDto productDto)
+        public async Task<ProductOutputDto> CreateProductAsync(CreateProductInputDto productDto)
         {
             try
             {
@@ -43,7 +45,7 @@ namespace Fiap.McTech.Application.AppServices.Product
             }
         }
 
-        public async Task<ProductOutputDto?> GetProductByIdAsync(Guid productId)
+        public async Task<ProductOutputDto> GetProductByIdAsync(Guid productId)
         {
             try
             {
@@ -53,13 +55,14 @@ namespace Fiap.McTech.Application.AppServices.Product
                 if (product == null)
                 {
                     _logger.LogInformation("Product with ID {ProductId} not found.", productId);
-                    return null;
+                    throw new EntityNotFoundException(string.Format("Product with ID {0} not found.", productId));
                 }
 
                 _logger.LogInformation("Product with ID {ProductId} retrieved successfully.", productId);
 
                 return _mapper.Map<ProductOutputDto>(product);
             }
+            catch (McTechException) { throw; }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to retrieve product with ID {ProductId}.", productId);

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Fiap.McTech.Domain.Entities.Products;
+using System;
 
 namespace Fiap.McTech.Domain.Entities.Cart
 {
@@ -25,8 +26,9 @@ namespace Fiap.McTech.Domain.Entities.Cart
 		public Guid ProductId { get; private set; }
 		public Guid CartClientId { get; private set; }
 		public CartClient? CartClient { get; private set; }
+        public Product? Product { get; private set; }
 
-		internal decimal CalculateValue()
+        internal decimal CalculateValue()
 		{
 			return Quantity * Value;
 		}

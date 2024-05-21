@@ -32,7 +32,7 @@ builder.Services.AddSwaggerGen(c =>
 
 // Configurando o AutoMapper
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-AutoMapperConfiguration.RegisterMappings();
+builder.Services.RegisterMappings();
 
 builder.Services.RegisterServices(builder.Configuration);
 

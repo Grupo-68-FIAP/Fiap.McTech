@@ -2,7 +2,12 @@
 using Fiap.McTech.Application.Dtos.Cart;
 using Fiap.McTech.Application.Dtos.Message;
 using Fiap.McTech.Application.Interfaces;
+using Fiap.McTech.Domain.Entities.Cart;
+using Fiap.McTech.Domain.Entities.Products;
+using Fiap.McTech.Domain.Exceptions;
 using Fiap.McTech.Domain.Interfaces.Repositories.Cart;
+using Fiap.McTech.Domain.Interfaces.Repositories.Products;
+using Fiap.McTech.Domain.ValuesObjects;
 using Microsoft.Extensions.Logging;
 
 namespace Fiap.McTech.Application.AppServices.Cart
@@ -12,40 +17,65 @@ namespace Fiap.McTech.Application.AppServices.Cart
 
         private readonly ILogger<CartAppService> _logger;
         private readonly IClientAppService _clientAppService;
+        private readonly IProductAppService _productAppService;
         private readonly ICartClientRepository _cartClientRepository;
-        private readonly ICartItemRepository _cartItemRepository;
         private readonly IMapper _mapper;
 
-        public CartAppService(ILogger<CartAppService> logger, IClientAppService clientAppService, ICartClientRepository cartClientRepository, ICartItemRepository cartItemRepository, IMapper mapper)
+        public CartAppService(ILogger<CartAppService> logger, IClientAppService clientAppService, ICartClientRepository cartClientRepository, IProductAppService productAppService, IMapper mapper)
         {
             _logger = logger;
             _clientAppService = clientAppService;
+            _productAppService = productAppService;
             _cartClientRepository = cartClientRepository;
-            _cartItemRepository = cartItemRepository;
             _mapper = mapper;
         }
 
-        // Evoluir para vincular o carrinho ao cliente e buscar o carrinho por um identificador exclusivo, seja o Guid ou cpf/email
         public async Task<CartClientOutputDto?> GetCartByIdAsync(Guid id)
         {
             try
             {
-                _logger.LogInformation("Retrieving cart with Client ID {Id}.", id);
+                _logger.LogInformation("Retrieving cart ID {Id}.", id);
 
-                var cartClient = await _cartClientRepository.GetByIdAsync(id);
+                var cartClient = await _cartClientRepository.GetByCartIdAsync(id);
                 if (cartClient == null)
                 {
                     _logger.LogInformation("Cart with ID {Id} not found.", id);
-                    return null;
+                    throw new EntityNotFoundException(string.Format("Cart with ID {0} not found.", id));
                 }
 
                 _logger.LogInformation("Cart with ID {Id} retrieved successfully.", id);
 
                 return _mapper.Map<CartClientOutputDto>(cartClient);
             }
+            catch (McTechException) { throw; }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to retrieve cart with client ID {Id}.", id);
+                throw;
+            }
+        }
+
+        public async Task<CartClientOutputDto?> GetCartByClientIdAsync(Guid clientId)
+        {
+            try
+            {
+                _logger.LogInformation("Retrieving cart with Client ID {Id}.", clientId);
+
+                var cartClient = await _cartClientRepository.GetByCartIdAsync(clientId);
+                if (cartClient == null)
+                {
+                    _logger.LogInformation("Cart with Client ID {Id} not found.", clientId);
+                    throw new EntityNotFoundException(string.Format("Cart with Client ID {0} not found.", clientId));
+                }
+
+                _logger.LogInformation("Carts with Client ID {Id} retrieved successfully.", clientId);
+
+                return _mapper.Map<CartClientOutputDto>(cartClient);
+            }
+            catch (McTechException) { throw; }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to retrieve cart with client ID {Id}.", clientId);
                 throw;
             }
         }
@@ -54,13 +84,29 @@ namespace Fiap.McTech.Application.AppServices.Cart
         {
             try
             {
-                _logger.LogInformation("Checking client existence.");
+                //  It can create a cart with anonymity
+                if (cartClientDto.ClientId != null)
+                {
+                    _logger.LogInformation("Checking client existence.");
+                    await _clientAppService.GetClientByIdAsync((Guid)cartClientDto.ClientId);
+                }
+                else
+                    _logger.LogInformation("Create a card with anonymous client.");
 
-                await _clientAppService.GetClientByIdAsync(cartClientDto.ClientId);
+
+                var newCartClient = _mapper.Map<NewCartClientDto>(cartClientDto);
+
+                _logger.LogInformation("Checking products existence.");
+                foreach (var item in newCartClient.Items)
+                {
+                    var product = await _productAppService.GetProductByIdAsync(item.ProductId);
+                    item.Name = product.Name;
+                    item.Value = product.Value;
+                }
 
                 _logger.LogInformation("Creating a new cart.");
-
-                var cartClient = _mapper.Map<Domain.Entities.Cart.CartClient>(cartClientDto);
+                var cartClient = _mapper.Map<Domain.Entities.Cart.CartClient>(newCartClient);
+                cartClient.CalculateValueCart();
 
                 var createdCartClient = await _cartClientRepository.AddAsync(cartClient);
 
@@ -68,6 +114,7 @@ namespace Fiap.McTech.Application.AppServices.Cart
 
                 return _mapper.Map<CartClientOutputDto>(createdCartClient);
             }
+            catch (McTechException) { throw; }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to create cart");
