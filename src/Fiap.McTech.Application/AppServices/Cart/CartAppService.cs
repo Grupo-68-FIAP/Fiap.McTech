@@ -61,7 +61,7 @@ namespace Fiap.McTech.Application.AppServices.Cart
             {
                 _logger.LogInformation("Retrieving cart with Client ID {Id}.", clientId);
 
-                var cartClient = await _cartClientRepository.GetByCartIdAsync(clientId);
+                var cartClient = await _cartClientRepository.GetByClientIdAsync(clientId);
                 if (cartClient == null)
                 {
                     _logger.LogInformation("Cart with Client ID {Id} not found.", clientId);
