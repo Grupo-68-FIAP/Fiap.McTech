@@ -1,11 +1,14 @@
-﻿using Fiap.McTech.Application.Interfaces;
-using Fiap.McTech.Application.Dtos.Clients;
+﻿using Fiap.McTech.Application.Dtos.Clients;
+using Fiap.McTech.Application.Interfaces;
 using Fiap.McTech.Domain.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Mime;
 
 namespace Fiap.McTech.Api.Controllers.Clients
 {
+    /// <summary>
+    /// Controller for managing clients.
+    /// </summary>
     [ApiController]
     [Route("api/client")]
     [Produces(MediaTypeNames.Application.Json)]
@@ -13,17 +16,21 @@ namespace Fiap.McTech.Api.Controllers.Clients
     {
         private readonly IClientAppService _clientAppService;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ClientController"/> class.
+        /// </summary>
+        /// <param name="clientAppService">The client application service.</param>
         public ClientController(IClientAppService clientAppService)
         {
             _clientAppService = clientAppService;
         }
 
         /// <summary>
-        /// Obtain all clients.
+        /// Retrieves all clients.
         /// </summary>
-        /// <returns>List of clients</returns>
-        /// <response code="200">Returns all items</response>
-        /// <response code="204">If there are nothing</response>
+        /// <returns>A list of clients.</returns>
+        /// <response code="200">Returns all clients.</response>
+        /// <response code="204">If no clients are found.</response>
         [HttpGet]
         [ProducesResponseType(typeof(List<ClientOutputDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -34,12 +41,12 @@ namespace Fiap.McTech.Api.Controllers.Clients
         }
 
         /// <summary>
-        /// Obtain client by id
+        /// Retrieves a client by its unique identifier.
         /// </summary>
-        /// <param name="id">Guid of reference that client</param>
-        /// <returns>Return client</returns>
-        /// <response code="200">Returns item</response>
-        /// <response code="404">If client isn't exists</response>
+        /// <param name="id">The unique identifier of the client.</param>
+        /// <returns>The requested client.</returns>
+        /// <response code="200">Returns the specified client.</response>
+        /// <response code="404">If the client with the given ID is not found.</response>
         [HttpGet("id/{id}")]
         [ProducesResponseType(typeof(ClientOutputDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -56,13 +63,13 @@ namespace Fiap.McTech.Api.Controllers.Clients
         }
 
         /// <summary>
-        /// Obtain client by CPF
+        /// Retrieves a client by its CPF (Brazilian Taxpayer Registry).
         /// </summary>
-        /// <param name="cpf">CPF of client</param>
-        /// <returns>Return client</returns>
-        /// <response code="200">Return item</response>
-        /// <response code="400">If there validations issues</response>
-        /// <response code="404">If client isn't exists</response>
+        /// <param name="cpf">The CPF of the client.</param>
+        /// <returns>The requested client.</returns>
+        /// <response code="200">Returns the specified client.</response>
+        /// <response code="400">If there are validation issues with the CPF.</response>
+        /// <response code="404">If the client with the given CPF is not found.</response>
         [HttpGet("cpf/{cpf}")]
         [ProducesResponseType(typeof(ClientOutputDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -80,12 +87,12 @@ namespace Fiap.McTech.Api.Controllers.Clients
         }
 
         /// <summary>
-        /// Create a new client
+        /// Creates a new client.
         /// </summary>
-        /// <param name="client">Input data of client</param>
-        /// <returns>Return client</returns>
-        /// <response code="201">Return new client</response>
-        /// <response code="400">If there validations issues</response>
+        /// <param name="client">The data of the client to be created.</param>
+        /// <returns>The created client.</returns>
+        /// <response code="201">Returns the newly created client.</response>
+        /// <response code="400">If there are validation issues with the input data.</response>
         [HttpPost]
         [ProducesResponseType(typeof(ClientOutputDto), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -96,13 +103,14 @@ namespace Fiap.McTech.Api.Controllers.Clients
         }
 
         /// <summary>
-        /// Update an existing client
+        /// Updates an existing client.
         /// </summary>
-        /// <param name="client">Input data of client</param>
-        /// <returns>Return client</returns>
-        /// <response code="200">Return new client</response>
-        /// <response code="400">If there validations issues</response>
-        /// <response code="404">If client isn't exists</response>
+        /// <param name="id">The unique identifier of the client to be updated.</param>
+        /// <param name="client">The updated data of the client.</param>
+        /// <returns>The updated client.</returns>
+        /// <response code="200">Returns the updated client.</response>
+        /// <response code="400">If there are validation issues with the updated data.</response>
+        /// <response code="404">If the client with the given ID is not found.</response>
         [HttpPut("{id}")]
         [ProducesResponseType(typeof(ClientOutputDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -120,15 +128,15 @@ namespace Fiap.McTech.Api.Controllers.Clients
         }
 
         /// <summary>
-        /// Remove an existing client
+        /// Deletes an existing client.
         /// </summary>
-        /// <param name=")">Input client id</param>
-        /// <response code="204">Success client removed</response>
-        /// <response code="404">If client isn't exists</response>
+        /// <param name="id">The unique identifier of the client to be deleted.</param>
+        /// <response code="204">Indicates successful deletion of the client.</response>
+        /// <response code="404">If the client with the given ID is not found.</response>
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> DeleteProduct(Guid id)
+        public async Task<IActionResult> DeleteClient(Guid id)
         {
             try
             {

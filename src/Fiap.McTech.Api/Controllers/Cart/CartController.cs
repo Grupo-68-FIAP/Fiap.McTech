@@ -1,32 +1,37 @@
 ﻿using Fiap.McTech.Application.Dtos.Cart;
-using Microsoft.AspNetCore.Mvc;
 using Fiap.McTech.Application.Interfaces;
 using Fiap.McTech.Domain.Exceptions;
+using Microsoft.AspNetCore.Mvc;
 using System.Net.Mime;
-using Fiap.McTech.Application.Dtos.Clients;
 
 namespace Fiap.McTech.Api.Controllers.Cart
 {
-
+    /// <summary>
+    /// Controller for managing shopping carts.
+    /// </summary>
     [ApiController]
     [Route("api/cart")]
     [Produces(MediaTypeNames.Application.Json)]
     public class CartController : Controller
     {
-        public readonly ICartAppService _cartAppService;
+        private readonly ICartAppService _cartAppService;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CartController"/> class.
+        /// </summary>
+        /// <param name="cartAppService">The shopping cart application service.</param>
         public CartController(ICartAppService cartAppService)
         {
             _cartAppService = cartAppService;
         }
 
         /// <summary>
-        /// Obtain a client cart by uuid.
+        /// Retrieves a shopping cart by its unique identifier.
         /// </summary>
-        /// <param name="id">CartClient uuid</param>
-        /// <returns>The cart of id</returns>
-        /// <response code="200">The cart</response>
-        /// <response code="204">If there are nothing</response>
+        /// <param name="id">The unique identifier of the shopping cart.</param>
+        /// <returns>The requested shopping cart.</returns>
+        /// <response code="200">Returns the specified shopping cart.</response>
+        /// <response code="204">If the shopping cart with the given ID is not found.</response>
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(List<CartClientOutputDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -43,12 +48,12 @@ namespace Fiap.McTech.Api.Controllers.Cart
         }
 
         /// <summary>
-        /// Obtain a client cart by client uuid.
+        /// Retrieves a shopping cart by the unique identifier of its associated client.
         /// </summary>
-        /// <param name="clientId">Client uuid</param>
-        /// <returns>The cart of id</returns>
-        /// <response code="200">The cart</response>
-        /// <response code="204">If there are nothing</response>
+        /// <param name="clientId">The unique identifier of the client.</param>
+        /// <returns>The shopping cart associated with the client.</returns>
+        /// <response code="200">Returns the specified shopping cart.</response>
+        /// <response code="204">If the shopping cart for the given client is not found.</response>
         [HttpGet("client/{clientId}")]
         [ProducesResponseType(typeof(List<CartClientOutputDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -64,7 +69,16 @@ namespace Fiap.McTech.Api.Controllers.Cart
             }
         }
 
+        /// <summary>
+        /// Creates a new shopping cart for a client.
+        /// </summary>
+        /// <param name="cartClientDto">The data of the shopping cart to be created.</param>
+        /// <returns>The created shopping cart.</returns>
+        /// <response code="201">Returns the newly created shopping cart.</response>
+        /// <response code="400">If there are issues with the input data.</response>
         [HttpPost]
+        [ProducesResponseType(typeof(CartClientOutputDto), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<CartClientOutputDto>> CreateCart(CartClientInputDto cartClientDto)
         {
             CartClientOutputDto createdCart;
@@ -101,7 +115,14 @@ namespace Fiap.McTech.Api.Controllers.Cart
             return Ok();
         }
 
+        /// <summary>
+        /// Deletes an existing shopping cart.
+        /// </summary>
+        /// <param name="id">The unique identifier of the shopping cart to be deleted.</param>
+        /// <returns>A response indicating success or failure.</returns>
         [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> DeleteCart(Guid id)
         {
             var deleted = await _cartAppService.DeleteCartClientAsync(id);
