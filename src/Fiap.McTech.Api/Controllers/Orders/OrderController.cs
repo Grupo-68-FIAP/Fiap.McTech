@@ -6,6 +6,9 @@ using Fiap.McTech.Application.Dtos.Orders.Update;
 using System.Net.Mime;
 using Fiap.McTech.Application.Dtos.Clients;
 using Fiap.McTech.Domain.Exceptions;
+using Fiap.McTech.Domain.Enums;
+using Fiap.McTech.Application.AppServices.Clients;
+using Fiap.McTech.Domain.Entities.Clients;
 
 namespace Fiap.McTech.Api.Controllers.Orders
 {
@@ -21,16 +24,39 @@ namespace Fiap.McTech.Api.Controllers.Orders
             _orderAppService = orderAppService;
         }
 
+        /// <summary>
+        /// Obtain order by id
+        /// </summary>
+        /// <param name="id">Order id</param>
+        /// <returns>The Order</returns>
+        /// <response code="200">Returns item</response>
+        /// <response code="404">If client isn't exists</response>
         [HttpGet("{id}")]
-        public async Task<ActionResult<OrderOutputDto>> GetOrderById(Guid id)
+        [ProducesResponseType(typeof(OrderOutputDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetOrderById(Guid id)
         {
-            var order = await _orderAppService.GetOrderByIdAsync(id);
-            if (order == null)
+            try
             {
-                return NotFound();
+                return Ok(await _orderAppService.GetOrderByIdAsync(id));
             }
+            catch (EntityNotFoundException ex)
+            {
+                return NotFound(new ProblemDetails() { Detail = ex.Message });
+            }
+        }
 
-            return order;
+        [HttpPost("{id}/nextstatus")]
+        public async Task<IActionResult> MoveOrderToNextStatus(Guid id)
+        {
+            try
+            {
+                return Ok(await _orderAppService.MoveOrderToNextStatus(id));
+            }
+            catch (EntityNotFoundException ex)
+            {
+                return NotFound(new ProblemDetails() { Detail = ex.Message });
+            }
         }
 
         [HttpPost]
@@ -87,6 +113,22 @@ namespace Fiap.McTech.Api.Controllers.Orders
             {
                 return NotFound(new ProblemDetails() { Detail = ex.Message });
             }
+        }
+
+        /// <summary>
+        /// Obtain a list of order by status
+        /// </summary>
+        /// <param name="status">Status to filter</param>
+        /// <returns>Orders list</returns>
+        /// <response code="200">Returns all items</response>
+        /// <response code="204">If there are nothing</response>
+        [HttpGet("status/{status}")]
+        [ProducesResponseType(typeof(List<ClientOutputDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<IActionResult> GetOrderByStatus(OrderStatus status)
+        {
+            var orders = await _orderAppService.GetOrderByStatusAsync(status);
+            return (orders == null || !orders.Any()) ? new NoContentResult() : Ok(orders);
         }
     }
 }

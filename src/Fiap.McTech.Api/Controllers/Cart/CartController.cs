@@ -90,7 +90,7 @@ namespace Fiap.McTech.Api.Controllers.Cart
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateCart(Guid id, CartClientOutputDto cartClientDto)
+        public async Task<IActionResult> UpdateCart(Guid id, CartClientInputDto cartClientDto)
         {
             var updatedCart = await _cartAppService.UpdateCartClientAsync(id, cartClientDto);
             if (updatedCart == null)

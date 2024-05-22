@@ -123,7 +123,7 @@ namespace Fiap.McTech.Application.AppServices.Cart
             }
         }
 
-        public async Task<CartClientOutputDto> UpdateCartClientAsync(Guid id, CartClientOutputDto cartClientDto)
+        public async Task<CartClientOutputDto> UpdateCartClientAsync(Guid id, CartClientInputDto cartClientDto)
         {
             try
             {

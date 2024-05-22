@@ -7,9 +7,11 @@ using Fiap.McTech.Application.ViewModels.Orders;
 using Fiap.McTech.Domain.Entities.Cart;
 using Fiap.McTech.Domain.Entities.Clients;
 using Fiap.McTech.Domain.Entities.Orders;
+using Fiap.McTech.Domain.Enums;
 using Fiap.McTech.Domain.Exceptions;
 using Fiap.McTech.Domain.Interfaces.Repositories.Cart;
 using Fiap.McTech.Domain.Interfaces.Repositories.Orders;
+using Fiap.McTech.Domain.Utils.Extensions;
 using Fiap.McTech.Domain.ValuesObjects;
 using Microsoft.Extensions.Logging;
 
@@ -36,17 +38,18 @@ namespace Fiap.McTech.Application.AppServices.Orders
             {
                 _logger.LogInformation("Retrieving order with ID {OrderId}.", id);
 
-                var order = await _orderRepository.GetByIdAsync(id);
+                var order = await _orderRepository.GetOrderByIdAsync(id);
                 if (order == null)
                 {
                     _logger.LogInformation("Order with ID {OrderId} not found.", id);
-                    return null;
+                    throw new EntityNotFoundException(string.Format("Order with ID {0} not found.", id));
                 }
 
                 _logger.LogInformation("Order with ID {OrderId} retrieved successfully.", id);
 
                 return _mapper.Map<OrderOutputDto>(order);
             }
+            catch (McTechException) { throw; }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to retrieve order with ID {OrderId}.", id);
@@ -80,7 +83,7 @@ namespace Fiap.McTech.Application.AppServices.Orders
             try
             {
                 _logger.LogInformation("Creating a new order by cart id {cartId}.", cartId);
-                var cart = await _cartClientRepository.GetByIdAsync(cartId);
+                var cart = await _cartClientRepository.GetByCartIdAsync(cartId);
                 if (cart == null)
                 {
                     _logger.LogWarning("Cart with ID {cartId} not found", cartId);
@@ -151,6 +154,57 @@ namespace Fiap.McTech.Application.AppServices.Orders
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to delete order with ID: {OrderId}", orderId);
+                throw;
+            }
+        }
+
+        public async Task<List<OrderOutputDto>> GetOrderByStatusAsync(OrderStatus status)
+        {
+            try
+            {
+                _logger.LogInformation("Retrieving order with status code {status}.", status);
+
+                var orders = await _orderRepository.GetOrderByStatusAsync(status);
+                if (orders == null)
+                {
+                    _logger.LogInformation("Order with status code {status} not found.", status);
+                    throw new EntityNotFoundException(string.Format("Order with status code {0} not found.", status));
+                }
+
+                _logger.LogInformation("Order with status code {status} retrieved successfully.", status);
+
+                return _mapper.Map<List<OrderOutputDto>>(orders);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to retrieve order with status code {status}.", status);
+                throw;
+            }
+        }
+
+        public async Task<OrderOutputDto> MoveOrderToNextStatus(Guid id)
+        {
+            try
+            {
+                var originalOrder = await _orderRepository.GetOrderByIdAsync(id);
+                if (originalOrder == null)
+                {
+                    _logger.LogWarning("Order with ID {OrderId} not found. Update aborted.", id);
+                    throw new InvalidOperationException("Order not found.");
+                }
+
+                var modifierOrder = _mapper.Map<UpdateOrderInputDto>(originalOrder);
+                modifierOrder.Status = originalOrder.Status.NextStatus();
+
+                var modifiedOrder = _mapper.Map<Order>(modifierOrder);
+
+                await _orderRepository.UpdateAsync(modifiedOrder);
+
+                return _mapper.Map<OrderOutputDto>(modifiedOrder);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to update order with ID {OrderId}.", id);
                 throw;
             }
         }

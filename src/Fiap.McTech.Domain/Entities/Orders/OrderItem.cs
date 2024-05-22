@@ -4,6 +4,8 @@ namespace Fiap.McTech.Domain.Entities.Orders
 {
 	public class OrderItem : EntityBase
 	{
+		public OrderItem() { }
+
 		public OrderItem(Guid productId, Guid orderId, string productName, decimal price, int quantity)
 		{
 			ProductId = productId;

@@ -3,6 +3,7 @@ using Fiap.McTech.Application.Dtos.Orders;
 using Fiap.McTech.Application.Dtos.Orders.Add;
 using Fiap.McTech.Application.Dtos.Orders.Update;
 using Fiap.McTech.Application.ViewModels.Orders;
+using Fiap.McTech.Domain.Entities.Cart;
 using Fiap.McTech.Domain.Entities.Orders;
 
 namespace Fiap.McTech.CrossCutting.Ioc.Mappers.Profiles
@@ -43,6 +44,15 @@ namespace Fiap.McTech.CrossCutting.Ioc.Mappers.Profiles
 				.ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.ProductName))
 				.ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.Price))
 				.ForMember(dest => dest.Quantity, opt => opt.MapFrom(src => src.Quantity));
-		}
+
+            CreateMap<CartClient, Order>()
+                .ForMember(dest => dest.TotalAmount, opt => opt.MapFrom(src => src.AllValue))
+				.ForMember(dest => dest.Items, opt => opt.MapFrom(src => src.Items));
+
+            CreateMap<CartItem, OrderItem>()
+                .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.Name))
+                .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.Value))
+                ;
+        }
 	}
 }

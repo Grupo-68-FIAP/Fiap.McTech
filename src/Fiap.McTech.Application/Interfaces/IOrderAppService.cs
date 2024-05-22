@@ -2,6 +2,7 @@
 using Fiap.McTech.Application.Dtos.Orders.Delete;
 using Fiap.McTech.Application.Dtos.Orders.Update;
 using Fiap.McTech.Application.ViewModels.Orders;
+using Fiap.McTech.Domain.Enums;
 
 namespace Fiap.McTech.Application.Interfaces
 {
@@ -12,5 +13,7 @@ namespace Fiap.McTech.Application.Interfaces
 		Task<OrderOutputDto> CreateOrderByCartAsync(Guid cartId);
         Task<OrderOutputDto> UpdateOrderAsync(Guid orderId, UpdateOrderInputDto orderDto);
 		Task<DeleteOrderOutputDto> DeleteOrderAsync(Guid orderId);
-	}
+        Task<List<OrderOutputDto>> GetOrderByStatusAsync(OrderStatus status);
+        Task<OrderOutputDto> MoveOrderToNextStatus(Guid id);
+    }
 }

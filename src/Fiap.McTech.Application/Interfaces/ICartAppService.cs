@@ -9,7 +9,7 @@ namespace Fiap.McTech.Application.Interfaces
         Task<CartClientOutputDto?> GetCartByIdAsync(Guid id);
         Task<CartClientOutputDto?> GetCartByClientIdAsync(Guid clientId);
         Task<CartClientOutputDto> CreateCartClientAsync(CartClientInputDto cart);
-        Task<CartClientOutputDto> UpdateCartClientAsync(Guid clientId, CartClientOutputDto cart);
+        Task<CartClientOutputDto> UpdateCartClientAsync(Guid clientId, CartClientInputDto cart);
         Task<MessageDto> DeleteCartClientAsync(Guid clientId);
     }
 }
