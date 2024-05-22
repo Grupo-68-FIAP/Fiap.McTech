@@ -122,9 +122,8 @@ namespace Fiap.McTech.Api.Controllers.Clients
         /// <summary>
         /// Remove an existing client
         /// </summary>
-        /// <param name="client">Input data of client</param>
-        /// <returns>Return client</returns>
-        /// <response code="204">Return new client</response>
+        /// <param name=")">Input client id</param>
+        /// <response code="204">Success client removed</response>
         /// <response code="404">If client isn't exists</response>
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]

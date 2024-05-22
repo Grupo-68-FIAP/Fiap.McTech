@@ -4,15 +4,13 @@ using Fiap.McTech.Application.Dtos.Orders.Delete;
 using Fiap.McTech.Application.Dtos.Orders.Update;
 using Fiap.McTech.Application.Interfaces;
 using Fiap.McTech.Application.ViewModels.Orders;
-using Fiap.McTech.Domain.Entities.Cart;
-using Fiap.McTech.Domain.Entities.Clients;
 using Fiap.McTech.Domain.Entities.Orders;
 using Fiap.McTech.Domain.Enums;
 using Fiap.McTech.Domain.Exceptions;
 using Fiap.McTech.Domain.Interfaces.Repositories.Cart;
 using Fiap.McTech.Domain.Interfaces.Repositories.Orders;
+using Fiap.McTech.Domain.Interfaces.Repositories.Payments;
 using Fiap.McTech.Domain.Utils.Extensions;
-using Fiap.McTech.Domain.ValuesObjects;
 using Microsoft.Extensions.Logging;
 
 namespace Fiap.McTech.Application.AppServices.Orders
@@ -21,13 +19,15 @@ namespace Fiap.McTech.Application.AppServices.Orders
     {
         private readonly ILogger<OrderAppService> _logger;
         private readonly ICartClientRepository _cartClientRepository;
+        private readonly IPaymentRepository _paymentRepository;
         private readonly IOrderRepository _orderRepository;
         private readonly IMapper _mapper;
 
-        public OrderAppService(IOrderRepository orderRepository, ICartClientRepository cartClientRepository, IMapper mapper, ILogger<OrderAppService> logger)
+        public OrderAppService(IOrderRepository orderRepository, ICartClientRepository cartClientRepository, IPaymentRepository paymentRepository, IMapper mapper, ILogger<OrderAppService> logger)
         {
             _orderRepository = orderRepository;
             _cartClientRepository = cartClientRepository;
+            _paymentRepository = paymentRepository;
             _mapper = mapper;
             _logger = logger;
         }
@@ -103,34 +103,6 @@ namespace Fiap.McTech.Application.AppServices.Orders
             }
         }
 
-        public async Task<OrderOutputDto> UpdateOrderAsync(Guid orderId, UpdateOrderInputDto orderDto)
-        {
-            try
-            {
-                var existingOrder = await _orderRepository.GetByIdAsync(orderId);
-                if (existingOrder == null)
-                {
-                    _logger.LogWarning("Order with ID {OrderId} not found. Update aborted.", orderId);
-                    throw new InvalidOperationException("Order not found.");
-                }
-
-                _logger.LogInformation("Updating order with ID {OrderId}.", orderId);
-
-                _mapper.Map(orderDto, existingOrder);
-
-                await _orderRepository.UpdateAsync(existingOrder);
-
-                _logger.LogInformation("Order with ID {OrderId} updated successfully.", orderId);
-
-                return _mapper.Map<OrderOutputDto>(existingOrder);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Failed to update order with ID {OrderId}.", orderId);
-                throw;
-            }
-        }
-
         public async Task<DeleteOrderOutputDto> DeleteOrderAsync(Guid orderId)
         {
             try
@@ -186,21 +158,26 @@ namespace Fiap.McTech.Application.AppServices.Orders
         {
             try
             {
-                var originalOrder = await _orderRepository.GetOrderByIdAsync(id);
+                var originalOrder = await _orderRepository.GetByIdAsync(id);
                 if (originalOrder == null)
                 {
                     _logger.LogWarning("Order with ID {OrderId} not found. Update aborted.", id);
-                    throw new InvalidOperationException("Order not found.");
+                    throw new EntityNotFoundException("Order not found.");
+                }
+                if (originalOrder.Status == OrderStatus.Pending)
+                {
+                    var payment = await _paymentRepository.GetByOrderIdAsync(id)
+                        ?? throw new PaymentRequiredException("Waiting for payment");
                 }
 
                 var modifierOrder = _mapper.Map<UpdateOrderInputDto>(originalOrder);
                 modifierOrder.Status = originalOrder.Status.NextStatus();
 
-                var modifiedOrder = _mapper.Map<Order>(modifierOrder);
+                _mapper.Map(modifierOrder, originalOrder);
 
-                await _orderRepository.UpdateAsync(modifiedOrder);
+                await _orderRepository.UpdateAsync(originalOrder);
 
-                return _mapper.Map<OrderOutputDto>(modifiedOrder);
+                return _mapper.Map<OrderOutputDto>(await _orderRepository.GetOrderByIdAsync(id));
             }
             catch (Exception ex)
             {

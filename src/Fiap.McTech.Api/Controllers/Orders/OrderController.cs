@@ -1,14 +1,10 @@
-﻿using Fiap.McTech.Application.ViewModels.Orders;
-using Microsoft.AspNetCore.Mvc;
+﻿using Fiap.McTech.Application.Dtos.Clients;
 using Fiap.McTech.Application.Interfaces;
-using Fiap.McTech.Application.Dtos.Orders.Add;
-using Fiap.McTech.Application.Dtos.Orders.Update;
-using System.Net.Mime;
-using Fiap.McTech.Application.Dtos.Clients;
-using Fiap.McTech.Domain.Exceptions;
+using Fiap.McTech.Application.ViewModels.Orders;
 using Fiap.McTech.Domain.Enums;
-using Fiap.McTech.Application.AppServices.Clients;
-using Fiap.McTech.Domain.Entities.Clients;
+using Fiap.McTech.Domain.Exceptions;
+using Microsoft.AspNetCore.Mvc;
+using System.Net.Mime;
 
 namespace Fiap.McTech.Api.Controllers.Orders
 {
@@ -30,7 +26,7 @@ namespace Fiap.McTech.Api.Controllers.Orders
         /// <param name="id">Order id</param>
         /// <returns>The Order</returns>
         /// <response code="200">Returns item</response>
-        /// <response code="404">If client isn't exists</response>
+        /// <response code="404">If order isn't exists</response>
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(OrderOutputDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -46,12 +42,27 @@ namespace Fiap.McTech.Api.Controllers.Orders
             }
         }
 
-        [HttpPost("{id}/nextstatus")]
+        /// <summary>
+        /// Change the field status of order
+        /// </summary>
+        /// <param name="id">Order uuid</param>
+        /// <returns>Updated Order</returns>
+        /// <response code="200">Returns Order</response>
+        /// <response code="402">Wating payment</response>
+        /// <response code="404">If order isn't exists</response>
+        [HttpPut("{id}/nextstatus")]
+        [ProducesResponseType(typeof(OrderOutputDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status402PaymentRequired)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> MoveOrderToNextStatus(Guid id)
         {
             try
             {
                 return Ok(await _orderAppService.MoveOrderToNextStatus(id));
+            }
+            catch (PaymentRequiredException ex)
+            {
+                return StatusCode(402, new ProblemDetails() { Detail = ex.Message });
             }
             catch (EntityNotFoundException ex)
             {
@@ -59,26 +70,15 @@ namespace Fiap.McTech.Api.Controllers.Orders
             }
         }
 
-        [HttpPost]
-        public async Task<ActionResult<OrderOutputDto>> CreateOrder(CreateOrderInputDto orderDto)
-        {
-            var createdOrder = await _orderAppService.CreateOrderAsync(orderDto);
-            return CreatedAtAction(nameof(GetOrderById), new { id = createdOrder.Id }, createdOrder);
-        }
-
-        [HttpPut("{id}")]
-        public async Task<ActionResult<OrderOutputDto>> UpdateOrder(Guid id, UpdateOrderInputDto orderDto)
-        {
-            var updatedOrder = await _orderAppService.UpdateOrderAsync(id, orderDto);
-            if (updatedOrder == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(updatedOrder);
-        }
-
+        /// <summary>
+        /// Remove an existing order
+        /// </summary>
+        /// <param name=")">Input order id</param>
+        /// <response code="204">Success order removed</response>
+        /// <response code="404">If order isn't exists</response>
         [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteOrder(Guid id)
         {
             var result = await _orderAppService.DeleteOrderAsync(id);
