@@ -73,8 +73,6 @@ namespace Fiap.McTech.Domain.Services
 
             await _cartItemRepository.AddAsync(newCartItem);
 
-            cartClient.Items.Add(newCartItem);
-
             cartClient.CalculateValueCart();
 
             await _cartClientRepository.UpdateAsync(cartClient);
@@ -91,7 +89,11 @@ namespace Fiap.McTech.Domain.Services
             var cartClientId = cartItem.CartClientId;
             await _cartItemRepository.RemoveAsync(cartItem);
 
-            return await GetCartAsync(cartClientId);
+            var cartClient = await GetCartAsync(cartClientId);
+            cartClient.CalculateValueCart();
+            await _cartClientRepository.UpdateAsync(cartClient);
+
+            return cartClient;
         }
     }
 }
