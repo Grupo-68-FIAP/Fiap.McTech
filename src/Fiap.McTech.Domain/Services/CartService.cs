@@ -84,9 +84,14 @@ namespace Fiap.McTech.Domain.Services
 
         public async Task<CartClient> RemoveCartItemFromCartClientAsync(Guid cartItemId)
         {
-            await Task.Run(() => { });
 
-            throw new Exception("Not implemented yet.");
+            var cartItem = await _cartItemRepository.GetByIdAsync(cartItemId) 
+                ?? throw new EntityNotFoundException(string.Format("Item with ID {0} not found.", cartItemId));
+
+            var cartClientId = cartItem.CartClientId;
+            await _cartItemRepository.RemoveAsync(cartItem);
+
+            return await GetCartAsync(cartClientId);
         }
     }
 }
