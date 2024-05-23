@@ -11,9 +11,9 @@ namespace Fiap.McTech.Domain.Entities.Clients
 			Email = email;
 		}
 
-		public string Name { get; private set; } = string.Empty;
-		public Cpf Cpf { get; private set; } 
-		public Email Email { get; private set; }
+		public string Name { get; internal set; } = string.Empty;
+		public Cpf Cpf { get; internal set; } 
+		public Email Email { get; internal set; }
 
 		public override bool IsValid()
 		{

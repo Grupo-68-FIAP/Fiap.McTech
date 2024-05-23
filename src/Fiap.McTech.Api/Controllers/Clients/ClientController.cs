@@ -36,8 +36,15 @@ namespace Fiap.McTech.Api.Controllers.Clients
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> GetAllClients()
         {
-            var clients = await _clientAppService.GetAllClientsAsync();
-            return (clients == null || !clients.Any()) ? new NoContentResult() : Ok(clients);
+            try
+            {
+                var clients = await _clientAppService.GetAllClientsAsync();
+                return (clients == null || !clients.Any()) ? new NoContentResult() : Ok(clients);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ProblemDetails() { Detail = ex.Message });
+            }
         }
 
         /// <summary>
@@ -59,6 +66,10 @@ namespace Fiap.McTech.Api.Controllers.Clients
             catch (EntityNotFoundException ex)
             {
                 return NotFound(new ProblemDetails() { Detail = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ProblemDetails() { Detail = ex.Message });
             }
         }
 
@@ -84,6 +95,10 @@ namespace Fiap.McTech.Api.Controllers.Clients
             {
                 return NotFound(new ProblemDetails() { Detail = ex.Message });
             }
+            catch (Exception ex)
+            {
+                return BadRequest(new ProblemDetails() { Detail = ex.Message });
+            }
         }
 
         /// <summary>
@@ -95,11 +110,23 @@ namespace Fiap.McTech.Api.Controllers.Clients
         /// <response code="400">If there are validation issues with the input data.</response>
         [HttpPost]
         [ProducesResponseType(typeof(ClientOutputDto), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> CreateClient(ClientInputDto client)
         {
-            var createdClient = await _clientAppService.CreateClientAsync(client);
-            return CreatedAtAction(nameof(GetClient), new { id = createdClient.Id }, createdClient);
+            try
+            {
+                var createdClient = await _clientAppService.CreateClientAsync(client);
+                return CreatedAtAction(nameof(GetClient), new { id = createdClient.Id }, createdClient);
+            }
+            catch (EntityValidationException ex)
+            {
+                return BadRequest(new ProblemDetails() { Detail = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ProblemDetails() { Detail = ex.Message });
+            }
         }
 
         /// <summary>
@@ -125,6 +152,10 @@ namespace Fiap.McTech.Api.Controllers.Clients
             {
                 return NotFound(new ProblemDetails() { Detail = ex.Message });
             }
+            catch (Exception ex)
+            {
+                return BadRequest(new ProblemDetails() { Detail = ex.Message });
+            }
         }
 
         /// <summary>
@@ -146,6 +177,10 @@ namespace Fiap.McTech.Api.Controllers.Clients
             catch (EntityNotFoundException ex)
             {
                 return NotFound(new ProblemDetails() { Detail = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ProblemDetails() { Detail = ex.Message });
             }
         }
     }

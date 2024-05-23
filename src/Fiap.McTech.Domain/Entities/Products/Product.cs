@@ -16,11 +16,11 @@ namespace Fiap.McTech.Domain.Entities.Products
 			Category = category;
 		}
 
-		public string Name { get; private set; }
-        public decimal Value { get; private set; }
-        public string Description { get; private set; }
-        public string Image { get; private set; }
-        public ProductCategory Category { get; private set; }
+		public string Name { get; internal set; }
+        public decimal Value { get; internal set; }
+        public string Description { get; internal set; }
+        public string Image { get; internal set; }
+        public ProductCategory Category { get; internal set; }
 
 		public override bool IsValid()
 		{

@@ -6,18 +6,19 @@ using Fiap.McTech.Domain.Exceptions;
 using Fiap.McTech.Domain.Interfaces.Repositories.Clients;
 using Fiap.McTech.Domain.ValuesObjects;
 using Microsoft.Extensions.Logging;
+using Fiap.McTech.Domain.Services;
 
 namespace Fiap.McTech.Application.AppServices.Clients
 {
     public class ClientAppService : IClientAppService
     {
-        private readonly IClientRepository _clientRepository;
+        private readonly ClientService _clientService;
         private readonly ILogger<ClientAppService> _logger;
         private readonly IMapper _mapper;
 
-        public ClientAppService(IClientRepository clientRepository, ILogger<ClientAppService> logger, IMapper mapper)
-        {
-            _clientRepository = clientRepository;
+        public ClientAppService(ClientService clientService, ILogger<ClientAppService> logger, IMapper mapper)
+        {   
+            _clientService = clientService;
             _logger = logger;
             _mapper = mapper;
         }
@@ -27,10 +28,19 @@ namespace Fiap.McTech.Application.AppServices.Clients
             try
             {
                 _logger.LogInformation("Creating a new client.");
-                var client = new Client(clientDto.Name, new Cpf(clientDto.Cpf), new Email(clientDto.Email));
-                var createdClient = await _clientRepository.AddAsync(client);
+
+                var client = _mapper.Map<Client>(clientDto);
+
+                var createdClient = await _clientService.CreateAsync(client);
+
                 _logger.LogInformation("Client created successfully with ID {ClientId}.", createdClient.Id);
+
                 return _mapper.Map<ClientOutputDto>(createdClient);
+            }
+            catch (McTechException ex)
+            {
+                _logger.LogError(ex, "Domain: {msg}", ex.Message);
+                throw;
             }
             catch (Exception ex)
             {
@@ -44,9 +54,14 @@ namespace Fiap.McTech.Application.AppServices.Clients
             try
             {
                 _logger.LogInformation("Retrieving all clients.");
-                var clients = await _clientRepository.GetAll();
-                if (clients == null || !clients.Any()) return new List<ClientOutputDto>();
+
+                var clients = await _clientService.GetAllAsync();
+
+                if (clients == null || !clients.Any())
+                    return new List<ClientOutputDto>();
+
                 _logger.LogInformation("Retrieved products successfully.");
+
                 return _mapper.Map<List<ClientOutputDto>>(clients);
             }
             catch (Exception ex)
@@ -56,22 +71,20 @@ namespace Fiap.McTech.Application.AppServices.Clients
             }
         }
 
-        public async Task<ClientOutputDto?> GetClientByCpfAsync(string cpf)
+        public async Task<ClientOutputDto?> GetClientByCpfAsync(string sCpf)
         {
             try
             {
-                var client = await _clientRepository.GetClientByCpfAsync(new Cpf(cpf));
-                if (client == null)
-                {
-                    _logger.LogWarning("Client with CPF {cpf} not found", cpf);
-                    throw new EntityNotFoundException(string.Format("Client with CPF {0} not found.", cpf));
-                }
+                var cpf = _mapper.Map<Cpf>(sCpf);
+
+                var client = await _clientService.GetAsync(cpf);
+
                 return _mapper.Map<ClientOutputDto>(client);
             }
             catch (McTechException) { throw; }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while fetching the client with CPF {cpf}", cpf);
+                _logger.LogError(ex, "An error occurred while fetching the client with CPF {cpf}", sCpf);
                 throw;
             }
         }
@@ -80,12 +93,8 @@ namespace Fiap.McTech.Application.AppServices.Clients
         {
             try
             {
-                var client = await _clientRepository.GetByIdAsync(id);
-                if (client == null)
-                {
-                    _logger.LogWarning("Client with ID {id} not found", id);
-                    throw new EntityNotFoundException(string.Format("Client with ID {0} not found.", id));
-                }
+                var client = await _clientService.GetAsync(id);
+
                 return _mapper.Map<ClientOutputDto>(client);
             }
             catch (McTechException) { throw; }
@@ -100,17 +109,16 @@ namespace Fiap.McTech.Application.AppServices.Clients
         {
             try
             {
-                var existed = await _clientRepository.GetByIdAsync(id);
-                if (existed == null)
-                {
-                    _logger.LogWarning("Client with ID {id} not found. Update aborted.", id);
-                    throw new EntityNotFoundException(string.Format("Client with ID {0} not found.", id));
-                }
+                var existed = await _clientService.GetAsync(id);
+
                 _logger.LogInformation("Updating client with ID {id}.", id);
+
                 _mapper.Map(dto, existed);
-                await _clientRepository.UpdateAsync(existed);
+
+                await _clientService.UpdateAsync(existed);
 
                 _logger.LogInformation("Client with ID {id} updated successfully.", id);
+
                 return _mapper.Map<ClientOutputDto>(existed);
             }
             catch (McTechException) { throw; }
@@ -127,14 +135,8 @@ namespace Fiap.McTech.Application.AppServices.Clients
             {
                 _logger.LogInformation("Attempting to delete client with ID: {id}", id);
 
-                var existing = await _clientRepository.GetByIdAsync(id);
-                if (existing == null)
-                {
-                    _logger.LogWarning("Client with ID {id} not found. Deletion aborted.", id);
-                    throw new EntityNotFoundException(string.Format("Client with ID {0} not found.", id));
-                }
+                await _clientService.DeleteAsync(id);
 
-                await _clientRepository.RemoveAsync(existing);
                 _logger.LogInformation("Client with ID {ProductId} deleted successfully.", id);
             }
             catch (McTechException) { throw; }

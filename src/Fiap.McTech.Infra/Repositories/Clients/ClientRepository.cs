@@ -10,9 +10,14 @@ namespace Fiap.McTech.Infra.Repositories.Clients
 	{
 		public ClientRepository(DataContext context) : base(context) { }
 
-        public async Task<Client?> GetClientByCpfAsync(Cpf cpf)
+        public async Task<Client?> GetClientAsync(Cpf cpf)
         {
             return await _dbSet.Where(c => cpf.Equals(c.Cpf)).FirstOrDefaultAsync();
+        }
+
+        public async Task<Client?> GetClientAsync(Email email)
+        {
+            return await _dbSet.Where(c => email.Equals(c.Email)).FirstOrDefaultAsync();
         }
     }
 }

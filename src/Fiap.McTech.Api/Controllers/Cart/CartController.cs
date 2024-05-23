@@ -31,10 +31,10 @@ namespace Fiap.McTech.Api.Controllers.Cart
         /// <param name="id">The unique identifier of the shopping cart.</param>
         /// <returns>The requested shopping cart.</returns>
         /// <response code="200">Returns the specified shopping cart.</response>
-        /// <response code="204">If the shopping cart with the given ID is not found.</response>
+        /// <response code="404">If the shopping cart with the given ID is not found.</response>
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(List<CartClientOutputDto>), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetCart(Guid id)
         {
             try
@@ -103,8 +103,18 @@ namespace Fiap.McTech.Api.Controllers.Cart
             return CreatedAtAction(nameof(GetCart), new { id = createdCart.Id }, createdCart);
         }
 
+        /// <summary>
+        /// Adds a product to the shopping cart.
+        /// </summary>
+        /// <param name="id">The unique identifier of the shopping cart.</param>
+        /// <param name="productId">The unique identifier of the product to add.</param>
+        /// <returns>The updated shopping cart.</returns>
+        /// <response code="200">Returns the updated shopping cart.</response>
+        /// <response code="404">If the shopping cart or product is not found.</response>
         [HttpPut("{id}/product/{productId}")]
-        public async Task<IActionResult> UpdateCart(Guid id, Guid productId)
+        [ProducesResponseType(typeof(CartClientOutputDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> AddCartItemToCartClientAsync(Guid id, Guid productId)
         {
             try
             {
@@ -117,20 +127,51 @@ namespace Fiap.McTech.Api.Controllers.Cart
         }
 
         /// <summary>
+        /// Removes an item from the shopping cart.
+        /// </summary>
+        /// <param name="cartItemId">The unique identifier of the cart item to be removed.</param>
+        /// <returns>The updated shopping cart.</returns>
+        /// <response code="200">Returns the updated shopping cart after the item has been removed.</response>
+        /// <response code="404">If the cart item with the given ID is not found.</response>
+        [HttpDelete("product/{cartItemId}")]
+        [ProducesResponseType(typeof(CartClientOutputDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> RemoveCartItemFromCartClientAsync(Guid cartItemId)
+        {
+            try
+            {
+                return Ok(await _cartAppService.RemoveCartItemFromCartClientAsync(cartItemId));
+            }
+            catch (EntityNotFoundException ex)
+            {
+                return NotFound(new ProblemDetails() { Detail = ex.Message });
+            }
+        }
+
+        /// <summary>
         /// Deletes an existing shopping cart.
         /// </summary>
         /// <param name="id">The unique identifier of the shopping cart to be deleted.</param>
         /// <returns>A response indicating success or failure.</returns>
+        /// <response code="204">Indicates successful deletion of the cart.</response>
+        /// <response code="404">If the cart with the given ID is not found.</response>
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteCart(Guid id)
         {
-            var deleted = await _cartAppService.DeleteCartClientAsync(id);
-
-            if (!deleted.IsSuccess)
+            try
             {
-                return BadRequest(deleted.Message);
+                var deleted = await _cartAppService.DeleteCartClientAsync(id);
+
+                if (!deleted.IsSuccess)
+                {
+                    return BadRequest(deleted.Message);
+                }
+            }
+            catch (EntityNotFoundException ex)
+            {
+                return NotFound(new ProblemDetails() { Detail = ex.Message });
             }
 
             return NoContent();
