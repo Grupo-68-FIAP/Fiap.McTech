@@ -103,16 +103,17 @@ namespace Fiap.McTech.Api.Controllers.Cart
             return CreatedAtAction(nameof(GetCart), new { id = createdCart.Id }, createdCart);
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateCart(Guid id, CartClientInputDto cartClientDto)
+        [HttpPut("{id}/product/{productId}")]
+        public async Task<IActionResult> UpdateCart(Guid id, Guid productId)
         {
-            var updatedCart = await _cartAppService.UpdateCartClientAsync(id, cartClientDto);
-            if (updatedCart == null)
+            try
             {
-                return NotFound("Cart not found.");
+                return Ok(await _cartAppService.AddCartItemToCartClientAsync(id, productId));
             }
-
-            return Ok();
+            catch (EntityNotFoundException ex)
+            {
+                return NotFound(new ProblemDetails() { Detail = ex.Message });
+            }
         }
 
         /// <summary>
