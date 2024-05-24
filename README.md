@@ -24,7 +24,41 @@ Utilizando tecnologias modernas e práticas arquiteturais, o MeTech oferece uma 
 
 ## Como Configurar e Executar o Projeto
 
-//TODO
+1 - Verifique a instalação do Docker:
+
+```sh
+docker --version
+```
+
+2 - Verifique a instalação do Docker Compose:
+
+```sh
+docker-compose --version
+```
+
+3 - Navegue até o diretório do projeto:
+
+```sh
+cd Fiap.McTech
+```
+
+4 - Construir e iniciar os serviços:
+
+```sh
+docker-compose up -d
+```
+
+5 - Verificar se os containers estão rodando:
+
+```sh
+docker-compose ps
+```
+
+6 - Veja a documentação do projeto e teste as API's:
+
+```sh
+http://localhost:8080/swagger
+```
 
 ## Equipe McTech
 Agradecemos por considerar contribuir para o MeTech! Se tiver alguma dúvida ou precisar de assistência, não hesite em entrar em contato conosco.
