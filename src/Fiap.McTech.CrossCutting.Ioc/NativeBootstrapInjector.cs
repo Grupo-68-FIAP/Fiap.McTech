@@ -4,7 +4,6 @@ using Fiap.McTech.Application.AppServices.Orders;
 using Fiap.McTech.Application.AppServices.Payment;
 using Fiap.McTech.Application.AppServices.Product;
 using Fiap.McTech.Application.Interfaces;
-using Fiap.McTech.Domain.Services;
 using Fiap.McTech.Infra.Context;
 using Fiap.McTech.Infra.Services;
 using Fiap.McTech.Infra.Services.Interfaces;
@@ -17,23 +16,19 @@ namespace Fiap.McTech.CrossCutting.Ioc
     {
         public static void RegisterServices(this IServiceCollection services, IConfiguration configuration)
         {
-			// Infra 
-			services.ConfigureSqlServer(configuration);
+            // Infra 
+            services.ConfigureSqlServer(configuration);
             services.RegisterRepositories();
 
-			//SERVICES
-			services.AddScoped<IPayPalPaymentService, PayPalPaymentService>();
+            //SERVICES
+            services.AddScoped<IPayPalPaymentService, PayPalPaymentService>();
 
-			//APP Services
-			services.AddScoped<IClientAppService, ClientAppService>();
+            //APP Services
+            services.AddScoped<IClientAppService, ClientAppService>();
             services.AddScoped<ICartAppService, CartAppService>();
             services.AddScoped<IOrderAppService, OrderAppService>();
             services.AddScoped<IPaymentAppService, PaymentAppService>();
-			services.AddScoped<IProductAppService, ProductAppService>();
-
-			services.AddScoped<ProductService>();
-			services.AddScoped<CartService>();
-			services.AddScoped<ClientService>();
+            services.AddScoped<IProductAppService, ProductAppService>();
         }
     }
 }

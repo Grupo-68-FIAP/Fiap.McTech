@@ -1,24 +1,26 @@
 ﻿using AutoMapper;
-using Fiap.McTech.Application.Interfaces;
 using Fiap.McTech.Application.Dtos.Clients;
+using Fiap.McTech.Application.Interfaces;
 using Fiap.McTech.Domain.Entities.Clients;
 using Fiap.McTech.Domain.Exceptions;
 using Fiap.McTech.Domain.Interfaces.Repositories.Clients;
 using Fiap.McTech.Domain.ValuesObjects;
 using Microsoft.Extensions.Logging;
-using Fiap.McTech.Domain.Services;
 
 namespace Fiap.McTech.Application.AppServices.Clients
 {
     public class ClientAppService : IClientAppService
     {
-        private readonly ClientService _clientService;
+        private readonly IClientRepository _clientRepository;
         private readonly ILogger<ClientAppService> _logger;
         private readonly IMapper _mapper;
 
-        public ClientAppService(ClientService clientService, ILogger<ClientAppService> logger, IMapper mapper)
-        {   
-            _clientService = clientService;
+        public ClientAppService(
+            IClientRepository clientRepository,
+            ILogger<ClientAppService> logger,
+            IMapper mapper)
+        {
+            _clientRepository = clientRepository;
             _logger = logger;
             _mapper = mapper;
         }
@@ -29,9 +31,17 @@ namespace Fiap.McTech.Application.AppServices.Clients
             {
                 _logger.LogInformation("Creating a new client.");
 
-                var client = _mapper.Map<Client>(clientDto);
+                var newClient = _mapper.Map<Client>(clientDto);
 
-                var createdClient = await _clientService.CreateAsync(client);
+                var existsClient = await _clientRepository.GetClientAsync(newClient.Cpf);
+                if (existsClient != null) throw new EntityValidationException(string.Format("Client with CPF {0} was exists.", newClient.Cpf));
+
+                existsClient = await _clientRepository.GetClientAsync(newClient.Email);
+                if (existsClient != null) throw new EntityValidationException(string.Format("Client with Email {0} was exists.", newClient.Email));
+
+                if (!newClient.IsValid()) throw new EntityValidationException("Client invalid data.");
+
+                var createdClient = await _clientRepository.AddAsync(newClient);
 
                 _logger.LogInformation("Client created successfully with ID {ClientId}.", createdClient.Id);
 
@@ -55,7 +65,7 @@ namespace Fiap.McTech.Application.AppServices.Clients
             {
                 _logger.LogInformation("Retrieving all clients.");
 
-                var clients = await _clientService.GetAllAsync();
+                var clients = await _clientRepository.GetAll();
 
                 if (clients == null || !clients.Any())
                     return new List<ClientOutputDto>();
@@ -77,7 +87,7 @@ namespace Fiap.McTech.Application.AppServices.Clients
             {
                 var cpf = _mapper.Map<Cpf>(sCpf);
 
-                var client = await _clientService.GetAsync(cpf);
+                var client = await GetAsync(cpf);
 
                 return _mapper.Map<ClientOutputDto>(client);
             }
@@ -93,7 +103,7 @@ namespace Fiap.McTech.Application.AppServices.Clients
         {
             try
             {
-                var client = await _clientService.GetAsync(id);
+                var client = await GetAsync(id);
 
                 return _mapper.Map<ClientOutputDto>(client);
             }
@@ -109,13 +119,13 @@ namespace Fiap.McTech.Application.AppServices.Clients
         {
             try
             {
-                var existed = await _clientService.GetAsync(id);
+                var existed = await GetAsync(id);
 
                 _logger.LogInformation("Updating client with ID {id}.", id);
 
                 _mapper.Map(dto, existed);
 
-                await _clientService.UpdateAsync(existed);
+                await _clientRepository.UpdateAsync(existed);
 
                 _logger.LogInformation("Client with ID {id} updated successfully.", id);
 
@@ -135,7 +145,15 @@ namespace Fiap.McTech.Application.AppServices.Clients
             {
                 _logger.LogInformation("Attempting to delete client with ID: {id}", id);
 
-                await _clientService.DeleteAsync(id);
+                var existing = await GetAsync(id);
+                try
+                {
+                    await _clientRepository.RemoveAsync(existing);
+                }
+                catch (Exception ex)
+                {
+                    throw new DatabaseException("It can't possivel remove entity client.", ex);
+                }
 
                 _logger.LogInformation("Client with ID {ProductId} deleted successfully.", id);
             }
@@ -145,6 +163,30 @@ namespace Fiap.McTech.Application.AppServices.Clients
                 _logger.LogError(ex, "Failed to delete product with ID: {ProductId}", id);
                 throw;
             }
+        }
+
+        private async Task<Client> GetAsync(Guid id)
+        {
+            return await _clientRepository.GetByIdAsync(id)
+                ?? throw new EntityNotFoundException(string.Format("Client with ID {0} not found.", id));
+        }
+
+        private async Task<Client> GetAsync(Cpf cpf)
+        {
+            if (!cpf.IsValid())
+                throw new EntityValidationException(string.Format("Invalid CPF {0}.", cpf));
+
+            return await _clientRepository.GetClientAsync(cpf)
+                ?? throw new EntityNotFoundException(string.Format("Client with CPF {0} not found.", cpf));
+        }
+
+        private async Task<Client> GetAsync(Email email)
+        {
+            if (!email.IsValid())
+                throw new EntityValidationException(string.Format("Invalid Email {0}.", email));
+
+            return await _clientRepository.GetClientAsync(email)
+                ?? throw new EntityNotFoundException(string.Format("Client with Email {0} not found.", email));
         }
     }
 }

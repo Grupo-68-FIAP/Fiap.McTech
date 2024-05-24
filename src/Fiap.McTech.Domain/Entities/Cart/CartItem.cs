@@ -44,8 +44,7 @@ namespace Fiap.McTech.Domain.Entities.Cart
 			return !string.IsNullOrWhiteSpace(Name) &&
 				   Quantity > 0 &&
 				   Value > 0 &&
-				   ProductId != Guid.Empty &&
-				   CartClientId != Guid.Empty;
+				   ProductId != Guid.Empty;
 		}
 	}
 }

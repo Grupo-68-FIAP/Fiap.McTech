@@ -2,8 +2,9 @@
 using Fiap.McTech.Application.Dtos.Cart;
 using Fiap.McTech.Application.Dtos.Message;
 using Fiap.McTech.Application.Interfaces;
+using Fiap.McTech.Domain.Entities.Cart;
 using Fiap.McTech.Domain.Exceptions;
-using Fiap.McTech.Domain.Services;
+using Fiap.McTech.Domain.Interfaces.Repositories.Cart;
 using Microsoft.Extensions.Logging;
 
 namespace Fiap.McTech.Application.AppServices.Cart
@@ -12,13 +13,25 @@ namespace Fiap.McTech.Application.AppServices.Cart
     {
 
         private readonly ILogger<CartAppService> _logger;
-        private readonly CartService _cartService;
+        private readonly IClientAppService _clientAppService;
+        private readonly IProductAppService _productAppService;
+        private readonly ICartClientRepository _cartClientRepository;
+        private readonly ICartItemRepository _cartItemRepository;
         private readonly IMapper _mapper;
 
-        public CartAppService(ILogger<CartAppService> logger, CartService cartService, IMapper mapper)
+        public CartAppService(
+            ICartClientRepository cartClientRepository,
+            ICartItemRepository cartItemRepository,
+            IProductAppService productAppService,
+            IClientAppService clientAppService,
+            ILogger<CartAppService> logger,
+            IMapper mapper)
         {
+            _cartClientRepository = cartClientRepository;
+            _cartItemRepository = cartItemRepository;
+            _clientAppService = clientAppService;
+            _productAppService = productAppService;
             _logger = logger;
-            _cartService = cartService;
             _mapper = mapper;
         }
 
@@ -28,7 +41,7 @@ namespace Fiap.McTech.Application.AppServices.Cart
             {
                 _logger.LogInformation("Retrieving cart ID {Id}.", id);
 
-                var cartClient = await _cartService.GetCartAsync(id);
+                var cartClient = await GetCartAsync(id);
 
                 _logger.LogInformation("Cart with ID {Id} retrieved successfully.", id);
 
@@ -52,7 +65,8 @@ namespace Fiap.McTech.Application.AppServices.Cart
             {
                 _logger.LogInformation("Retrieving cart with Client ID {Id}.", clientId);
 
-                var cartClient = await _cartService.GetCartByClientIdAsync(clientId);
+                var cartClient = await _cartClientRepository.GetByClientIdAsync(clientId)
+                    ?? throw new EntityNotFoundException(string.Format("Cart with Client ID {0} not found.", clientId));
 
                 _logger.LogInformation("Carts with Client ID {Id} retrieved successfully.", clientId);
 
@@ -74,14 +88,29 @@ namespace Fiap.McTech.Application.AppServices.Cart
         {
             try
             {
-                // TODO: remover a NewCartClientDto e fazer a conversão direta de CartClientInputDto -> CartClient
                 var newCartClient = _mapper.Map<NewCartClientDto>(cartClientDto);
+
+                if (newCartClient.ClientId != null)
+                {
+                    await _clientAppService.GetClientByIdAsync((Guid)newCartClient.ClientId);
+                }
+
+                foreach (var item in newCartClient.Items)
+                {
+                    var product = await _productAppService.GetProductByIdAsync(item.ProductId);
+                    item.Name = product.Name;
+                    item.Value = product.Value;
+                }
 
                 var cartClient = _mapper.Map<Domain.Entities.Cart.CartClient>(newCartClient);
 
+                cartClient.CalculateValueCart();
+
+                if (!cartClient.IsValid()) throw new EntityValidationException("Cart invalid data.");
+
                 _logger.LogInformation("Creating a new cart.");
 
-                var createdCartClient = await _cartService.CreateCartClientAsync(cartClient);
+                var createdCartClient = await _cartClientRepository.AddAsync(cartClient);
 
                 _logger.LogInformation("Cart created successfully with ID {Id}.", createdCartClient.Id);
 
@@ -106,11 +135,21 @@ namespace Fiap.McTech.Application.AppServices.Cart
             {
                 _logger.LogInformation("Adding new item to cart with ID {Id}.", id);
 
-                var cartClient = await _cartService.AddCartItemToCartClientAsync(id, productId);
+                var cartClient = await GetCartAsync(id);
+
+                var product = await _productAppService.GetProductByIdAsync(productId);
+
+                var newCartItem = new CartItem(product.Name, 1, product.Value, product.Id, cartClient.Id);
+
+                await _cartItemRepository.AddAsync(newCartItem);
+
+                cartClient.CalculateValueCart();
+
+                await _cartClientRepository.UpdateAsync(cartClient);
 
                 _logger.LogInformation("Added new item to cart with ID {Id}.", id);
 
-                return _mapper.Map<CartClientOutputDto>(cartClient);
+                return _mapper.Map<CartClientOutputDto>(await GetCartAsync(id));
             }
             catch (McTechException ex)
             {
@@ -131,7 +170,14 @@ namespace Fiap.McTech.Application.AppServices.Cart
             {
                 _logger.LogInformation("Attempting to delete Card Item ID {cartItemId}.", cartItemId);
 
-                var cart = await _cartService.RemoveCartItemFromCartClientAsync(cartItemId);
+                var cartItem = await GetCartItemAsync(cartItemId);
+
+                var cartClientId = cartItem.CartClientId;
+                await _cartItemRepository.RemoveAsync(cartItem);
+
+                var cart = await GetCartAsync(cartClientId);
+                cart.CalculateValueCart();
+                await _cartClientRepository.UpdateAsync(cart);
 
                 _logger.LogInformation("Cart Item with ID {Id} deleted successfully.", cartItemId);
 
@@ -155,7 +201,9 @@ namespace Fiap.McTech.Application.AppServices.Cart
             {
                 _logger.LogInformation("Attempting to delete cart with ID: {Id}", id);
 
-                await _cartService.DeleteCartClientAsync(id);
+                var existingCart = await GetCartAsync(id);
+
+                await _cartClientRepository.RemoveAsync(existingCart);
 
                 _logger.LogInformation("Cart with ID {Id} deleted successfully.", id);
 
@@ -171,6 +219,18 @@ namespace Fiap.McTech.Application.AppServices.Cart
                 _logger.LogError(ex, "Failed to delete cart with ID: {Id}", id);
                 throw;
             }
+        }
+
+        private async Task<CartClient> GetCartAsync(Guid id)
+        {
+            return await _cartClientRepository.GetByCartIdAsync(id)
+                ?? throw new EntityNotFoundException(string.Format("Cart with ID {0} not found.", id));
+        }
+
+        private async Task<CartItem> GetCartItemAsync(Guid id)
+        {
+            return await _cartItemRepository.GetByIdAsync(id)
+                    ?? throw new EntityNotFoundException(string.Format("Item with ID {0} not found.", id));
         }
     }
 }
