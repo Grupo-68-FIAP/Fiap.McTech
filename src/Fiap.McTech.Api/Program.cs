@@ -8,7 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Configuration.AddCommandLine(args);
 
 // Add services to the container.
-builder.Services.AddControllers(); 
+builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -29,9 +29,20 @@ builder.Services.AddSwaggerGen(c =>
             Url = new Uri("https://opensource.org/licenses/MIT")
         }
     });
-    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-    c.IncludeXmlComments(xmlPath);
+
+    var xmlFiles = new List<string> {
+        $"{Assembly.GetExecutingAssembly().GetName().Name}.xml",
+        "Fiap.McTech.Application.xml",
+        "Fiap.McTech.Domain.xml"
+    };
+    foreach (var xmlFile in xmlFiles)
+    {
+        var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+        if (File.Exists(xmlPath))
+        {
+            c.IncludeXmlComments(xmlPath);
+        }
+    }
 });
 
 // Configurando o AutoMapper
