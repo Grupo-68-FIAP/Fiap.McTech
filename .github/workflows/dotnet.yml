@@ -1,0 +1,47 @@
+# This workflow will build a .NET project
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
+
+name: .NET
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "*" ]
+    paths-ignore: [ "**/*.md" ]
+    types: [ opened, synchronize, reopened ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 6.0.x
+    - name: Restore dependencies
+      run: dotnet restore src/Fiap.McTech.Api/Fiap.McTech.Api.csproj
+    - name: Build
+      run: dotnet build src/Fiap.McTech.Api/Fiap.McTech.Api.csproj --configuration Release
+    - name: Test
+      run: dotnet test src/Fiap.McTech.Api/Fiap.McTech.Api.csproj --verbosity normal
+
+    - name: Extract warnings
+      id: extract_warnings
+      run: |
+        echo "::set-output name=warnings::$(comando_para_extrair_warnings)"
+
+    - name: Add warnings as a comment
+      if: steps.extract_warnings.outputs.warnings != ''
+      run: |
+        body=$(echo "${{ steps.extract_warnings.outputs.warnings }}")
+        body+="\n\n"
+        body+="Warnings detected in the build/test process:\n"
+        body+="\`\`\`\n"
+        body+="${{ steps.extract_warnings.outputs.warnings }}"
+        body+="\`\`\`"
+        echo "$body" | jq -R -s 'split("\n")' | jq -s -R '{body: .}' | jq -c '{body: .[]}' > comment.json
+        curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -H "Content-Type: application/json" --data @comment.json "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/issues/$ISSUE_NUMBER/comments"
