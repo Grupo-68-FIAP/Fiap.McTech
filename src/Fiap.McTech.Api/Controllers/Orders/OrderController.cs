@@ -63,18 +63,7 @@ namespace Fiap.McTech.Api.Controllers.Orders
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> MoveOrderToNextStatus(Guid id)
         {
-            try
-            {
-                return Ok(await _orderAppService.MoveOrderToNextStatus(id));
-            }
-            catch (PaymentRequiredException ex)
-            {
-                return StatusCode(402, new ProblemDetails() { Detail = ex.Message });
-            }
-            catch (EntityNotFoundException ex)
-            {
-                return NotFound(new ProblemDetails() { Detail = ex.Message });
-            }
+            return Ok(await _orderAppService.MoveOrderToNextStatus(id));
         }
 
         /// <summary>
@@ -88,12 +77,7 @@ namespace Fiap.McTech.Api.Controllers.Orders
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteOrder(Guid id)
         {
-            var result = await _orderAppService.DeleteOrderAsync(id);
-            if (!result.IsSuccess)
-            {
-                return NotFound();
-            }
-
+            await _orderAppService.DeleteOrderAsync(id);
             return NoContent();
         }
 

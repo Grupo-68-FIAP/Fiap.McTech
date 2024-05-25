@@ -1,3 +1,4 @@
+using Fiap.McTech.Api.Handlers;
 using Fiap.McTech.CrossCutting.Ioc;
 using Fiap.McTech.CrossCutting.Ioc.Mappers;
 using Fiap.McTech.Infra.Context;
@@ -68,6 +69,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
     app.UseCors("DevelopmentPolicy");
 }
+
+app.UseMiddleware<ErrorHandlerMiddleware>();
 
 app.UseHttpsRedirection();
 

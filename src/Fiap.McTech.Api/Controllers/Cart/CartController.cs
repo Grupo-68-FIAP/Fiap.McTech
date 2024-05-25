@@ -1,6 +1,5 @@
 ﻿using Fiap.McTech.Application.Dtos.Cart;
 using Fiap.McTech.Application.Interfaces;
-using Fiap.McTech.Domain.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Mime;
 
@@ -37,14 +36,7 @@ namespace Fiap.McTech.Api.Controllers.Cart
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetCart(Guid id)
         {
-            try
-            {
-                return Ok(await _cartAppService.GetCartByIdAsync(id));
-            }
-            catch (EntityNotFoundException ex)
-            {
-                return NotFound(new ProblemDetails() { Detail = ex.Message });
-            }
+            return Ok(await _cartAppService.GetCartByIdAsync(id));
         }
 
         /// <summary>
@@ -59,14 +51,7 @@ namespace Fiap.McTech.Api.Controllers.Cart
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> GetCartByClientId(Guid clientId)
         {
-            try
-            {
-                return Ok(await _cartAppService.GetCartByClientIdAsync(clientId));
-            }
-            catch (EntityNotFoundException ex)
-            {
-                return NotFound(new ProblemDetails() { Detail = ex.Message });
-            }
+            return Ok(await _cartAppService.GetCartByClientIdAsync(clientId));
         }
 
         /// <summary>
@@ -78,28 +63,11 @@ namespace Fiap.McTech.Api.Controllers.Cart
         /// <response code="400">If there are issues with the input data.</response>
         [HttpPost]
         [ProducesResponseType(typeof(CartClientOutputDto), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<CartClientOutputDto>> CreateCart(CartClientInputDto cartClientDto)
         {
-            CartClientOutputDto createdCart;
-            try
-            {
-                createdCart = await _cartAppService.CreateCartClientAsync(cartClientDto);
-            }
-            catch (McTechException ex)
-            {
-                return NotFound(new ProblemDetails() { Detail = ex.Message });
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-
-            if (createdCart == null)
-            {
-                return BadRequest("Unable to create cart.");
-            }
-
+            var createdCart = await _cartAppService.CreateCartClientAsync(cartClientDto);
             return CreatedAtAction(nameof(GetCart), new { id = createdCart.Id }, createdCart);
         }
 
@@ -110,20 +78,14 @@ namespace Fiap.McTech.Api.Controllers.Cart
         /// <param name="productId">The unique identifier of the product to add.</param>
         /// <returns>The updated shopping cart.</returns>
         /// <response code="200">Returns the updated shopping cart.</response>
+        /// <response code="400">If there are validation issues with the input data.</response>
         /// <response code="404">If the shopping cart or product is not found.</response>
         [HttpPut("{id}/product/{productId}")]
         [ProducesResponseType(typeof(CartClientOutputDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> AddCartItemToCartClientAsync(Guid id, Guid productId)
         {
-            try
-            {
-                return Ok(await _cartAppService.AddCartItemToCartClientAsync(id, productId));
-            }
-            catch (EntityNotFoundException ex)
-            {
-                return NotFound(new ProblemDetails() { Detail = ex.Message });
-            }
+            return Ok(await _cartAppService.AddCartItemToCartClientAsync(id, productId));
         }
 
         /// <summary>
@@ -138,14 +100,7 @@ namespace Fiap.McTech.Api.Controllers.Cart
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> RemoveCartItemFromCartClientAsync(Guid cartItemId)
         {
-            try
-            {
-                return Ok(await _cartAppService.RemoveCartItemFromCartClientAsync(cartItemId));
-            }
-            catch (EntityNotFoundException ex)
-            {
-                return NotFound(new ProblemDetails() { Detail = ex.Message });
-            }
+            return Ok(await _cartAppService.RemoveCartItemFromCartClientAsync(cartItemId));
         }
 
         /// <summary>
@@ -160,20 +115,7 @@ namespace Fiap.McTech.Api.Controllers.Cart
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteCart(Guid id)
         {
-            try
-            {
-                var deleted = await _cartAppService.DeleteCartClientAsync(id);
-
-                if (!deleted.IsSuccess)
-                {
-                    return BadRequest(deleted.Message);
-                }
-            }
-            catch (EntityNotFoundException ex)
-            {
-                return NotFound(new ProblemDetails() { Detail = ex.Message });
-            }
-
+            await _cartAppService.DeleteCartClientAsync(id);
             return NoContent();
         }
     }
