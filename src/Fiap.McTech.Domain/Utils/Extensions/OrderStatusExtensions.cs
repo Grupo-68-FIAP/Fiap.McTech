@@ -1,31 +1,28 @@
 ﻿using Fiap.McTech.Domain.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Fiap.McTech.Domain.Utils.Extensions
 {
+    /// <summary>
+    /// Provides extension methods for the <see cref="OrderStatus"/> enumeration.
+    /// </summary>
     public static class OrderStatusExtensions
     {
+        /// <summary>
+        /// Gets the next status for the order based on the current status.
+        /// </summary>
+        /// <param name="currentStatus">The current status of the order.</param>
+        /// <returns>The next status for the order.</returns>
         public static OrderStatus NextStatus(this OrderStatus currentStatus)
         {
-            switch (currentStatus)
+            return currentStatus switch
             {
-                case OrderStatus.None:
-                    return OrderStatus.Pending;
-                case OrderStatus.Pending:
-                    return OrderStatus.Processing;
-                case OrderStatus.Processing: 
-                    return OrderStatus.Completed;
-                case OrderStatus.Completed: 
-                    return OrderStatus.Completed;
-                case OrderStatus.Canceled: 
-                    return OrderStatus.Canceled;
-                default: 
-                    return OrderStatus.None;
-            }
+                OrderStatus.None => OrderStatus.Pending,
+                OrderStatus.Pending => OrderStatus.Processing,
+                OrderStatus.Processing => OrderStatus.Completed,
+                OrderStatus.Completed => OrderStatus.Completed,
+                OrderStatus.Canceled => OrderStatus.Canceled,
+                _ => OrderStatus.None,
+            };
         }
     }
 }
