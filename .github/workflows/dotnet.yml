@@ -5,9 +5,11 @@ name: .NET
 
 on:
   push:
-    branches: [ "ervin-automation" ]
+    branches: [ "master" ]
   pull_request:
-    branches: [ "ervin-automation" ]
+    branches: [ "*" ]
+    paths-ignore: [ "**/*.md" ]
+    types: [ opened, synchronize, reopened ]
 
 jobs:
   build:
