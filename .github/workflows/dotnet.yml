@@ -28,20 +28,4 @@ jobs:
       run: dotnet build src/Fiap.McTech.Api/Fiap.McTech.Api.csproj --configuration Release
     - name: Test
       run: dotnet test src/Fiap.McTech.Api/Fiap.McTech.Api.csproj --verbosity normal
-
-    - name: Extract warnings
-      id: extract_warnings
-      run: |
-        echo "::set-output name=warnings::$(comando_para_extrair_warnings)"
-
-    - name: Add warnings as a comment
-      if: steps.extract_warnings.outputs.warnings != ''
-      run: |
-        body=$(echo "${{ steps.extract_warnings.outputs.warnings }}")
-        body+="\n\n"
-        body+="Warnings detected in the build/test process:\n"
-        body+="\`\`\`\n"
-        body+="${{ steps.extract_warnings.outputs.warnings }}"
-        body+="\`\`\`"
-        echo "$body" | jq -R -s 'split("\n")' | jq -s -R '{body: .}' | jq -c '{body: .[]}' > comment.json
-        curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -H "Content-Type: application/json" --data @comment.json "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/issues/$ISSUE_NUMBER/comments"
+      
