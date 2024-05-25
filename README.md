@@ -4,8 +4,8 @@ O McTech é um sistema completo de gerenciamento de pedidos desenvolvido especif
 Utilizando tecnologias modernas e práticas arquiteturais, o MeTech oferece uma solução eficiente e escalável para restaurantes de todos os portes.
 
 ## Tecnologias Utilizadas
- - Plataforma: .NET
- - Banco de Dados: MySQL
+ - Plataforma: .NET 6.0
+ - Banco de Dados: Microsoft SQL Server
  - Arquitetura de Software: Hexagonal (ou Ports and Adapters)
  - Padrão Arquitetural Adicional: Arquitetura em Cebola (ou Onion Architecture)
 
