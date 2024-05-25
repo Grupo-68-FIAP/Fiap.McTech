@@ -21,8 +21,8 @@ jobs:
       with:
         dotnet-version: 6.0.x
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore src/Fiap.McTech.Api/Fiap.McTech.Api.csproj
     - name: Build
-      run: dotnet build --no-restore
+      run: dotnet build src/Fiap.McTech.Api/Fiap.McTech.Api.csproj --configuration Release --output /app/build
     - name: Test
-      run: dotnet test --no-build --verbosity normal
+      run: dotnet test src/Fiap.McTech.Api/Fiap.McTech.Api.csproj --verbosity normal
