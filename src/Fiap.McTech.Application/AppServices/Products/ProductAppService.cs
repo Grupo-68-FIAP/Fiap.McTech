@@ -44,18 +44,14 @@ namespace Fiap.McTech.Application.AppServices.Product
 
                 var product = _mapper.Map<Domain.Entities.Products.Product>(productDto);
 
-                if (!product.IsValid()) throw new EntityValidationException("Product invalid data.");
+                if (!product.IsValid())
+                    throw new EntityValidationException("Product invalid data.");
 
                 var createdProduct = await _productRepository.AddAsync(product);
 
                 _logger.LogInformation("Product created successfully with ID {ProductId}.", createdProduct.Id);
 
                 return _mapper.Map<ProductOutputDto>(createdProduct);
-            }
-            catch (McTechException ex)
-            {
-                _logger.LogError(ex, "Application: {msg}", ex.Message);
-                throw;
             }
             catch (Exception ex)
             {
@@ -127,7 +123,8 @@ namespace Fiap.McTech.Application.AppServices.Product
 
                 _mapper.Map(productDto, existingProduct);
 
-                if (!existingProduct.IsValid()) throw new EntityValidationException("Product invalid data.");
+                if (!existingProduct.IsValid())
+                    throw new EntityValidationException("Product invalid data.");
 
                 await _productRepository.UpdateAsync(existingProduct);
 

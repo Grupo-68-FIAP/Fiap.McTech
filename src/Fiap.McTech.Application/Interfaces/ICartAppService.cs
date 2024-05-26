@@ -46,7 +46,7 @@ namespace Fiap.McTech.Application.Interfaces
         /// <summary>
         /// Deletes a shopping cart for a client asynchronously.
         /// </summary>
-        /// <param name="clientId">The ID of the client associated with the shopping cart to delete.</param>
-        Task DeleteCartClientAsync(Guid clientId);
+        /// <param name="id">The ID of the client associated with the shopping cart to delete.</param>
+        Task DeleteCartClientAsync(Guid id);
     }
 }
