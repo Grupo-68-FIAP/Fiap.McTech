@@ -1,11 +1,12 @@
+[![.NET](https://github.com/Grupo-68-FIAP/Fiap.McTech/actions/workflows/dotnet.yml/badge.svg)](https://github.com/Grupo-68-FIAP/Fiap.McTech/actions/workflows/dotnet.yml) [![SonarCloud analysis](https://github.com/Grupo-68-FIAP/Fiap.McTech/actions/workflows/sonarcloud.yml/badge.svg)](https://github.com/Grupo-68-FIAP/Fiap.McTech/actions/workflows/sonarcloud.yml)
 # McTech - Sistema Gerenciador de Pedidos para Restaurantes
 
 O McTech é um sistema completo de gerenciamento de pedidos desenvolvido especificamente para restaurantes, projetado para simplificar e otimizar os processos de pedidos, desde o momento em que são feitos até a sua conclusão. 
 Utilizando tecnologias modernas e práticas arquiteturais, o MeTech oferece uma solução eficiente e escalável para restaurantes de todos os portes.
 
 ## Tecnologias Utilizadas
- - Plataforma: .NET
- - Banco de Dados: MySQL
+ - Plataforma: .NET 6.0
+ - Banco de Dados: Microsoft SQL Server
  - Arquitetura de Software: Hexagonal (ou Ports and Adapters)
  - Padrão Arquitetural Adicional: Arquitetura em Cebola (ou Onion Architecture)
 
