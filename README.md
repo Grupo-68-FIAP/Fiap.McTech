@@ -1,4 +1,4 @@
-[![.NET](https://github.com/Grupo-68-FIAP/Fiap.McTech/actions/workflows/dotnet.yml/badge.svg)](https://github.com/Grupo-68-FIAP/Fiap.McTech/actions/workflows/dotnet.yml)
+[![.NET](https://github.com/Grupo-68-FIAP/Fiap.McTech/actions/workflows/dotnet.yml/badge.svg)](https://github.com/Grupo-68-FIAP/Fiap.McTech/actions/workflows/dotnet.yml) [![SonarCloud analysis](https://github.com/Grupo-68-FIAP/Fiap.McTech/actions/workflows/sonarcloud.yml/badge.svg)](https://github.com/Grupo-68-FIAP/Fiap.McTech/actions/workflows/sonarcloud.yml)
 # McTech - Sistema Gerenciador de Pedidos para Restaurantes
 
 O McTech é um sistema completo de gerenciamento de pedidos desenvolvido especificamente para restaurantes, projetado para simplificar e otimizar os processos de pedidos, desde o momento em que são feitos até a sua conclusão. 
