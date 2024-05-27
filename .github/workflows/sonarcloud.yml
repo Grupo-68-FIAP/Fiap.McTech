@@ -45,5 +45,6 @@ jobs:
           .\.sonar\scanner\dotnet-sonarscanner begin /k:"Grupo-68-FIAP_Fiap.McTech" /o:"grupo-68-fiap" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
           dotnet restore src/Fiap.McTech.Api/Fiap.McTech.Api.csproj
           dotnet build src/Fiap.McTech.Api/Fiap.McTech.Api.csproj --configuration Release
-          dotnet test ((Get-ChildItem -Path . -Filter *.csproj -Recurse -Path "*Tests*") | ForEach-Object { $_.FullName }) --verbosity normal
+          $testProjects = Get-ChildItem -Path . -Filter *.csproj -Recurse | Where-Object { $_.FullName -like "*Tests*" }
+          $testProjects | ForEach-Object { dotnet test $_.FullName --verbosity normal }
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
