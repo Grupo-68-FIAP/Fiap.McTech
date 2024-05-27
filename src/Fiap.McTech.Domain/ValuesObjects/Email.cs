@@ -40,7 +40,7 @@ namespace Fiap.McTech.Domain.ValuesObjects
             if (obj is string)
                 return string.Equals(obj, this.Address);
             else if (obj is Email email)
-                return email?.Address == this.Address;
+                return email.Address == this.Address;
             return base.Equals(obj);
         }
 

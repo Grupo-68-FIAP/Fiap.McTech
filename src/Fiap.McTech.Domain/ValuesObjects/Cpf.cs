@@ -39,7 +39,7 @@ namespace Fiap.McTech.Domain.ValuesObjects
             if (obj is string)
                 return string.Equals(obj, this.Document);
             else if (obj is Cpf email)
-                return email?.Document == this.Document;
+                return email.Document == this.Document;
             return base.Equals(obj);
         }
 
