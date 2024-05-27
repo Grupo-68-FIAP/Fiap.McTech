@@ -30,6 +30,9 @@ Utilizando tecnologias modernas e práticas arquiteturais, o MeTech oferece uma 
 
 ### Visão Geral do Sistema com DDD
 
+- Em PDF: [Link para documento PDF](./Documentação%20do%20Sistema%20com%20DDD.pdf)
+- No Miro: [Link para o Miro](https://miro.com/app/board/uXjVKVozBqw=/)
+
 ![DDD do Sistema](./ddd-sistema.jpg)
 
 ## Como Contribuir
