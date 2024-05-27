@@ -38,10 +38,10 @@ namespace Fiap.McTech.Domain.ValuesObjects
         public override bool Equals(object? obj)
         {
             if (obj is string)
-                return string.Equals(obj, this.Address);
+                return Equals(obj, Address);
             else if (obj is Email email)
-                return email.Address == this.Address;
-            return base.Equals(obj);
+                return email.Address == Address;
+            return false;
         }
 
         /// <inheritdoc/>

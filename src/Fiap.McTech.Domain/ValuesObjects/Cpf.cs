@@ -37,10 +37,10 @@ namespace Fiap.McTech.Domain.ValuesObjects
         public override bool Equals(object? obj)
         {
             if (obj is string)
-                return string.Equals(obj, this.Document);
-            else if (obj is Cpf email)
-                return email.Document == this.Document;
-            return base.Equals(obj);
+                return Equals(obj, Document);
+            else if (obj is Cpf cpf)
+                return cpf.Document == Document;
+            return false;
         }
 
         /// <inheritdoc/>
