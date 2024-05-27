@@ -28,7 +28,7 @@ Utilizando tecnologias modernas e práticas arquiteturais, o MeTech oferece uma 
 5. **Listar Pedidos**
    - API que lista todos os pedidos feitos pelos clientes. Esta funcionalidade permite que os clientes e administradores vejam o histórico de pedidos, incluindo detalhes sobre cada pedido, como produtos incluídos, data e status do pedido.
 
-### Visão Geral do Sistema com DDD
+## Visão Geral do Sistema com DDD
 
 - Em PDF: [Link para documento PDF](./Documentação%20do%20Sistema%20com%20DDD.pdf)
 - No Miro: [Link para o Miro](https://miro.com/app/board/uXjVKVozBqw=/)
