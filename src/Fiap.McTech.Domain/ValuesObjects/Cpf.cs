@@ -32,5 +32,18 @@ namespace Fiap.McTech.Domain.ValuesObjects
         /// </summary>
         /// <returns>The string representation of the CPF if it is valid; otherwise, an empty string.</returns>
         public override string ToString() => Document + (IsValid() ? "" : "<invalid>");
+
+        /// <inheritdoc/>
+        public override bool Equals(object? obj)
+        {
+            if (obj is string)
+                return string.Equals(obj, this.Document);
+            else if (obj is Cpf email)
+                return email?.Document == this.Document;
+            return base.Equals(obj);
+        }
+
+        /// <inheritdoc/>
+        public override int GetHashCode() => HashCode.Combine(Document);
     }
 }

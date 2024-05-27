@@ -1,4 +1,5 @@
 ﻿using Fiap.McTech.Domain.Utils.Extensions;
+using System.Reflection.Metadata;
 
 namespace Fiap.McTech.Domain.ValuesObjects
 {
@@ -32,5 +33,18 @@ namespace Fiap.McTech.Domain.ValuesObjects
         /// </summary>
         /// <returns>The email address if it's valid, otherwise an empty string.</returns>
         public override string ToString() => Address + (IsValid() ? "" : "<invalid>");
+
+        /// <inheritdoc/>
+        public override bool Equals(object? obj)
+        {
+            if (obj is string)
+                return string.Equals(obj, this.Address);
+            else if (obj is Email email)
+                return email?.Address == this.Address;
+            return base.Equals(obj);
+        }
+
+        /// <inheritdoc/>
+        public override int GetHashCode() => HashCode.Combine(Address);
     }
 }
