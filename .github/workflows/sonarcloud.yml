@@ -47,5 +47,5 @@ jobs:
           dotnet build src/Fiap.McTech.Api/Fiap.McTech.Api.csproj --configuration Release
           $testProjects = Get-ChildItem -Path . -Filter *.csproj -Recurse | Where-Object { $_.FullName -like "*Tests*" }
           $testProjects | ForEach-Object { dotnet test $_.FullName --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura }
-          .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.coverageReportPaths="**/coverage.xml"
-
+          .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.cs.vscoveragexml.reportsPaths="**/coverage.xml"
+          
