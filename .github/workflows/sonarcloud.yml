@@ -43,10 +43,13 @@ jobs:
         shell: powershell
         run: |
           dotnet tool install --global dotnet-coverage
-          .\.sonar\scanner\dotnet-sonarscanner begin /k:"Grupo-68-FIAP_Fiap.McTech" /o:"grupo-68-fiap" \
-            /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" \
-            /d:sonar.cs.vscoveragexml.reportsPaths=coverage.xml
+          .\.sonar\scanner\dotnet-sonarscanner begin /k:"Grupo-68-FIAP_Fiap.McTech" /o:"grupo-68-fiap" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.vscoveragexml.reportsPaths="coverage.xml"
           dotnet restore src/Fiap.McTech.Api/Fiap.McTech.Api.csproj
           dotnet build src/Fiap.McTech.Api/Fiap.McTech.Api.csproj --configuration Release --no-incremental
-          dotnet-coverage collect 'dotnet test' -f xml  -o 'coverage.xml'
+          $testProjects = Get-ChildItem -Path . -Filter *.csproj -Recurse | Where-Object { $_.FullName -like "*Tests*" }
+        
+          foreach ($project in $testProjects) {
+              dotnet-coverage collect "dotnet test $($project.FullName)" -f xml -o $project.Directory.FullName\coverage.xml
+          }
+        
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
