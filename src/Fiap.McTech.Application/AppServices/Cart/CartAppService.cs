@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Fiap.McTech.Application.Dtos.Cart;
-using Fiap.McTech.Application.Dtos.Message;
 using Fiap.McTech.Application.Interfaces;
 using Fiap.McTech.Domain.Entities.Cart;
 using Fiap.McTech.Domain.Exceptions;
@@ -9,6 +8,9 @@ using Microsoft.Extensions.Logging;
 
 namespace Fiap.McTech.Application.AppServices.Cart
 {
+    /// <summary>
+    /// Provides functionality to manage shopping carts.
+    /// </summary>
     public class CartAppService : ICartAppService
     {
 
@@ -19,6 +21,15 @@ namespace Fiap.McTech.Application.AppServices.Cart
         private readonly ICartItemRepository _cartItemRepository;
         private readonly IMapper _mapper;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CartAppService"/> class.
+        /// </summary>
+        /// <param name="cartClientRepository">The repository for cart clients.</param>
+        /// <param name="cartItemRepository">The repository for cart items.</param>
+        /// <param name="productAppService">The service for managing products.</param>
+        /// <param name="clientAppService">The service for managing clients.</param>
+        /// <param name="logger">The logger.</param>
+        /// <param name="mapper">The mapper.</param>
         public CartAppService(
             ICartClientRepository cartClientRepository,
             ICartItemRepository cartItemRepository,
@@ -35,6 +46,7 @@ namespace Fiap.McTech.Application.AppServices.Cart
             _mapper = mapper;
         }
 
+        /// <inheritdoc/>
         public async Task<CartClientOutputDto?> GetCartByIdAsync(Guid id)
         {
             try
@@ -59,6 +71,7 @@ namespace Fiap.McTech.Application.AppServices.Cart
             }
         }
 
+        /// <inheritdoc/>
         public async Task<CartClientOutputDto?> GetCartByClientIdAsync(Guid clientId)
         {
             try
@@ -84,6 +97,7 @@ namespace Fiap.McTech.Application.AppServices.Cart
             }
         }
 
+        /// <inheritdoc/>
         public async Task<CartClientOutputDto> CreateCartClientAsync(CartClientInputDto cartClientDto)
         {
             try
@@ -129,6 +143,7 @@ namespace Fiap.McTech.Application.AppServices.Cart
             }
         }
 
+        /// <inheritdoc/>
         public async Task<CartClientOutputDto> AddCartItemToCartClientAsync(Guid id, Guid productId)
         {
             try
@@ -164,6 +179,7 @@ namespace Fiap.McTech.Application.AppServices.Cart
             }
         }
 
+        /// <inheritdoc/>
         public async Task<CartClientOutputDto> RemoveCartItemFromCartClientAsync(Guid cartItemId)
         {
             try
@@ -195,7 +211,8 @@ namespace Fiap.McTech.Application.AppServices.Cart
             }
         }
 
-        public async Task<MessageDto> DeleteCartClientAsync(Guid id)
+        /// <inheritdoc/>
+        public async Task DeleteCartClientAsync(Guid id)
         {
             try
             {
@@ -206,8 +223,6 @@ namespace Fiap.McTech.Application.AppServices.Cart
                 await _cartClientRepository.RemoveAsync(existingCart);
 
                 _logger.LogInformation("Cart with ID {Id} deleted successfully.", id);
-
-                return new MessageDto(true, "Cart deleted successfully.");
             }
             catch (McTechException ex)
             {

@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Fiap.McTech.Application.Dtos.Products;
 using Fiap.McTech.Application.Dtos.Products.Add;
-using Fiap.McTech.Application.Dtos.Products.Delete;
 using Fiap.McTech.Application.Dtos.Products.Update;
 using Fiap.McTech.Application.Interfaces;
 using Fiap.McTech.Domain.Enums;
@@ -11,19 +10,32 @@ using Microsoft.Extensions.Logging;
 
 namespace Fiap.McTech.Application.AppServices.Product
 {
+    /// <summary>
+    /// Service for managing products.
+    /// </summary>
     public class ProductAppService : IProductAppService
     {
         private readonly ILogger<ProductAppService> _logger;
         private readonly IProductRepository _productRepository;
         private readonly IMapper _mapper;
 
-        public ProductAppService(ILogger<ProductAppService> logger, IProductRepository productRepository, IMapper mapper)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ProductAppService"/> class.
+        /// </summary>
+        /// <param name="logger">The logger.</param>
+        /// <param name="productRepository">The product repository.</param>
+        /// <param name="mapper">The mapper.</param>
+        public ProductAppService(
+            ILogger<ProductAppService> logger,
+            IProductRepository productRepository,
+            IMapper mapper)
         {
             _logger = logger;
             _productRepository = productRepository;
             _mapper = mapper;
         }
 
+        /// <inheritdoc/>
         public async Task<ProductOutputDto> CreateProductAsync(CreateProductInputDto productDto)
         {
             try
@@ -32,11 +44,18 @@ namespace Fiap.McTech.Application.AppServices.Product
 
                 var product = _mapper.Map<Domain.Entities.Products.Product>(productDto);
 
+                if (!product.IsValid()) throw new EntityValidationException("Product invalid data.");
+
                 var createdProduct = await _productRepository.AddAsync(product);
 
                 _logger.LogInformation("Product created successfully with ID {ProductId}.", createdProduct.Id);
 
                 return _mapper.Map<ProductOutputDto>(createdProduct);
+            }
+            catch (McTechException ex)
+            {
+                _logger.LogError(ex, "Application: {msg}", ex.Message);
+                throw;
             }
             catch (Exception ex)
             {
@@ -45,6 +64,7 @@ namespace Fiap.McTech.Application.AppServices.Product
             }
         }
 
+        /// <inheritdoc/>
         public async Task<ProductOutputDto> GetProductByIdAsync(Guid productId)
         {
             try
@@ -70,6 +90,7 @@ namespace Fiap.McTech.Application.AppServices.Product
             }
         }
 
+        /// <inheritdoc/>
         public async Task<List<ProductOutputDto>> GetAllProductsAsync()
         {
             try
@@ -94,20 +115,19 @@ namespace Fiap.McTech.Application.AppServices.Product
             }
         }
 
+        /// <inheritdoc/>
         public async Task<ProductOutputDto> UpdateProductAsync(Guid productId, UpdateProductInputDto productDto)
         {
             try
             {
-                var existingProduct = await _productRepository.GetByIdAsync(productId);
-                if (existingProduct == null)
-                {
-                    _logger.LogWarning("Product with ID {ProductId} not found. Update aborted.", productId);
-                    throw new InvalidOperationException("Product not found.");
-                }
+                var existingProduct = await _productRepository.GetByIdAsync(productId)
+                    ?? throw new EntityNotFoundException(string.Format("Product with ID {0} not found.", productId));
 
                 _logger.LogInformation("Updating product with ID {ProductId}.", productId);
 
                 _mapper.Map(productDto, existingProduct);
+
+                if (!existingProduct.IsValid()) throw new EntityValidationException("Product invalid data.");
 
                 await _productRepository.UpdateAsync(existingProduct);
 
@@ -122,25 +142,19 @@ namespace Fiap.McTech.Application.AppServices.Product
             }
         }
 
-        public async Task<DeleteProductOutputDto> DeleteProductAsync(Guid productId)
+        /// <inheritdoc/>
+        public async Task DeleteProductAsync(Guid productId)
         {
             try
             {
                 _logger.LogInformation("Attempting to delete product with ID: {ProductId}", productId);
 
-                var existingProduct = await _productRepository.GetByIdAsync(productId);
-                if (existingProduct == null)
-                {
-                    _logger.LogWarning("Product with ID {ProductId} not found. Deletion aborted.", productId);
-
-                    return new DeleteProductOutputDto(isSuccess: false, message: "Product not found.");
-                }
+                var existingProduct = await _productRepository.GetByIdAsync(productId)
+                    ?? throw new EntityNotFoundException(string.Format("Product with ID {0} not found.", productId));
 
                 await _productRepository.RemoveAsync(existingProduct);
 
                 _logger.LogInformation("Product with ID {ProductId} deleted successfully.", productId);
-
-                return new DeleteProductOutputDto(isSuccess: true, message: "Product deleted successfully.");
             }
             catch (Exception ex)
             {
@@ -149,6 +163,7 @@ namespace Fiap.McTech.Application.AppServices.Product
             }
         }
 
+        /// <inheritdoc/>
         public async Task<List<ProductOutputDto>> GetProductsByCategoryAsync(ProductCategory category)
         {
             try

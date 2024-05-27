@@ -1,6 +1,5 @@
 ﻿using Fiap.McTech.Application.Dtos.Clients;
 using Fiap.McTech.Application.Interfaces;
-using Fiap.McTech.Domain.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Mime;
 
@@ -36,15 +35,8 @@ namespace Fiap.McTech.Api.Controllers.Clients
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> GetAllClients()
         {
-            try
-            {
-                var clients = await _clientAppService.GetAllClientsAsync();
-                return (clients == null || !clients.Any()) ? new NoContentResult() : Ok(clients);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new ProblemDetails() { Detail = ex.Message });
-            }
+            var clients = await _clientAppService.GetAllClientsAsync();
+            return (clients == null || !clients.Any()) ? new NoContentResult() : Ok(clients);
         }
 
         /// <summary>
@@ -59,18 +51,7 @@ namespace Fiap.McTech.Api.Controllers.Clients
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetClient(Guid id)
         {
-            try
-            {
-                return Ok(await _clientAppService.GetClientByIdAsync(id));
-            }
-            catch (EntityNotFoundException ex)
-            {
-                return NotFound(new ProblemDetails() { Detail = ex.Message });
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new ProblemDetails() { Detail = ex.Message });
-            }
+            return Ok(await _clientAppService.GetClientByIdAsync(id));
         }
 
         /// <summary>
@@ -87,18 +68,7 @@ namespace Fiap.McTech.Api.Controllers.Clients
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetClientByCpf(string cpf)
         {
-            try
-            {
-                return Ok(await _clientAppService.GetClientByCpfAsync(cpf));
-            }
-            catch (EntityNotFoundException ex)
-            {
-                return NotFound(new ProblemDetails() { Detail = ex.Message });
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new ProblemDetails() { Detail = ex.Message });
-            }
+            return Ok(await _clientAppService.GetClientByCpfAsync(cpf));
         }
 
         /// <summary>
@@ -108,25 +78,15 @@ namespace Fiap.McTech.Api.Controllers.Clients
         /// <returns>The created client.</returns>
         /// <response code="201">Returns the newly created client.</response>
         /// <response code="400">If there are validation issues with the input data.</response>
+        /// <response code="404">If the client was not found.</response>
         [HttpPost]
         [ProducesResponseType(typeof(ClientOutputDto), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> CreateClient(ClientInputDto client)
         {
-            try
-            {
-                var createdClient = await _clientAppService.CreateClientAsync(client);
-                return CreatedAtAction(nameof(GetClient), new { id = createdClient.Id }, createdClient);
-            }
-            catch (EntityValidationException ex)
-            {
-                return BadRequest(new ProblemDetails() { Detail = ex.Message });
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new ProblemDetails() { Detail = ex.Message });
-            }
+            var createdClient = await _clientAppService.CreateClientAsync(client);
+            return CreatedAtAction(nameof(GetClient), new { id = createdClient.Id }, createdClient);
         }
 
         /// <summary>
@@ -144,18 +104,7 @@ namespace Fiap.McTech.Api.Controllers.Clients
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateClient(Guid id, ClientInputDto client)
         {
-            try
-            {
-                return Ok(await _clientAppService.UpdateClientAsync(id, client));
-            }
-            catch (EntityNotFoundException ex)
-            {
-                return NotFound(new ProblemDetails() { Detail = ex.Message });
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new ProblemDetails() { Detail = ex.Message });
-            }
+            return Ok(await _clientAppService.UpdateClientAsync(id, client));
         }
 
         /// <summary>
@@ -169,19 +118,8 @@ namespace Fiap.McTech.Api.Controllers.Clients
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteClient(Guid id)
         {
-            try
-            {
-                await _clientAppService.DeleteClientAsync(id);
-                return NoContent();
-            }
-            catch (EntityNotFoundException ex)
-            {
-                return NotFound(new ProblemDetails() { Detail = ex.Message });
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new ProblemDetails() { Detail = ex.Message });
-            }
+            await _clientAppService.DeleteClientAsync(id);
+            return NoContent();
         }
     }
 }

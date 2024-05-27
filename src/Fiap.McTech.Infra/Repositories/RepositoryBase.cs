@@ -23,7 +23,6 @@ namespace Fiap.McTech.Infra.Repositories
 
 		public async Task<TEntity> AddAsync(TEntity obj)
 		{
-			if (!obj.IsValid()) throw new ValidationException($"Entity is invalid");
 			await _dbSet.AddAsync(obj);
 			await _db.SaveChangesAsync();
 			return obj;

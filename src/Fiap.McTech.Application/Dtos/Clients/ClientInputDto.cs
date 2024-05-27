@@ -57,7 +57,7 @@ namespace Fiap.McTech.Application.Dtos.Clients
         /// </summary>
         /// <param name="field">The field value.</param>
         /// <param name="context">The validation context.</param>
-        /// <returns>A <see cref="ValidationResult"/> indicating whether the field is valid or not.</returns
+        /// <returns>A <see cref="ValidationResult"/> indicating whether the field is valid or not.</returns>
         public static ValidationResult? Validate(string field, ValidationContext context)
         {
             if (string.IsNullOrEmpty(field)) return new ValidationResult($"Invalid {context.DisplayName}.");

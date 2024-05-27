@@ -2,17 +2,35 @@
 
 namespace Fiap.McTech.Domain.ValuesObjects
 {
-	public class Cpf : ValueObject
-	{
-		public Cpf(string document)
-		{
-			Document = document;
-		}
+    /// <summary>
+    /// Represents a CPF (Cadastro de Pessoas Físicas), which stands for "Individual Taxpayer Registry" in English.
+    /// </summary>
+    public class Cpf : ValueObject
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Cpf"/> class with the specified CPF document.
+        /// </summary>
+        /// <param name="document">The CPF document.</param>
+        public Cpf(string document)
+        {
+            Document = document;
+        }
 
-		public string Document { get; set; } = string.Empty;
+        /// <summary>
+        /// Gets or sets the CPF document.
+        /// </summary>
+        public string Document { get; set; } = string.Empty;
 
-		public override bool IsValid() => Document.IsValidCpf();
+        /// <summary>
+        /// Validates the CPF document.
+        /// </summary>
+        /// <returns>True if the CPF document is valid; otherwise, false.</returns>
+        public override bool IsValid() => Document.IsValidCpf();
 
-		public override string ToString() => IsValid() ? Document : "";
-	}
+        /// <summary>
+        /// Returns a string representation of the CPF.
+        /// </summary>
+        /// <returns>The string representation of the CPF if it is valid; otherwise, an empty string.</returns>
+        public override string ToString() => Document + (IsValid() ? "" : "<invalid>");
+    }
 }

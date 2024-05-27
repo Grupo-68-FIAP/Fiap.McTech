@@ -3,7 +3,6 @@ using Fiap.McTech.Application.Dtos.Products.Add;
 using Fiap.McTech.Application.Dtos.Products.Update;
 using Fiap.McTech.Application.Interfaces;
 using Fiap.McTech.Domain.Enums;
-using Fiap.McTech.Domain.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Mime;
 
@@ -40,15 +39,7 @@ namespace Fiap.McTech.Api.Controllers.Product
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<ProductOutputDto>> GetProduct(Guid id)
         {
-            try
-            {
-                var product = await _productAppService.GetProductByIdAsync(id);
-                return Ok(product);
-            }
-            catch (EntityNotFoundException ex)
-            {
-                return NotFound(new ProblemDetails() { Detail = ex.Message });
-            }
+            return Ok(await _productAppService.GetProductByIdAsync(id));
         }
 
         /// <summary>
@@ -56,19 +47,14 @@ namespace Fiap.McTech.Api.Controllers.Product
         /// </summary>
         /// <returns>A list of all products.</returns>
         /// <response code="200">Returns a list of products.</response>
-        /// <response code="404">If no products are found.</response>
+        /// <response code="204">If no products are found.</response>
         [HttpGet]
         [ProducesResponseType(typeof(List<ProductOutputDto>), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> GetAllProducts()
         {
             var products = await _productAppService.GetAllProductsAsync();
-            if (products == null || !products.Any())
-            {
-                return NotFound("No products found.");
-            }
-
-            return Ok(products);
+            return (products == null || !products.Any()) ? new NoContentResult() : Ok(products);
         }
 
         /// <summary>
@@ -96,17 +82,11 @@ namespace Fiap.McTech.Api.Controllers.Product
         /// <response code="200">If the product was successfully updated.</response>
         /// <response code="404">If the product does not exist.</response>
         [HttpPut("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ProductOutputDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateProduct(Guid id, UpdateProductInputDto productDto)
         {
-            var updatedProduct = await _productAppService.UpdateProductAsync(id, productDto);
-            if (updatedProduct == null)
-            {
-                return NotFound("Product not found.");
-            }
-
-            return Ok();
+            return Ok(await _productAppService.UpdateProductAsync(id, productDto));
         }
 
         /// <summary>
@@ -115,20 +95,13 @@ namespace Fiap.McTech.Api.Controllers.Product
         /// <param name="id">The unique identifier of the product to be deleted.</param>
         /// <returns>A result indicating the outcome of the delete operation.</returns>
         /// <response code="204">If the product was successfully deleted.</response>
-        /// <response code="400">If there was an error deleting the product.</response>
         /// <response code="404">If the product does not exist.</response>
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteProduct(Guid id)
         {
-            var deleted = await _productAppService.DeleteProductAsync(id);
-            if (!deleted.IsSuccess)
-            {
-                return BadRequest("Error to delete product");
-            }
-
+            await _productAppService.DeleteProductAsync(id);
             return NoContent();
         }
 

@@ -9,12 +9,21 @@ using Microsoft.Extensions.Logging;
 
 namespace Fiap.McTech.Application.AppServices.Clients
 {
+    /// <summary>
+    /// Application service for managing clients.
+    /// </summary>
     public class ClientAppService : IClientAppService
     {
         private readonly IClientRepository _clientRepository;
         private readonly ILogger<ClientAppService> _logger;
         private readonly IMapper _mapper;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ClientAppService"/> class.
+        /// </summary>
+        /// <param name="clientRepository">The client repository.</param>
+        /// <param name="logger">The logger.</param>
+        /// <param name="mapper">The mapper.</param>
         public ClientAppService(
             IClientRepository clientRepository,
             ILogger<ClientAppService> logger,
@@ -25,6 +34,7 @@ namespace Fiap.McTech.Application.AppServices.Clients
             _mapper = mapper;
         }
 
+        /// <inheritdoc/>
         public async Task<ClientOutputDto> CreateClientAsync(ClientInputDto clientDto)
         {
             try
@@ -49,7 +59,7 @@ namespace Fiap.McTech.Application.AppServices.Clients
             }
             catch (McTechException ex)
             {
-                _logger.LogError(ex, "Domain: {msg}", ex.Message);
+                _logger.LogError(ex, "Application: {msg}", ex.Message);
                 throw;
             }
             catch (Exception ex)
@@ -59,6 +69,7 @@ namespace Fiap.McTech.Application.AppServices.Clients
             }
         }
 
+        /// <inheritdoc/>
         public async Task<List<ClientOutputDto>> GetAllClientsAsync()
         {
             try
@@ -81,6 +92,7 @@ namespace Fiap.McTech.Application.AppServices.Clients
             }
         }
 
+        /// <inheritdoc/>
         public async Task<ClientOutputDto?> GetClientByCpfAsync(string sCpf)
         {
             try
@@ -99,6 +111,7 @@ namespace Fiap.McTech.Application.AppServices.Clients
             }
         }
 
+        /// <inheritdoc/>
         public async Task<ClientOutputDto?> GetClientByIdAsync(Guid id)
         {
             try
@@ -115,6 +128,7 @@ namespace Fiap.McTech.Application.AppServices.Clients
             }
         }
 
+        /// <inheritdoc/>
         public async Task<ClientOutputDto> UpdateClientAsync(Guid id, ClientInputDto dto)
         {
             try
@@ -124,6 +138,8 @@ namespace Fiap.McTech.Application.AppServices.Clients
                 _logger.LogInformation("Updating client with ID {id}.", id);
 
                 _mapper.Map(dto, existed);
+
+                if (!existed.IsValid()) throw new EntityValidationException("Client invalid data.");
 
                 await _clientRepository.UpdateAsync(existed);
 
@@ -139,6 +155,7 @@ namespace Fiap.McTech.Application.AppServices.Clients
             }
         }
 
+        /// <inheritdoc/>
         public async Task DeleteClientAsync(Guid id)
         {
             try
@@ -174,7 +191,7 @@ namespace Fiap.McTech.Application.AppServices.Clients
         private async Task<Client> GetAsync(Cpf cpf)
         {
             if (!cpf.IsValid())
-                throw new EntityValidationException(string.Format("Invalid CPF {0}.", cpf));
+                throw new EntityValidationException(string.Format("Invalid CPF {0}.", cpf.Document));
 
             return await _clientRepository.GetClientAsync(cpf)
                 ?? throw new EntityNotFoundException(string.Format("Client with CPF {0} not found.", cpf));
