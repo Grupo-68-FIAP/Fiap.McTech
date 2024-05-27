@@ -11,8 +11,29 @@ Utilizando tecnologias modernas e práticas arquiteturais, o MeTech oferece uma 
  - Padrão Arquitetural Adicional: Arquitetura em Cebola (ou Onion Architecture)
 
 ## Funcionalidades Principais
+1. **Identificação do Cliente via CPF**
+   - API que permite identificar o cliente através do CPF. Esta funcionalidade autentica o cliente e garante que ele está registrado no sistema antes de proceder com outras operações.
 
-//TODO
+2. **Gerenciamento de Produtos**
+   - **Criar Produtos:** API que permite a criação de novos produtos no sistema, incluindo detalhes como nome, descrição, preço e categoria.
+   - **Editar Produtos:** API para atualizar informações de produtos existentes. Isso inclui alterações no nome, descrição, preço e categoria do produto.
+   - **Remover Produtos:** API que permite a remoção de produtos do sistema, assegurando que produtos desatualizados ou descontinuados sejam removidos.
+
+3. **Busca de Produtos por Categoria**
+   - API que permite buscar produtos com base em suas categorias. Isso facilita a organização e acesso aos produtos, permitindo que os clientes filtrem produtos de acordo com suas preferências.
+
+4. **Fake Checkout**
+   - API que simula o processo de checkout. Nesta etapa, os produtos escolhidos pelo cliente são enviados para uma fila de pedidos. Este fake checkout não realiza transações reais, mas prepara os pedidos para finalização.
+
+5. **Listar Pedidos**
+   - API que lista todos os pedidos feitos pelos clientes. Esta funcionalidade permite que os clientes e administradores vejam o histórico de pedidos, incluindo detalhes sobre cada pedido, como produtos incluídos, data e status do pedido.
+
+## Visão Geral do Sistema com DDD
+
+- Em PDF: [Link para documento PDF](./Documentação%20do%20Sistema%20com%20DDD.pdf)
+- No Miro: [Link para o Miro](https://miro.com/app/board/uXjVKVozBqw=/)
+
+![DDD do Sistema](./ddd-sistema.jpg)
 
 ## Como Contribuir
 
