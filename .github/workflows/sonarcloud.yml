@@ -49,7 +49,9 @@ jobs:
           $testProjects = Get-ChildItem -Path . -Filter *.csproj -Recurse | Where-Object { $_.FullName -like "*Tests*" }
         
           foreach ($project in $testProjects) {
-              dotnet-coverage collect "dotnet test $($project.FullName)" -f xml -o $project.Directory.FullName\coverage.xml
+              $coverageOutputDir = $project.Directory.FullName
+              dotnet-coverage collect "dotnet test $($project.FullName)" -f xml -o $coverageOutputDir
           }
         
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+
