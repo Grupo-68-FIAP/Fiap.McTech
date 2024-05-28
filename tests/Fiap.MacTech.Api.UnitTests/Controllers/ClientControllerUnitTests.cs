@@ -111,7 +111,7 @@ namespace Fiap.MacTech.Api.UnitTests.Controllers
             var cpf = "49380966091";
             var c = new Client("Test 2", new(cpf), new("test2@test.com"));
             _mockedClientRepository
-                .Setup(iClientRepository => iClientRepository.GetClientAsync(It.IsAny<Cpf>()))
+                .Setup(iClientRepository => iClientRepository.GetClientAsync(c.Cpf))
                 .ReturnsAsync(() => c);
             var controller = GetClientController();
 
@@ -140,6 +140,48 @@ namespace Fiap.MacTech.Api.UnitTests.Controllers
 
             // Act & Assert
             var task = Assert.ThrowsAsync(expectedExceptionType, () => controller.GetClientByCpf(search)).Result;
+            Assert.Contains(search, task.Message);
+        }
+
+
+        [Fact]
+        public void GetClientByEmail_Returns_200OK()
+        {
+            // Arrange
+            var email = "test2@test.com";
+            var c = new Client("Test 2", new("49380966091"), new(email));
+            _mockedClientRepository
+                .Setup(iClientRepository => iClientRepository.GetClientAsync(c.Email))
+                .ReturnsAsync(() => c);
+            var controller = GetClientController();
+
+            // Act
+            var task = controller.GetClientByEmail(email).Result;
+
+            // Assert
+            Assert.IsType<OkObjectResult>(task);
+
+            var taskResult = task as OkObjectResult;
+            Assert.IsType<ClientOutputDto>(taskResult?.Value);
+
+            var objectResult = taskResult.Value as dynamic;
+            Assert.Equal(c.Name, objectResult?.Name);
+            Assert.Equal(c.Id, objectResult?.Id);
+        }
+
+        [Theory]
+        [InlineData("invalid_email", typeof(EntityValidationException))]
+        [InlineData("test@test.com", typeof(EntityNotFoundException))]
+        public void GetClientByEmail_Throws_CorrectException(string search, Type expectedExceptionType)
+        {
+            // Arrange
+            _mockedClientRepository
+                .Setup(iClientRepository => iClientRepository.GetClientAsync(It.IsAny<Email>()))
+                .ReturnsAsync(() => null);
+            var controller = GetClientController();
+
+            // Act & Assert
+            var task = Assert.ThrowsAsync(expectedExceptionType, () => controller.GetClientByEmail(search)).Result;
             Assert.Contains(search, task.Message);
         }
 

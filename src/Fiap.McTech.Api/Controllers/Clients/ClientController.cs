@@ -1,5 +1,6 @@
 ﻿using Fiap.McTech.Application.Dtos.Clients;
 using Fiap.McTech.Application.Interfaces;
+using Fiap.McTech.Domain.ValuesObjects;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Mime;
 
@@ -69,6 +70,23 @@ namespace Fiap.McTech.Api.Controllers.Clients
         public async Task<IActionResult> GetClientByCpf(string cpf)
         {
             return Ok(await _clientAppService.GetClientByCpfAsync(cpf));
+        }
+
+        /// <summary>
+        /// Retrieves a client by its Email.
+        /// </summary>
+        /// <param name="email">The Email of the client.</param>
+        /// <returns>The requested client.</returns>
+        /// <response code="200">Returns the specified client.</response>
+        /// <response code="400">If there are validation issues with the Email.</response>
+        /// <response code="404">If the client with the given Email is not found.</response>
+        [HttpGet("email/{email}")]
+        [ProducesResponseType(typeof(ClientOutputDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetClientByEmail(string email)
+        {
+            return Ok(await _clientAppService.GetClientByEmailAsync(email));
         }
 
         /// <summary>
