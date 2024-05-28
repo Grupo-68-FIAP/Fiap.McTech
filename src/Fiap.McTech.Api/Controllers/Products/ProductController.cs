@@ -37,7 +37,7 @@ namespace Fiap.McTech.Api.Controllers.Product
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(ProductOutputDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<ProductOutputDto>> GetProduct(Guid id)
+        public async Task<IActionResult> GetProduct(Guid id)
         {
             return Ok(await _productAppService.GetProductByIdAsync(id));
         }

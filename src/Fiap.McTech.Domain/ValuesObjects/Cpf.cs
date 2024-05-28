@@ -19,7 +19,7 @@ namespace Fiap.McTech.Domain.ValuesObjects
         /// <summary>
         /// Gets or sets the CPF document.
         /// </summary>
-        public string Document { get; set; } = string.Empty;
+        public string Document { get; set; }
 
         /// <summary>
         /// Validates the CPF document.
@@ -32,5 +32,18 @@ namespace Fiap.McTech.Domain.ValuesObjects
         /// </summary>
         /// <returns>The string representation of the CPF if it is valid; otherwise, an empty string.</returns>
         public override string ToString() => Document + (IsValid() ? "" : "<invalid>");
+
+        /// <inheritdoc/>
+        public override bool Equals(object? obj)
+        {
+            if (obj is string)
+                return Equals(obj, Document);
+            else if (obj is Cpf cpf)
+                return cpf.Document == Document;
+            return false;
+        }
+
+        /// <inheritdoc/>
+        public override int GetHashCode() => HashCode.Combine(Document);
     }
 }

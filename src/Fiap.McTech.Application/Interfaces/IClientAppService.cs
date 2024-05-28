@@ -28,6 +28,13 @@ namespace Fiap.McTech.Application.Interfaces
         Task<ClientOutputDto?> GetClientByCpfAsync(string cpf);
 
         /// <summary>
+        /// Retrieves a client by email asynchronously.
+        /// </summary>
+        /// <param name="email">The email of the client to retrieve.</param>
+        /// <returns>A task representing the asynchronous operation that returns a client DTO, or null if not found.</returns>
+        Task<ClientOutputDto?> GetClientByEmailAsync(string email);
+
+        /// <summary>
         /// Creates a new client asynchronously.
         /// </summary>
         /// <param name="dto">The DTO containing client data to create.</param>

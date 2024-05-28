@@ -21,7 +21,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fiap.McTech.UnitTests", "te
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{BE266F47-3BB1-4262-9693-BE017B676B69}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fiap.McTech.Services", "src\Fiap.McTech.Services\Fiap.McTech.Services.csproj", "{A8B75878-1A39-452E-9136-3766426A12CB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fiap.McTech.Services", "src\Fiap.McTech.Services\Fiap.McTech.Services.csproj", "{A8B75878-1A39-452E-9136-3766426A12CB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fiap.MacTech.Api.UnitTests", "tests\Fiap.MacTech.Api.UnitTests\Fiap.MacTech.Api.UnitTests.csproj", "{8CD060B3-C26C-445C-9030-0E67ABD017E5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -61,6 +63,10 @@ Global
 		{A8B75878-1A39-452E-9136-3766426A12CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A8B75878-1A39-452E-9136-3766426A12CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A8B75878-1A39-452E-9136-3766426A12CB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8CD060B3-C26C-445C-9030-0E67ABD017E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8CD060B3-C26C-445C-9030-0E67ABD017E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8CD060B3-C26C-445C-9030-0E67ABD017E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8CD060B3-C26C-445C-9030-0E67ABD017E5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -73,6 +79,7 @@ Global
 		{3850682D-F84E-46C8-BF97-CE6985302AB6} = {1E7A28C7-5452-4692-BFB5-F79F796CBF52}
 		{8FB5A7D3-90EE-45D6-B86D-48235639D40A} = {AF9D3E99-46C2-496E-894D-2F59EA1D7A9F}
 		{A8B75878-1A39-452E-9136-3766426A12CB} = {1E7A28C7-5452-4692-BFB5-F79F796CBF52}
+		{8CD060B3-C26C-445C-9030-0E67ABD017E5} = {AF9D3E99-46C2-496E-894D-2F59EA1D7A9F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {198C4A27-5AC8-4896-B628-BFEA2E289080}
