@@ -45,18 +45,21 @@ namespace Fiap.McTech.Domain.ValuesObjects
         {
             // Arrange
             var newForTest = new Email(STRING_VALID_EMAIL_1);
+            var objFifferent = new Cpf("00011122233");
 
             // Act
             var test1 = validEmail1.Equals(validEmail2);
             var test2 = validEmail1.Equals(STRING_VALID_EMAIL_1);
             var test3 = validEmail1.Equals(newForTest);
             var test4 = validEmail1.Equals("00011122233");
+            var test5 = validEmail1.Equals(objFifferent);
 
             // Assert
             Assert.False(test1);
             Assert.True(test2);
             Assert.True(test3);
             Assert.False(test4);
+            Assert.False(test5);
         }
         [Fact]
         public void GetHashCode_Returns_SameHash_ForEqualObjects()

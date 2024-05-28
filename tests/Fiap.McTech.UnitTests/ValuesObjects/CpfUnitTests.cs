@@ -43,18 +43,21 @@
         {
             // Arrange
             var newForTest = new Cpf(STRING_VALID_CPF_1);
+            var objFifferent = new Email("invalid-email");
 
             // Act
             var test1 = validCpf1.Equals(validCpf2);
             var test2 = validCpf1.Equals(STRING_VALID_CPF_1);
             var test3 = validCpf1.Equals(newForTest);
             var test4 = validCpf1.Equals("00011122233");
+            var test5 = validCpf1.Equals(objFifferent);
 
             // Assert
             Assert.False(test1);
             Assert.True(test2);
             Assert.True(test3);
             Assert.False(test4);
+            Assert.False(test5);
         }
         [Fact]
         public void GetHashCode_Returns_SameHash_ForEqualObjects()
