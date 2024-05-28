@@ -19,7 +19,7 @@ namespace Fiap.McTech.Domain.ValuesObjects
         /// <summary>
         /// Gets or sets the CPF document.
         /// </summary>
-        public string Document { get; set; } = string.Empty;
+        public string Document { get; set; }
 
         /// <summary>
         /// Validates the CPF document.

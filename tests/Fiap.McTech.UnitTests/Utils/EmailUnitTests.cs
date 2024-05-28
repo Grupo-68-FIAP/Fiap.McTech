@@ -17,69 +17,19 @@ namespace Fiap.McTech.UnitTests.Utils
 			Assert.True(isValid);
 		}
 
-		[Fact]
-		public void TestInvalidEmail_NoAtSymbol()
+		[Theory]
+        [InlineData(null)]
+        [InlineData("@example.com")]
+        [InlineData("test@")]
+        [InlineData("   ")]
+        [InlineData("testexample.com")]
+        public void TestInvalidEmail_InvalidData(string invalidEmail)
 		{
-			// Arrange
-			string invalidEmail = "testexample.com";
-
 			// Act
 			bool isValid = invalidEmail.IsValidEmail();
 
 			// Assert
 			Assert.False(isValid);
-		}
-
-		[Fact]
-		public void TestInvalidEmail_NoDomain()
-		{
-			// Arrange
-			string invalidEmail = "test@";
-
-			// Act
-			bool isValid = invalidEmail.IsValidEmail();
-
-			// Assert
-			Assert.False(isValid);
-		}
-
-		[Fact]
-		public void TestInvalidEmail_NoUsername()
-		{
-			// Arrange
-			string invalidEmail = "@example.com"; 
-
-			// Act
-			bool isValid = invalidEmail.IsValidEmail();
-
-			// Assert
-			Assert.False(isValid);
-		}
-
-		[Fact]
-		public void TestInvalidEmail_NullOrEmpty()
-		{
-			// Arrange
-			string nullOrEmptyEmail = null; 
-
-			// Act
-			bool isValidNullOrEmpty = nullOrEmptyEmail.IsValidEmail();
-
-			// Assert
-			Assert.False(isValidNullOrEmpty);
-		}
-
-		[Fact]
-		public void TestInvalidEmail_WhiteSpace()
-		{
-			// Arrange
-			string whiteSpaceEmail = "   ";
-
-			// Act
-			bool isValidWhiteSpace = whiteSpaceEmail.IsValidEmail();
-
-			// Assert
-			Assert.False(isValidWhiteSpace);
 		}
 	}
 }

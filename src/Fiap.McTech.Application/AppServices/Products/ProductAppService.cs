@@ -38,144 +38,96 @@ namespace Fiap.McTech.Application.AppServices.Product
         /// <inheritdoc/>
         public async Task<ProductOutputDto> CreateProductAsync(CreateProductInputDto productDto)
         {
-            try
-            {
-                _logger.LogInformation("Creating a new product.");
+            _logger.LogInformation("Creating a new product.");
 
-                var product = _mapper.Map<Domain.Entities.Products.Product>(productDto);
+            var product = _mapper.Map<Domain.Entities.Products.Product>(productDto);
 
-                if (!product.IsValid())
-                    throw new EntityValidationException("Product invalid data.");
+            if (!product.IsValid())
+                throw new EntityValidationException("Product invalid data.");
 
-                var createdProduct = await _productRepository.AddAsync(product);
+            var createdProduct = await _productRepository.AddAsync(product);
 
-                _logger.LogInformation("Product created successfully with ID {ProductId}.", createdProduct.Id);
+            _logger.LogInformation("Product created successfully with ID {ProductId}.", createdProduct.Id);
 
-                return _mapper.Map<ProductOutputDto>(createdProduct);
-            }
-            catch (Exception)
-            {
-                _logger.LogError("Failed to create product");
-                throw;
-            }
+            return _mapper.Map<ProductOutputDto>(createdProduct);
         }
 
         /// <inheritdoc/>
         public async Task<ProductOutputDto> GetProductByIdAsync(Guid productId)
         {
-            try
+            _logger.LogInformation("Retrieving product with ID {ProductId}.", productId);
+
+            var product = await _productRepository.GetByIdAsync(productId);
+            if (product == null)
             {
-                _logger.LogInformation("Retrieving product with ID {ProductId}.", productId);
-
-                var product = await _productRepository.GetByIdAsync(productId);
-                if (product == null)
-                {
-                    _logger.LogInformation("Product with ID {ProductId} not found.", productId);
-                    throw new EntityNotFoundException(string.Format("Product with ID {0} not found.", productId));
-                }
-
-                _logger.LogInformation("Product with ID {ProductId} retrieved successfully.", productId);
-
-                return _mapper.Map<ProductOutputDto>(product);
+                _logger.LogInformation("Product with ID {ProductId} not found.", productId);
+                throw new EntityNotFoundException(string.Format("Product with ID {0} not found.", productId));
             }
-            catch (McTechException) { throw; }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Failed to retrieve product with ID {ProductId}.", productId);
-                throw;
-            }
+
+            _logger.LogInformation("Product with ID {ProductId} retrieved successfully.", productId);
+
+            return _mapper.Map<ProductOutputDto>(product);
         }
 
         /// <inheritdoc/>
         public async Task<List<ProductOutputDto>> GetAllProductsAsync()
         {
-            try
+
+            _logger.LogInformation("Retrieving all products.");
+
+            var products = await _productRepository.GetAll();
+            if (products == null || !products.Any())
             {
-                _logger.LogInformation("Retrieving all products.");
-
-                var products = await _productRepository.GetAll();
-                if (products == null || !products.Any())
-                {
-                    _logger.LogInformation("No products found.");
-                    return new List<ProductOutputDto>();
-                }
-
-                _logger.LogInformation("Retrieved products successfully.");
-
-                return _mapper.Map<List<ProductOutputDto>>(products);
+                _logger.LogInformation("No products found.");
+                return new List<ProductOutputDto>();
             }
-            catch (Exception)
-            {
-                _logger.LogError("Failed to retrieve products");
-                throw;
-            }
+
+            _logger.LogInformation("Retrieved products successfully.");
+
+            return _mapper.Map<List<ProductOutputDto>>(products);
         }
 
         /// <inheritdoc/>
         public async Task<ProductOutputDto> UpdateProductAsync(Guid productId, UpdateProductInputDto productDto)
         {
-            try
-            {
-                var existingProduct = await _productRepository.GetByIdAsync(productId)
-                    ?? throw new EntityNotFoundException(string.Format("Product with ID {0} not found.", productId));
+            var existingProduct = await _productRepository.GetByIdAsync(productId)
+                ?? throw new EntityNotFoundException(string.Format("Product with ID {0} not found.", productId));
 
-                _logger.LogInformation("Updating product with ID {ProductId}.", productId);
+            _logger.LogInformation("Updating product with ID {ProductId}.", productId);
 
-                _mapper.Map(productDto, existingProduct);
+            _mapper.Map(productDto, existingProduct);
 
-                if (!existingProduct.IsValid())
-                    throw new EntityValidationException("Product invalid data.");
+            if (!existingProduct.IsValid())
+                throw new EntityValidationException("Product invalid data.");
 
-                await _productRepository.UpdateAsync(existingProduct);
+            await _productRepository.UpdateAsync(existingProduct);
 
-                _logger.LogInformation("Product with ID {ProductId} updated successfully.", productId);
+            _logger.LogInformation("Product with ID {ProductId} updated successfully.", productId);
 
-                return _mapper.Map<ProductOutputDto>(existingProduct);
-            }
-            catch (Exception)
-            {
-                _logger.LogError("Failed to update product with ID {ProductId}.", productId);
-                throw;
-            }
+            return _mapper.Map<ProductOutputDto>(existingProduct);
         }
 
         /// <inheritdoc/>
         public async Task DeleteProductAsync(Guid productId)
         {
-            try
-            {
-                _logger.LogInformation("Attempting to delete product with ID: {ProductId}", productId);
+            _logger.LogInformation("Attempting to delete product with ID: {ProductId}", productId);
 
-                var existingProduct = await _productRepository.GetByIdAsync(productId)
-                    ?? throw new EntityNotFoundException(string.Format("Product with ID {0} not found.", productId));
+            var existingProduct = await _productRepository.GetByIdAsync(productId)
+                ?? throw new EntityNotFoundException(string.Format("Product with ID {0} not found.", productId));
 
-                await _productRepository.RemoveAsync(existingProduct);
+            await _productRepository.RemoveAsync(existingProduct);
 
-                _logger.LogInformation("Product with ID {ProductId} deleted successfully.", productId);
-            }
-            catch (Exception)
-            {
-                _logger.LogError("Failed to delete product with ID: {ProductId}", productId);
-                throw;
-            }
+            _logger.LogInformation("Product with ID {ProductId} deleted successfully.", productId);
         }
 
         /// <inheritdoc/>
         public async Task<List<ProductOutputDto>> GetProductsByCategoryAsync(ProductCategory category)
         {
-            try
-            {
-                _logger.LogInformation("Retrieving products by category {category}.", category);
+            _logger.LogInformation("Retrieving products by category {category}.", category);
 
-                var products = await _productRepository.GetProductsByCategoryAsync(category);
+            var products = await _productRepository.GetProductsByCategoryAsync(category);
 
-                return _mapper.Map<List<ProductOutputDto>>(products);
-            }
-            catch (Exception)
-            {
-                _logger.LogError("An error occurred while retrieving products by category {Category}.", category);
-                throw;
-            }
+            return _mapper.Map<List<ProductOutputDto>>(products);
         }
     }
 }
