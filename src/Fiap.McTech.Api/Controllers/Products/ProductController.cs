@@ -60,7 +60,18 @@ namespace Fiap.McTech.Api.Controllers.Product
         /// <summary>
         /// Creates a new product.
         /// </summary>
-        /// <param name="productDto">The data of the product to be created.</param>
+        /// <param name="productDto"><para>The data of the product to be created.</para>
+        /// <para>For "category" attribute, consider using one of the values below, in order to have products grouped by category:</para>
+        /// <para>
+        /// <list type="bullet">
+        /// <item><description><c>None</c> (-1): No specific category.</description></item>
+        /// <item><description><c>Snack</c> (0): Category for snacks.</description></item>
+        /// <item><description><c>SideDish</c> (1): Category for side dishes.</description></item>
+        /// <item><description><c>Beverage</c> (2): Category for beverages.</description></item>
+        /// <item><description><c>Dessert</c> (3): Category for desserts.</description></item>
+        /// </list>
+        /// </para>
+        /// </param>
         /// <returns>The created product.</returns>
         /// <response code="201">Returns the newly created product.</response>
         /// <response code="400">If there are validation issues.</response>
