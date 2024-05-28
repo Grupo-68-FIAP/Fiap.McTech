@@ -39,8 +39,8 @@ jobs:
         shell: powershell
         run: |
           New-Item -Path .\.sonar\scanner -ItemType Directory
-          dotnet tool update --global dotnet-sonarscanner  --tool-path .\.sonar\scanner
-          dotnet tool update --global dotnet-coverageconverter  --tool-path .\.sonar\scanner
+          dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
+          dotnet tool update dotnet-coverageconverter  --tool-path .\.sonar\scanner
 
       - name: Build and analyze
         env:
@@ -50,6 +50,6 @@ jobs:
         run: |
           .\.sonar\scanner\dotnet-sonarscanner begin /k:"Grupo-68-FIAP_Fiap.McTech" /o:"grupo-68-fiap" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"  /d:sonar.cs.vscoveragexml.reportsPaths="**.coveragexml" /d:sonar.cs.vstest.reportsPaths="**.trx"
           dotnet test "Fiap.McTech.sln" --collect "Code Coverage" --logger trx --results-directory "TestsResults"
-          dotnet-coverageconverter -f "." -p true -r
+          .\.sonar\scanner\dotnet-coverageconverter -f "." -p true -r
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
 
