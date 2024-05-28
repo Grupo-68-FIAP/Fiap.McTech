@@ -53,9 +53,9 @@ namespace Fiap.McTech.Application.AppServices.Product
 
                 return _mapper.Map<ProductOutputDto>(createdProduct);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                _logger.LogError(ex, "Failed to create product");
+                _logger.LogError("Failed to create product");
                 throw;
             }
         }
@@ -104,9 +104,9 @@ namespace Fiap.McTech.Application.AppServices.Product
 
                 return _mapper.Map<List<ProductOutputDto>>(products);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                _logger.LogError(ex, "Failed to retrieve products");
+                _logger.LogError("Failed to retrieve products");
                 throw;
             }
         }
@@ -132,9 +132,9 @@ namespace Fiap.McTech.Application.AppServices.Product
 
                 return _mapper.Map<ProductOutputDto>(existingProduct);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                _logger.LogError(ex, "Failed to update product with ID {ProductId}.", productId);
+                _logger.LogError("Failed to update product with ID {ProductId}.", productId);
                 throw;
             }
         }
@@ -153,9 +153,9 @@ namespace Fiap.McTech.Application.AppServices.Product
 
                 _logger.LogInformation("Product with ID {ProductId} deleted successfully.", productId);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                _logger.LogError(ex, "Failed to delete product with ID: {ProductId}", productId);
+                _logger.LogError("Failed to delete product with ID: {ProductId}", productId);
                 throw;
             }
         }
@@ -171,9 +171,9 @@ namespace Fiap.McTech.Application.AppServices.Product
 
                 return _mapper.Map<List<ProductOutputDto>>(products);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                _logger.LogError(ex, "An error occurred while retrieving products by category {Category}.", category);
+                _logger.LogError("An error occurred while retrieving products by category {Category}.", category);
                 throw;
             }
         }
