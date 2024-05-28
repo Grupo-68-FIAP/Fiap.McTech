@@ -36,7 +36,9 @@ jobs:
 
       - name: Install SonarCloud scanner
         if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
+        shell: powershell
         run: |
+          New-Item -Path .\.sonar\scanner -ItemType Directory
           dotnet tool update --global dotnet-sonarscanner  --tool-path .\.sonar\scanner
           dotnet tool update --global dotnet-coverageconverter  --tool-path .\.sonar\scanner
 
