@@ -35,11 +35,11 @@ namespace Fiap.McTech.Application.AppServices.Clients
         }
 
         /// <inheritdoc/>
-        public async Task<ClientOutputDto> CreateClientAsync(ClientInputDto clientDto)
+        public async Task<ClientOutputDto> CreateClientAsync(ClientInputDto dto)
         {
             _logger.LogInformation("Creating a new client.");
 
-            var newClient = _mapper.Map<Client>(clientDto);
+            var newClient = _mapper.Map<Client>(dto);
 
             var existsClient = await _clientRepository.GetClientAsync(newClient.Cpf);
             if (existsClient != null)
