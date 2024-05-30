@@ -13,6 +13,21 @@ namespace Fiap.McTech.Domain.Entities.Cart
         public CartClient() { }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="CartClient"/> class with specified parameters.
+        /// </summary>
+        /// <param name="clientId">The unique identifier of the client associated with the cart.</param>
+        /// <param name="client">The client associated with the cart.</param>
+        /// <param name="allValue">The total value of all items in the cart.</param>
+        /// <param name="items">The list of items in the cart.</param>
+        public CartClient(Guid? clientId, Client? client, decimal allValue, List<CartItem> items)
+        {
+            ClientId = clientId;
+            Client = client;
+            AllValue = allValue;
+            Items = items;
+        }
+
+        /// <summary>
         /// Gets or sets the unique identifier of the client associated with the cart.
         /// </summary>
         public Guid? ClientId { get; internal set; }

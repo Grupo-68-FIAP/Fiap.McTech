@@ -1,6 +1,5 @@
 ﻿using Fiap.McTech.Application.Dtos.Clients;
 using Fiap.McTech.Application.Interfaces;
-using Fiap.McTech.Domain.ValuesObjects;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Mime;
 

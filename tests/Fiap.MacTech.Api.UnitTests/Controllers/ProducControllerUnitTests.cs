@@ -236,7 +236,7 @@ namespace Fiap.MacTech.Api.UnitTests.Controllers
 
         private ProductController GetProductController()
         {
-            var appService = new ProductAppService(_mockedLogger.Object, _mockedProductRepository.Object, _mapper);
+            var appService = new ProductAppService(_mockedProductRepository.Object, _mockedLogger.Object, _mapper);
             return new ProductController(appService);
         }
     }
