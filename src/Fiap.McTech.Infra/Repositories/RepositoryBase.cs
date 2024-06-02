@@ -71,10 +71,28 @@ namespace Fiap.McTech.Infra.Repositories
             await _db.SaveChangesAsync();
         }
 
+        private bool disposed = false;
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposed) return;
+            
+            if (disposing)
+            {
+                _db.Dispose();
+            }
+            disposed = true;
+        }
+
         public void Dispose()
         {
-            _db.Dispose();
+            Dispose(true);
             GC.SuppressFinalize(this);
+        }
+
+        ~RepositoryBase()
+        {
+            Dispose(false);
         }
     }
 }
