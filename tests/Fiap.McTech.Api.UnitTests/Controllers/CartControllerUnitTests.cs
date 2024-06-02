@@ -52,7 +52,7 @@ namespace Fiap.MacTech.Api.UnitTests.Controllers
         }
 
         [Fact]
-        public void GetCart_Returns_200OK()
+        public async Task GetCart_Returns_200OK()
         {
             // Arrange
             var c = new CartClient();
@@ -62,7 +62,7 @@ namespace Fiap.MacTech.Api.UnitTests.Controllers
             var controller = CreateCartController();
 
             // Act
-            var task = controller.GetCart(c.Id).Result;
+            var task = await controller.GetCart(c.Id);
 
             // Assert
             Assert.IsType<OkObjectResult>(task);
@@ -73,7 +73,7 @@ namespace Fiap.MacTech.Api.UnitTests.Controllers
         }
 
         [Fact]
-        public void GetCart_Throws_EntityNotFoundException()
+        public async Task GetCart_Throws_EntityNotFoundException()
         {
             // Arrange
             _mockedCartClientRepository
@@ -83,12 +83,12 @@ namespace Fiap.MacTech.Api.UnitTests.Controllers
             var guidSearch = Guid.NewGuid();
 
             // Act & Assert
-            var task = Assert.ThrowsAsync<EntityNotFoundException>(() => controller.GetCart(guidSearch)).Result;
+            var task = await Assert.ThrowsAsync<EntityNotFoundException>(() => controller.GetCart(guidSearch));
             Assert.Contains(guidSearch.ToString(), task.Message);
         }
 
         [Fact]
-        public void GetCartByClientId_Returns_200OK()
+        public async Task GetCartByClientId_Returns_200OK()
         {
             // Arrange
             var client = new Client("", new Cpf(""), new Email(""));
@@ -99,7 +99,7 @@ namespace Fiap.MacTech.Api.UnitTests.Controllers
             var controller = CreateCartController();
 
             // Act
-            var task = controller.GetCartByClientId(client.Id).Result;
+            var task = await controller.GetCartByClientId(client.Id);
 
             // Assert
             Assert.IsType<OkObjectResult>(task);
@@ -110,7 +110,7 @@ namespace Fiap.MacTech.Api.UnitTests.Controllers
         }
 
         [Fact]
-        public void GetByCartIdAsync_Throws_EntityNotFoundException()
+        public async Task GetByCartIdAsync_Throws_EntityNotFoundException()
         {
             // Arrange
             var guidSearch = Guid.NewGuid();
@@ -120,14 +120,14 @@ namespace Fiap.MacTech.Api.UnitTests.Controllers
             var controller = CreateCartController();
 
             // Act & Assert
-            var task = Assert.ThrowsAsync<EntityNotFoundException>(() => controller.GetCartByClientId(guidSearch)).Result;
+            var task = await Assert.ThrowsAsync<EntityNotFoundException>(() => controller.GetCartByClientId(guidSearch));
             Assert.Contains(guidSearch.ToString(), task.Message);
         }
 
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public void CreateCart_Returns_201Created(bool includeClient)
+        public async Task CreateCart_Returns_201Created(bool includeClient)
         {
             // Arrange
             var product = new Product("Prod 1", 10, "Prod desc 1", "img", ProductCategory.Snack);
@@ -152,7 +152,7 @@ namespace Fiap.MacTech.Api.UnitTests.Controllers
             var controller = CreateCartController();
 
             // Act
-            var task = controller.CreateCart(cartClientInputDto).Result;
+            var task = await controller.CreateCart(cartClientInputDto);
 
             // Assert
             Assert.IsType<CreatedAtActionResult>(task.Result);
@@ -173,7 +173,7 @@ namespace Fiap.MacTech.Api.UnitTests.Controllers
         [InlineData(GUID_1, GUID_2, typeof(EntityNotFoundException))]
         // Test exception when invalid cart data
         [InlineData(GUID_1, GUID_1, typeof(EntityValidationException))]
-        public void CreateCart_Throws_CorrectException(string clientGuid, string productGuid, Type expectedExceptionType)
+        public async Task CreateCart_Throws_CorrectException(string clientGuid, string productGuid, Type expectedExceptionType)
         {
             // Arrange
             var product = new Product("", 10, "", "", ProductCategory.Snack);
@@ -195,12 +195,12 @@ namespace Fiap.MacTech.Api.UnitTests.Controllers
             var controller = CreateCartController();
 
             // Act & Assert
-            Assert.ThrowsAsync(expectedExceptionType, () => controller.CreateCart(cartClientInputDto));
+            await Assert.ThrowsAsync(expectedExceptionType, () => controller.CreateCart(cartClientInputDto));
             _mockedCartClientRepository.Verify(repository => repository.AddAsync(It.IsAny<CartClient>()), Times.Never);
         }
 
         [Fact]
-        public void AddCartItemToCartClientAsync_Returns_200OK()
+        public async Task AddCartItemToCartClientAsync_Returns_200OK()
         {
             // Arrange
             var prodId = Guid.NewGuid();
@@ -218,7 +218,7 @@ namespace Fiap.MacTech.Api.UnitTests.Controllers
             var controller = CreateCartController();
 
             // Act
-            var task = controller.AddCartItemToCartClientAsync(cart.Id, product.Id).Result;
+            var task = await controller.AddCartItemToCartClientAsync(cart.Id, product.Id);
 
             // Assert
             Assert.IsType<OkObjectResult>(task);
@@ -235,7 +235,7 @@ namespace Fiap.MacTech.Api.UnitTests.Controllers
         [InlineData(GUID_2, GUID_2)]
         // Test exception when product not found
         [InlineData(GUID_1, GUID_2)]
-        public void AddCartItemToCartClientAsync_Throws_CorrectException(string cartGuid, string productGuid)
+        public async Task AddCartItemToCartClientAsync_Throws_CorrectException(string cartGuid, string productGuid)
         {
             // Arrange
             var cart = new CartClient(null, null, 0, new() { { new CartItem("Prod 1", 1, 10, new Guid(productGuid), Guid.Empty) } });
@@ -249,12 +249,12 @@ namespace Fiap.MacTech.Api.UnitTests.Controllers
             var controller = CreateCartController();
 
             // Act & Assert
-            Assert.ThrowsAsync<EntityNotFoundException>(() => controller.AddCartItemToCartClientAsync(new Guid(cartGuid), new Guid(productGuid)));
+            await Assert.ThrowsAsync<EntityNotFoundException>(() => controller.AddCartItemToCartClientAsync(new Guid(cartGuid), new Guid(productGuid)));
             _mockedCartItemRepository.Verify(repository => repository.AddAsync(It.IsAny<CartItem>()), Times.Never);
         }
 
         [Fact]
-        public void RemoveCartItemFromCartClientAsync_Returns_200OK()
+        public async Task RemoveCartItemFromCartClientAsync_Returns_200OK()
         {
             // Arrange
             var cartItem = new CartItem("Prod 1", 1, 10, Guid.NewGuid(), Guid.Empty);
@@ -268,7 +268,7 @@ namespace Fiap.MacTech.Api.UnitTests.Controllers
             var controller = CreateCartController();
 
             // Act
-            var task = controller.RemoveCartItemFromCartClientAsync(cart.Id).Result;
+            var task = await controller.RemoveCartItemFromCartClientAsync(cart.Id);
 
             // Assert
             Assert.IsType<OkObjectResult>(task);
@@ -282,7 +282,7 @@ namespace Fiap.MacTech.Api.UnitTests.Controllers
         }
 
         [Fact]
-        public void RemoveCartItemFromCartClientAsync_Throws_CorrectException()
+        public async Task RemoveCartItemFromCartClientAsync_Throws_CorrectException()
         {
             // Arrange
             _mockedCartItemRepository
@@ -291,13 +291,13 @@ namespace Fiap.MacTech.Api.UnitTests.Controllers
             var controller = CreateCartController();
 
             // Act & Assert
-            Assert.ThrowsAsync<EntityNotFoundException>(() => controller.RemoveCartItemFromCartClientAsync(Guid.NewGuid()));
+            await Assert.ThrowsAsync<EntityNotFoundException>(() => controller.RemoveCartItemFromCartClientAsync(Guid.NewGuid()));
             _mockedCartItemRepository.Verify(repository => repository.RemoveAsync(It.IsAny<CartItem>()), Times.Never);
             _mockedCartClientRepository.Verify(repository => repository.UpdateAsync(It.IsAny<CartClient>()), Times.Never);
         }
 
         [Fact]
-        public void DeleteCart_Returns_204NoContent()
+        public async Task DeleteCart_Returns_204NoContent()
         {
             // Arrange
             var c = new CartClient();
@@ -307,7 +307,7 @@ namespace Fiap.MacTech.Api.UnitTests.Controllers
             var controller = CreateCartController();
 
             // Act
-            var task = controller.DeleteCart(c.Id).Result;
+            var task = await controller.DeleteCart(c.Id);
 
             // Assert
             Assert.IsType<NoContentResult>(task);
@@ -315,7 +315,7 @@ namespace Fiap.MacTech.Api.UnitTests.Controllers
         }
 
         [Fact]
-        public void DeleteCart_Throws_CorrectException()
+        public async Task DeleteCart_Throws_CorrectException()
         {
             // Arrange
             _mockedCartClientRepository
@@ -324,7 +324,7 @@ namespace Fiap.MacTech.Api.UnitTests.Controllers
             var controller = CreateCartController();
 
             // Act & Assert
-            Assert.ThrowsAsync<EntityNotFoundException>(() => controller.DeleteCart(Guid.NewGuid()));
+            await Assert.ThrowsAsync<EntityNotFoundException>(() => controller.DeleteCart(Guid.NewGuid()));
             _mockedCartClientRepository.Verify(repository => repository.RemoveAsync(It.IsAny<CartClient>()), Times.Never);
         }
 

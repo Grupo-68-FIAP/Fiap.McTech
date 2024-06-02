@@ -5,7 +5,6 @@ using Fiap.McTech.Application.Dtos.Products;
 using Fiap.McTech.Application.Dtos.Products.Add;
 using Fiap.McTech.Application.Dtos.Products.Update;
 using Fiap.McTech.CrossCutting.Ioc.Mappers.Profiles;
-using Fiap.McTech.Domain.Entities.Clients;
 using Fiap.McTech.Domain.Entities.Products;
 using Fiap.McTech.Domain.Enums;
 using Fiap.McTech.Domain.Exceptions;
@@ -38,7 +37,7 @@ namespace Fiap.MacTech.Api.UnitTests.Controllers
         }
 
         [Fact]
-        public void GetAllProducts_Returns_204NoContent()
+        public async Task GetAllProducts_Returns_204NoContent()
         {
             // Arrange
             _mockedProductRepository
@@ -47,14 +46,14 @@ namespace Fiap.MacTech.Api.UnitTests.Controllers
             var controller = GetProductController();
 
             // Act
-            var result = controller.GetAllProducts().Result;
+            var result = await controller.GetAllProducts();
 
             // Assert
             Assert.IsType<NoContentResult>(result);
         }
 
         [Fact]
-        public void GetAllProducts_Returns_200Ok()
+        public async Task GetAllProducts_Returns_200Ok()
         {
             // Arrange
             _mockedProductRepository
@@ -63,7 +62,7 @@ namespace Fiap.MacTech.Api.UnitTests.Controllers
             var controller = GetProductController();
 
             // Act
-            var result = controller.GetAllProducts().Result;
+            var result = await controller.GetAllProducts();
 
             // Assert
             Assert.IsType<OkObjectResult>(result);
@@ -74,7 +73,7 @@ namespace Fiap.MacTech.Api.UnitTests.Controllers
         }
 
         [Fact]
-        public void GetProduct_Returns_200OK()
+        public async Task GetProduct_Returns_200OK()
         {
             // Arrange
             var p = _productListForTest[0];
@@ -84,7 +83,7 @@ namespace Fiap.MacTech.Api.UnitTests.Controllers
             var controller = GetProductController();
 
             // Act
-            var task = controller.GetProduct(p.Id).Result;
+            var task = await controller.GetProduct(p.Id);
 
             // Assert
             Assert.IsType<OkObjectResult>(task);
@@ -98,7 +97,7 @@ namespace Fiap.MacTech.Api.UnitTests.Controllers
         }
 
         [Fact]
-        public void GetProduct_Throws_EntityNotFoundException()
+        public async Task GetProduct_Throws_EntityNotFoundException()
         {
             // Arrange
             _mockedProductRepository
@@ -108,12 +107,12 @@ namespace Fiap.MacTech.Api.UnitTests.Controllers
             var guidSearch = Guid.NewGuid();
 
             // Act & Assert
-            var task = Assert.ThrowsAsync<EntityNotFoundException>(() => controller.GetProduct(guidSearch)).Result;
+            var task = await Assert.ThrowsAsync<EntityNotFoundException>(() => controller.GetProduct(guidSearch));
             Assert.Contains(guidSearch.ToString(), task.Message);
         }
 
         [Fact]
-        public void CreateProduct_Returns_201Created()
+        public async Task CreateProduct_Returns_201Created()
         {
             // Arrange
             _mockedProductRepository
@@ -123,7 +122,7 @@ namespace Fiap.MacTech.Api.UnitTests.Controllers
             var input = new CreateProductInputDto("Test 1", 10, "Product test 1", ProductCategory.Snack);
 
             // Act
-            var result = controller.CreateProduct(input).Result;
+            var result = await controller.CreateProduct(input);
 
             // Assert
             Assert.IsType<CreatedAtActionResult>(result);
@@ -131,7 +130,7 @@ namespace Fiap.MacTech.Api.UnitTests.Controllers
         }
 
         [Fact]
-        public void CreateProduct_Throws_CorrectException()
+        public async Task CreateProduct_Throws_CorrectException()
         {
             // Arrange
             var input = new CreateProductInputDto("", 0, "", ProductCategory.Snack);
@@ -139,13 +138,13 @@ namespace Fiap.MacTech.Api.UnitTests.Controllers
             var controller = GetProductController();
 
             // Act & Assert
-            var task = Assert.ThrowsAsync<EntityValidationException>(() => controller.CreateProduct(input)).Result;
+            var task = await Assert.ThrowsAsync<EntityValidationException>(() => controller.CreateProduct(input));
             Assert.Contains("invalid data", task.Message);
             _mockedProductRepository.Verify(repository => repository.AddAsync(It.IsAny<Product>()), Times.Never);
         }
 
         [Fact]
-        public void UpdateProduct_Returns_200OK()
+        public async Task UpdateProduct_Returns_200OK()
         {
             // Arrange
             var p = _productListForTest[0];
@@ -158,7 +157,7 @@ namespace Fiap.MacTech.Api.UnitTests.Controllers
             var input = new UpdateProductInputDto() { Id = p.Id, Category = p.Category, Description = p.Description, Name = p.Name, Value = p.Value };
 
             // Act
-            var result = controller.UpdateProduct(p.Id, input).Result;
+            var result = await controller.UpdateProduct(p.Id, input);
 
             // Assert
             Assert.IsType<OkObjectResult>(result);
@@ -166,7 +165,7 @@ namespace Fiap.MacTech.Api.UnitTests.Controllers
         }
 
         [Fact]
-        public void UpdateProduct_Throws_EntityNotFoundException()
+        public async Task UpdateProduct_Throws_EntityNotFoundException()
         {
             // Arrange
             var p = _productListForTest[0];
@@ -178,13 +177,13 @@ namespace Fiap.MacTech.Api.UnitTests.Controllers
             var controller = GetProductController();
 
             // Act & Assert
-            var task = Assert.ThrowsAsync<EntityNotFoundException>(() => controller.UpdateProduct(guid, input)).Result;
+            var task = await Assert.ThrowsAsync<EntityNotFoundException>(() => controller.UpdateProduct(guid, input));
             Assert.Contains(guid.ToString(), task.Message);
             _mockedProductRepository.Verify(repository => repository.UpdateAsync(It.IsAny<Product>()), Times.Never);
         }
 
         [Fact]
-        public void UpdateProduct_Throws_EntityValidationException()
+        public async Task UpdateProduct_Throws_EntityValidationException()
         {
             // Arrange
             var p = _productListForTest[0];
@@ -195,13 +194,13 @@ namespace Fiap.MacTech.Api.UnitTests.Controllers
             var controller = GetProductController();
 
             // Act & Assert
-            var task = Assert.ThrowsAsync<EntityValidationException>(() => controller.UpdateProduct(p.Id, input)).Result;
+            var task = await Assert.ThrowsAsync<EntityValidationException>(() => controller.UpdateProduct(p.Id, input));
             Assert.Contains("invalid data", task.Message);
             _mockedProductRepository.Verify(repository => repository.UpdateAsync(It.IsAny<Product>()), Times.Never);
         }
 
         [Fact]
-        public void DeleteClient_Returns_204NoContent()
+        public async Task DeleteClient_Returns_204NoContent()
         {
             // Arrange
             var p = _productListForTest[0];
@@ -211,7 +210,7 @@ namespace Fiap.MacTech.Api.UnitTests.Controllers
             var controller = GetProductController();
 
             // Act
-            var result = controller.DeleteProduct(p.Id).Result;
+            var result = await controller.DeleteProduct(p.Id);
 
             // Assert
             Assert.IsType<NoContentResult>(result);
@@ -219,7 +218,7 @@ namespace Fiap.MacTech.Api.UnitTests.Controllers
         }
 
         [Fact]
-        public void DeleteClient_Throws_EntityNotFoundException()
+        public async Task DeleteClient_Throws_EntityNotFoundException()
         {
             // Arrange
             var guid = Guid.NewGuid();
@@ -229,7 +228,7 @@ namespace Fiap.MacTech.Api.UnitTests.Controllers
             var controller = GetProductController();
 
             // Act & Assert
-            var task = Assert.ThrowsAsync<EntityNotFoundException>(() => controller.DeleteProduct(guid)).Result;
+            var task = await Assert.ThrowsAsync<EntityNotFoundException>(() => controller.DeleteProduct(guid));
             Assert.Contains(guid.ToString(), task.Message);
             _mockedProductRepository.Verify(repository => repository.RemoveAsync(It.IsAny<Product>()), Times.Never);
         }
