@@ -4,7 +4,7 @@
     /// Represents a base repository interface for CRUD operations with entities in the McTech domain.
     /// </summary>
     /// <typeparam name="TEntity">The type of entity.</typeparam>
-    public interface IRepositoryBase<TEntity> where TEntity : class
+    public interface IRepositoryBase<TEntity> : IDisposable where TEntity : class
     {
         /// <summary>
         /// Adds a new entity to the repository.
@@ -71,10 +71,5 @@
         /// <param name="obj">The entity to remove.</param>
         /// <returns>A task representing the asynchronous operation.</returns>
         Task RemoveAsync(TEntity obj);
-
-        /// <summary>
-        /// Releases all resources used by the repository.
-        /// </summary>
-        void Dispose();
     }
 }

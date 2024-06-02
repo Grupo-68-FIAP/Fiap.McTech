@@ -1,7 +1,7 @@
 name: SonarCloud analysis
 on:
   push:
-    branches: [ master ]
+    branches: [ 'master', '*sonar*' ]
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:
