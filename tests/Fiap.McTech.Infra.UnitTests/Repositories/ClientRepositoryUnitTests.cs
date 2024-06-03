@@ -1,30 +1,119 @@
 ﻿using Fiap.McTech.Domain.Entities.Clients;
+using Fiap.McTech.Infra.Context;
 using Fiap.McTech.Infra.Repositories.Clients;
 
 namespace Fiap.McTech.Infra.UnitTests.Repositories
 {
     public sealed class ClientRepositoryUnitTests : RepositoryBaseUnitTests<Client>
     {
-        readonly static Client CLIENT_1 = new("Client 1", new("79703017037"), new("test1@test.com"));
-        readonly static Client CLIENT_2 = new("Client 2", new("29255133012"), new("test2@test.com"));
-        readonly static Client CLIENT_3 = new("Client 3", new("32161895036"), new("test3@test.com"));
-
-        public ClientRepositoryUnitTests() : base(CLIENT_1)
+        protected override ClientRepository GetRepository(DataContext context)
         {
-            // Popule o banco de dados em memória com alguns dados de teste
-            _context.Clients?.Add(CLIENT_1);
-            _context.Clients?.Add(CLIENT_2);
-            _context.SaveChanges();
+            return new ClientRepository(context);
         }
 
-        protected override ClientRepository GetRepository()
+        protected override Client MakeNewEntity()
         {
-            return new ClientRepository(_context);
+            Random rand = new();
+            var i = rand.Next(1000, 9999);
+            return new($"Client rand {i}", new("32161895036"), new($"rand{i}@test.com"));
         }
 
-        protected override Client GetEntityToAddTest()
+        [Fact]
+        public async Task GetClientAsync_WithCpf_ShouldReturnClient()
         {
-            return CLIENT_3;
+            Before();
+            if (_context == null)
+                Assert.Fail();
+
+            // Arrange
+            var repository = GetRepository(_context);
+
+            var client = MakeNewEntity();
+            var dbSet = _context.Set<Client>();
+            await dbSet.AddAsync(client);
+            await _context.SaveChangesAsync();
+
+            // Act
+            var result = await repository.GetClientAsync(client.Cpf);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.Equal(client, result);
+
+            After();
+        }
+
+        [Fact]
+        public async Task GetClientAsync_WithCpf_ShouldReturnNull()
+        {
+            Before();
+            if (_context == null)
+                Assert.Fail();
+
+            // Arrange
+            var repository = GetRepository(_context);
+
+            var client = MakeNewEntity();
+            var dbSet = _context.Set<Client>();
+            await dbSet.AddAsync(client);
+            await _context.SaveChangesAsync();
+
+            // Act
+            var result = await repository.GetClientAsync(new Domain.ValuesObjects.Cpf("12345678901"));
+
+            // Assert
+            Assert.Null(result);
+
+            After();
+        }
+
+        [Fact]
+        public async Task GetClientAsync_WithEmail_ShouldReturnClient()
+        {
+            Before();
+            if (_context == null)
+                Assert.Fail();
+
+            // Arrange
+            var repository = GetRepository(_context);
+
+            var client = MakeNewEntity();
+            var dbSet = _context.Set<Client>();
+            await dbSet.AddAsync(client);
+            await _context.SaveChangesAsync();
+
+            // Act
+            var result = await repository.GetClientAsync(client.Email);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.Equal(client, result);
+
+            After();
+        }
+
+        [Fact]
+        public async Task GetClientAsync_WithEmail_ShouldReturnNull()
+        {
+            Before();
+            if (_context == null)
+                Assert.Fail();
+
+            // Arrange
+            var repository = GetRepository(_context);
+
+            var client = MakeNewEntity();
+            var dbSet = _context.Set<Client>();
+            await dbSet.AddAsync(client);
+            await _context.SaveChangesAsync();
+
+            // Act
+            var result = await repository.GetClientAsync(new Domain.ValuesObjects.Email("test@test.com"));
+
+            // Assert
+            Assert.Null(result);
+
+            After();
         }
     }
 }

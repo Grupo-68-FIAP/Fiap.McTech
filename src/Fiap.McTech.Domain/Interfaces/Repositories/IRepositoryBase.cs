@@ -10,7 +10,8 @@
         /// Adds a new entity to the repository.
         /// </summary>
         /// <param name="obj">The entity to add.</param>
-        void Add(TEntity obj);
+        /// <returns>The entity the specified</returns>
+        TEntity Add(TEntity obj);
 
         /// <summary>
         /// Asynchronously adds a new entity to the repository.

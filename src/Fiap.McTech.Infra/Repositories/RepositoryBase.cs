@@ -15,9 +15,11 @@ namespace Fiap.McTech.Infra.Repositories
             _dbSet = _db.Set<TEntity>();
         }
 
-        public void Add(TEntity obj)
+        public TEntity Add(TEntity obj)
         {
             _dbSet.Add(obj);
+            _db.SaveChanges();
+            return obj;
         }
 
         public async Task<TEntity> AddAsync(TEntity obj)
@@ -63,6 +65,7 @@ namespace Fiap.McTech.Infra.Repositories
         public void Remove(TEntity obj)
         {
             _dbSet.Remove(obj);
+            _db.SaveChanges();
         }
 
         public async Task RemoveAsync(TEntity obj)
