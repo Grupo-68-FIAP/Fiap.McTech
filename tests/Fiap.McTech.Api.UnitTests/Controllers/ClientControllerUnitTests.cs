@@ -203,19 +203,19 @@ namespace Fiap.MacTech.Api.UnitTests.Controllers
             _mockedClientRepository.Verify(clientRepository => clientRepository.AddAsync(It.IsAny<Client>()), Times.Exactly(1));
         }
 
-        public static TheoryData<ClientInputDto, Type, string> CreateClient_Parameters()
+        public static TheoryData<string, string, string, Type, string> CreateClient_Parameters()
         {
-            return new TheoryData<ClientInputDto, Type, string>
+            return new TheoryData<string, string, string, Type, string>
             {
-                { new ClientInputDto("Test", "94682236040", "test3@test.com"), typeof(EntityValidationException), "test3@test.com" },
-                { new ClientInputDto("Test", "72518830073", "test@test.com"), typeof(EntityValidationException), "72518830073" },
-                { new ClientInputDto("", "94682236040", "test@test.com"), typeof(EntityValidationException), "invalid data" },
+                { "Test", "94682236040", "test3@test.com", typeof(EntityValidationException), "test3@test.com" },
+                { "Test", "72518830073", "test@test.com", typeof(EntityValidationException), "72518830073" },
+                { "", "94682236040", "test@test.com", typeof(EntityValidationException), "invalid data" },
             };
         }
 
         [Theory]
         [MemberData(nameof(CreateClient_Parameters))]
-        public async Task CreateClient_Throws_CorrectException(ClientInputDto input, Type expectedExceptionType, string msgPart)
+        public async Task CreateClient_Throws_CorrectException(string name, string cpf, string email, Type expectedExceptionType, string msgPart)
         {
             // Arrange
             var c = new Client("Test 3", new("72518830073"), new("test3@test.com"));
@@ -231,7 +231,7 @@ namespace Fiap.MacTech.Api.UnitTests.Controllers
             var controller = GetClientController();
 
             // Act & Assert
-            var task = await Assert.ThrowsAsync(expectedExceptionType, () => controller.CreateClient(input));
+            var task = await Assert.ThrowsAsync(expectedExceptionType, () => controller.CreateClient(new ClientInputDto(name, cpf, email)));
             Assert.Contains(msgPart, task.Message);
             _mockedClientRepository.Verify(clientRepository => clientRepository.AddAsync(It.IsAny<Client>()), Times.Never);
         }
