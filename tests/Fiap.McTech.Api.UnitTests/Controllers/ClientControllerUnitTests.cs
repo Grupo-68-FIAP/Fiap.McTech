@@ -29,7 +29,7 @@ namespace Fiap.MacTech.Api.UnitTests.Controllers
         }
 
         [Fact]
-        public void GetAllClients_Returns_204NoContent()
+        public async Task GetAllClients_Returns_204NoContent()
         {
             // Arrange
             _mockedClientRepository
@@ -38,14 +38,14 @@ namespace Fiap.MacTech.Api.UnitTests.Controllers
             var controller = GetClientController();
 
             // Act
-            var result = controller.GetAllClients().Result;
+            var result = await controller.GetAllClients();
 
             // Assert
             Assert.IsType<NoContentResult>(result);
         }
 
         [Fact]
-        public void GetAllClients_Returns_200Ok()
+        public async Task GetAllClients_Returns_200Ok()
         {
             // Arrange
             var c1 = new Client("Test 1", new("72518830073"), new("test1@test.com"));
@@ -57,7 +57,7 @@ namespace Fiap.MacTech.Api.UnitTests.Controllers
             var controller = GetClientController();
 
             // Act
-            var result = controller.GetAllClients().Result;
+            var result = await controller.GetAllClients();
 
             // Assert
             Assert.IsType<OkObjectResult>(result);
@@ -68,7 +68,7 @@ namespace Fiap.MacTech.Api.UnitTests.Controllers
         }
 
         [Fact]
-        public void GetClient_Returns_200OK()
+        public async Task GetClient_Returns_200OK()
         {
             // Arrange
             var c = new Client("Test 1", new("72518830073"), new("test1@test.com"));
@@ -78,7 +78,7 @@ namespace Fiap.MacTech.Api.UnitTests.Controllers
             var controller = GetClientController();
 
             // Act
-            var task = controller.GetClient(c.Id).Result;
+            var task = await controller.GetClient(c.Id);
 
             // Assert
             Assert.IsType<OkObjectResult>(task);
@@ -90,7 +90,7 @@ namespace Fiap.MacTech.Api.UnitTests.Controllers
         }
 
         [Fact]
-        public void GetClient_Throws_EntityNotFoundException()
+        public async Task GetClient_Throws_EntityNotFoundException()
         {
             // Arrange
             _mockedClientRepository
@@ -100,12 +100,12 @@ namespace Fiap.MacTech.Api.UnitTests.Controllers
             var guidSearch = Guid.NewGuid();
 
             // Act & Assert
-            var task = Assert.ThrowsAsync<EntityNotFoundException>(() => controller.GetClient(guidSearch)).Result;
+            var task = await Assert.ThrowsAsync<EntityNotFoundException>(() => controller.GetClient(guidSearch));
             Assert.Contains(guidSearch.ToString(), task.Message);
         }
 
         [Fact]
-        public void GetClientByCpf_Returns_200OK()
+        public async Task GetClientByCpf_Returns_200OK()
         {
             // Arrange
             var cpf = "49380966091";
@@ -116,7 +116,7 @@ namespace Fiap.MacTech.Api.UnitTests.Controllers
             var controller = GetClientController();
 
             // Act
-            var task = controller.GetClientByCpf(cpf).Result;
+            var task = await controller.GetClientByCpf(cpf);
 
             // Assert
             Assert.IsType<OkObjectResult>(task);
@@ -130,7 +130,7 @@ namespace Fiap.MacTech.Api.UnitTests.Controllers
         [Theory]
         [InlineData("00011122233", typeof(EntityValidationException))]
         [InlineData("07059775951", typeof(EntityNotFoundException))]
-        public void GetClientByCpf_Throws_CorrectException(string search, Type expectedExceptionType)
+        public async Task GetClientByCpf_Throws_CorrectException(string search, Type expectedExceptionType)
         {
             // Arrange
             _mockedClientRepository
@@ -139,13 +139,13 @@ namespace Fiap.MacTech.Api.UnitTests.Controllers
             var controller = GetClientController();
 
             // Act & Assert
-            var task = Assert.ThrowsAsync(expectedExceptionType, () => controller.GetClientByCpf(search)).Result;
+            var task = await Assert.ThrowsAsync(expectedExceptionType, () => controller.GetClientByCpf(search));
             Assert.Contains(search, task.Message);
         }
 
 
         [Fact]
-        public void GetClientByEmail_Returns_200OK()
+        public async Task GetClientByEmail_Returns_200OK()
         {
             // Arrange
             var email = "test2@test.com";
@@ -156,7 +156,7 @@ namespace Fiap.MacTech.Api.UnitTests.Controllers
             var controller = GetClientController();
 
             // Act
-            var task = controller.GetClientByEmail(email).Result;
+            var task = await controller.GetClientByEmail(email);
 
             // Assert
             Assert.IsType<OkObjectResult>(task);
@@ -172,7 +172,7 @@ namespace Fiap.MacTech.Api.UnitTests.Controllers
         [Theory]
         [InlineData("invalid_email", typeof(EntityValidationException))]
         [InlineData("test@test.com", typeof(EntityNotFoundException))]
-        public void GetClientByEmail_Throws_CorrectException(string search, Type expectedExceptionType)
+        public async Task GetClientByEmail_Throws_CorrectException(string search, Type expectedExceptionType)
         {
             // Arrange
             _mockedClientRepository
@@ -181,12 +181,12 @@ namespace Fiap.MacTech.Api.UnitTests.Controllers
             var controller = GetClientController();
 
             // Act & Assert
-            var task = Assert.ThrowsAsync(expectedExceptionType, () => controller.GetClientByEmail(search)).Result;
+            var task = await Assert.ThrowsAsync(expectedExceptionType, () => controller.GetClientByEmail(search));
             Assert.Contains(search, task.Message);
         }
 
         [Fact]
-        public void CreateClient_Returns_201Created()
+        public async Task CreateClient_Returns_201Created()
         {
             // Arrange
             _mockedClientRepository
@@ -196,26 +196,26 @@ namespace Fiap.MacTech.Api.UnitTests.Controllers
             var input = new ClientInputDto("Test1", "72518830073", "test1@test.com");
 
             // Act
-            var result = controller.CreateClient(input).Result;
+            var result = await controller.CreateClient(input);
 
             // Assert
             Assert.IsType<CreatedAtActionResult>(result);
             _mockedClientRepository.Verify(clientRepository => clientRepository.AddAsync(It.IsAny<Client>()), Times.Exactly(1));
         }
 
-        public static TheoryData<ClientInputDto, Type, string> CreateClient_Parameters()
+        public static TheoryData<string, string, string, Type, string> CreateClient_Parameters()
         {
-            return new TheoryData<ClientInputDto, Type, string>
+            return new TheoryData<string, string, string, Type, string>
             {
-                { new ClientInputDto("Test", "94682236040", "test3@test.com"), typeof(EntityValidationException), "test3@test.com" },
-                { new ClientInputDto("Test", "72518830073", "test@test.com"), typeof(EntityValidationException), "72518830073" },
-                { new ClientInputDto("", "94682236040", "test@test.com"), typeof(EntityValidationException), "invalid data" },
+                { "Test", "94682236040", "test3@test.com", typeof(EntityValidationException), "test3@test.com" },
+                { "Test", "72518830073", "test@test.com", typeof(EntityValidationException), "72518830073" },
+                { "", "94682236040", "test@test.com", typeof(EntityValidationException), "invalid data" },
             };
         }
 
         [Theory]
         [MemberData(nameof(CreateClient_Parameters))]
-        public void CreateClient_Throws_CorrectException(ClientInputDto input, Type expectedExceptionType, string msgPart)
+        public async Task CreateClient_Throws_CorrectException(string name, string cpf, string email, Type expectedExceptionType, string msgPart)
         {
             // Arrange
             var c = new Client("Test 3", new("72518830073"), new("test3@test.com"));
@@ -231,13 +231,13 @@ namespace Fiap.MacTech.Api.UnitTests.Controllers
             var controller = GetClientController();
 
             // Act & Assert
-            var task = Assert.ThrowsAsync(expectedExceptionType, () => controller.CreateClient(input)).Result;
+            var task = await Assert.ThrowsAsync(expectedExceptionType, () => controller.CreateClient(new ClientInputDto(name, cpf, email)));
             Assert.Contains(msgPart, task.Message);
             _mockedClientRepository.Verify(clientRepository => clientRepository.AddAsync(It.IsAny<Client>()), Times.Never);
         }
 
         [Fact]
-        public void UpdateClient_Returns_200OK()
+        public async Task UpdateClient_Returns_200OK()
         {
             // Arrange
             var c = new Client("Test 1", new("72518830073"), new("test1@test.com"));
@@ -250,7 +250,7 @@ namespace Fiap.MacTech.Api.UnitTests.Controllers
             var input = new ClientInputDto("Test 1", "72518830073", "test1@test.com");
 
             // Act
-            var result = controller.UpdateClient(c.Id, input).Result;
+            var result = await controller.UpdateClient(c.Id, input);
 
             // Assert
             Assert.IsType<OkObjectResult>(result);
@@ -258,7 +258,7 @@ namespace Fiap.MacTech.Api.UnitTests.Controllers
         }
 
         [Fact]
-        public void UpdateClient_Throws_EntityNotFoundException()
+        public async Task UpdateClient_Throws_EntityNotFoundException()
         {
             // Arrange
             var guid = Guid.NewGuid();
@@ -269,13 +269,13 @@ namespace Fiap.MacTech.Api.UnitTests.Controllers
             var controller = GetClientController();
 
             // Act & Assert
-            var task = Assert.ThrowsAsync<EntityNotFoundException>(() => controller.UpdateClient(guid, inputDto)).Result;
+            var task = await Assert.ThrowsAsync<EntityNotFoundException>(() => controller.UpdateClient(guid, inputDto));
             Assert.Contains(guid.ToString(), task.Message);
             _mockedClientRepository.Verify(clientRepository => clientRepository.UpdateAsync(It.IsAny<Client>()), Times.Never);
         }
 
         [Fact]
-        public void UpdateClient_Throws_EntityValidationException()
+        public async Task UpdateClient_Throws_EntityValidationException()
         {
             // Arrange
             var inputDto = new ClientInputDto("", "72518830073", "test3@test.com");
@@ -286,13 +286,13 @@ namespace Fiap.MacTech.Api.UnitTests.Controllers
             var controller = GetClientController();
 
             // Act & Assert
-            var task = Assert.ThrowsAsync<EntityValidationException>(() => controller.UpdateClient(c.Id, inputDto)).Result;
+            var task = await Assert.ThrowsAsync<EntityValidationException>(() => controller.UpdateClient(c.Id, inputDto));
             Assert.Contains("invalid data", task.Message);
             _mockedClientRepository.Verify(clientRepository => clientRepository.UpdateAsync(It.IsAny<Client>()), Times.Never);
         }
 
         [Fact]
-        public void DeleteClient_Returns_204NoContent()
+        public async Task DeleteClient_Returns_204NoContent()
         {
             // Arrange
             var c = new Client("Test 3", new("72518830073"), new("test3@test.com"));
@@ -302,7 +302,7 @@ namespace Fiap.MacTech.Api.UnitTests.Controllers
             var controller = GetClientController();
 
             // Act
-            var result = controller.DeleteClient(c.Id).Result;
+            var result = await controller.DeleteClient(c.Id);
 
             // Assert
             Assert.IsType<NoContentResult>(result);
@@ -310,7 +310,7 @@ namespace Fiap.MacTech.Api.UnitTests.Controllers
         }
 
         [Fact]
-        public void DeleteClient_Throws_EntityNotFoundException()
+        public async Task DeleteClient_Throws_EntityNotFoundException()
         {
             // Arrange
             var guid = Guid.NewGuid();
@@ -320,7 +320,7 @@ namespace Fiap.MacTech.Api.UnitTests.Controllers
             var controller = GetClientController();
 
             // Act & Assert
-            var task = Assert.ThrowsAsync<EntityNotFoundException>(() => controller.DeleteClient(guid)).Result;
+            var task = await Assert.ThrowsAsync<EntityNotFoundException>(() => controller.DeleteClient(guid));
             Assert.Contains(guid.ToString(), task.Message);
             _mockedClientRepository.Verify(clientRepository => clientRepository.RemoveAsync(It.IsAny<Client>()), Times.Never);
         }

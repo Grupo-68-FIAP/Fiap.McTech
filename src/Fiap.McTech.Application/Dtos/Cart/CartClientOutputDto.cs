@@ -38,6 +38,6 @@
         /// <summary>
         /// Gets or sets the items in the cart.
         /// </summary>
-		public List<CartItemOutputDto> Items { get; set; } = new List<CartItemOutputDto>();
+		public List<CartItemOutputDto> Items { get; set; }
     }
 }

@@ -7,6 +7,7 @@ namespace Fiap.McTech.Application.Dtos.Clients
     /// <summary>
     /// Represents the input data for a client.
     /// </summary>
+    [Serializable]
     public class ClientInputDto
     {
         /// <summary>
