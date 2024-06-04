@@ -9,13 +9,13 @@ namespace Fiap.McTech.Infra.Repositories.Cart
     {
         public CartClientRepository(DataContext context) : base(context) { }
 
-        public Task<CartClient?> GetByCartIdAsync(Guid uuid)
+        public Task<CartClient?> GetByCartIdAsync(Guid id)
         {
             return _dbSet
                 .Include(o => o.Client)
                 .Include(o => o.Items)
                 .ThenInclude(oi => oi.Product)
-                .FirstOrDefaultAsync(o => o.Id == uuid);
+                .FirstOrDefaultAsync(o => o.Id == id);
         }
 
         public async Task<CartClient?> GetByClientIdAsync(Guid clientId)

@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
 
-namespace Fiap.MacTech.Api.UnitTests.Controllers
+namespace Fiap.McTech.Api.UnitTests.Controllers
 {
     public class ProducControllerUnitTests
     {
