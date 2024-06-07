@@ -15,11 +15,11 @@ COPY ["src/Fiap.McTech.CrossCutting.Ioc/Fiap.McTech.CrossCutting.Ioc.csproj", "s
 RUN dotnet restore "./src/Fiap.McTech.Api/Fiap.McTech.Api.csproj"
 COPY . .
 WORKDIR "/src/src/Fiap.McTech.Api"
-RUN dotnet build "./Fiap.McTech.Api.csproj" -c $BUILD_CONFIGURATION -o /app/build
+RUN dotnet build "./Fiap.McTech.Api.csproj" -c "$BUILD_CONFIGURATION" -o /app/build
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./Fiap.McTech.Api.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "./Fiap.McTech.Api.csproj" -c "$BUILD_CONFIGURATION" -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app

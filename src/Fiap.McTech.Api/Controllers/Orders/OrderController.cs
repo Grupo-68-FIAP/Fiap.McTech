@@ -2,7 +2,6 @@
 using Fiap.McTech.Application.Interfaces;
 using Fiap.McTech.Application.ViewModels.Orders;
 using Fiap.McTech.Domain.Enums;
-using Fiap.McTech.Domain.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Mime;
 
@@ -39,14 +38,7 @@ namespace Fiap.McTech.Api.Controllers.Orders
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetOrderById(Guid id)
         {
-            try
-            {
-                return Ok(await _orderAppService.GetOrderByIdAsync(id));
-            }
-            catch (EntityNotFoundException ex)
-            {
-                return NotFound(new ProblemDetails() { Detail = ex.Message });
-            }
+            return Ok(await _orderAppService.GetOrderByIdAsync(id));
         }
 
         /// <summary>
@@ -95,15 +87,8 @@ namespace Fiap.McTech.Api.Controllers.Orders
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> CreateOrder(Guid cartId)
         {
-            try
-            {
-                var createdOrder = await _orderAppService.CreateOrderByCartAsync(cartId);
-                return CreatedAtAction(nameof(GetOrderById), new { id = createdOrder.Id }, createdOrder);
-            }
-            catch (EntityNotFoundException ex)
-            {
-                return NotFound(new ProblemDetails() { Detail = ex.Message });
-            }
+            var createdOrder = await _orderAppService.CreateOrderByCartAsync(cartId);
+            return CreatedAtAction(nameof(GetOrderById), new { id = createdOrder.Id }, createdOrder);
         }
 
         /// <summary>

@@ -23,12 +23,7 @@ builder.Services.AddSwaggerGen(c =>
                       "- **Ervin Notari Junior**: ervinnotari@hotmail.com\n" +
                       "- **Guilherme Novaes da silva**: guilherme.novaes233@gmail.com\n" +
                       "- **José Maria dos Reis Lisboa**: josemrlisboa@gmail.com\n" +
-                      "- **Vanessa Alves do Nascimento**: vanascimento.dev@gmail.com\n",
-        License = new OpenApiLicense
-        {
-            Name = "MIT License",
-            Url = new Uri("https://opensource.org/licenses/MIT")
-        }
+                      "- **Vanessa Alves do Nascimento**: vanascimento.dev@gmail.com\n"
     });
 
     var xmlFiles = new List<string> {
