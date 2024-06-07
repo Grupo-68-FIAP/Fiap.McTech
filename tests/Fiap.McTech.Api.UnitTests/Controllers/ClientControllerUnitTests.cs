@@ -325,6 +325,25 @@ namespace Fiap.McTech.Api.UnitTests.Controllers
             _mockedClientRepository.Verify(clientRepository => clientRepository.RemoveAsync(It.IsAny<Client>()), Times.Never);
         }
 
+        [Fact]
+        public async Task DeleteClient_Throws_DatabaseException()
+        {
+            // Arrange
+            var c = new Client("Test 3", new("72518830073"), new(""));
+            _mockedClientRepository
+                .Setup(iClientRepository => iClientRepository.GetByIdAsync(c.Id))
+                .ReturnsAsync(() => c);
+            _mockedClientRepository
+                .Setup(clientRepository => clientRepository.RemoveAsync(c))
+                .ThrowsAsync(new DatabaseException("Test DatabaseException"));
+            var controller = GetClientController();
+
+            // Act & Assert
+            var task = await Assert.ThrowsAsync<DatabaseException>(() => controller.DeleteClient(c.Id));
+            Assert.Contains("It can't possivel remove entity client.", task.Message);
+            _mockedClientRepository.Verify(clientRepository => clientRepository.RemoveAsync(It.IsAny<Client>()), Times.Exactly(1));
+        }
+
         private ClientController GetClientController()
         {
             var clientAppService = new ClientAppService(_mockedClientRepository.Object, _mockedLogger.Object, _mapper);

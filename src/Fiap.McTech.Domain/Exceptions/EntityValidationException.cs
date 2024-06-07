@@ -6,11 +6,6 @@
     public class EntityValidationException : McTechException
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="EntityValidationException"/> class.
-        /// </summary>
-        public EntityValidationException() { }
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="EntityValidationException"/> class with a specified error message.
         /// </summary>
         /// <param name="message">The message that describes the error.</param>

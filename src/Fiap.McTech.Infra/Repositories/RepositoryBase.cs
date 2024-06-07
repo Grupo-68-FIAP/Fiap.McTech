@@ -78,8 +78,9 @@ namespace Fiap.McTech.Infra.Repositories
 
         protected virtual void Dispose(bool disposing)
         {
-            if (disposed) return;
-            
+            if (disposed)
+                return;
+
             if (disposing)
             {
                 _db.Dispose();

@@ -2,7 +2,6 @@
 using Fiap.McTech.Domain.Enums;
 using Fiap.McTech.Infra.Context;
 using Fiap.McTech.Infra.Repositories.Products;
-using Microsoft.EntityFrameworkCore;
 
 namespace Fiap.McTech.Infra.UnitTests.Repositories
 {

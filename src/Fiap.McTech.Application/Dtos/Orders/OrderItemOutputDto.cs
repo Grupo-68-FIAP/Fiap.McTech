@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Fiap.McTech.Application.Dtos.Orders
+﻿namespace Fiap.McTech.Application.Dtos.Orders
 {
     /// <summary>
     /// Represents the output data for an item in an order.

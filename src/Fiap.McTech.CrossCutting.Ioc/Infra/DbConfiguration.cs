@@ -13,7 +13,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using System;
 
 namespace Fiap.McTech.Infra.Context
 {
@@ -26,7 +25,8 @@ namespace Fiap.McTech.Infra.Context
                 var connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING")
                     ?? configuration.GetConnectionString("DefaultConnection");
 
-                if (string.IsNullOrWhiteSpace(connectionString)) throw new DatabaseException("Database is not configured. Please inform your connection string.");
+                if (string.IsNullOrWhiteSpace(connectionString))
+                    throw new DatabaseException("Database is not configured. Please inform your connection string.");
 
                 services.AddDbContext<DataContext>(options => options.UseSqlServer(connectionString));
             }

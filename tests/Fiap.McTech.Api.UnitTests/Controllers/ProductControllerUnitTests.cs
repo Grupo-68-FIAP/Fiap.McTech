@@ -65,8 +65,8 @@ namespace Fiap.McTech.Api.UnitTests.Controllers
             var result = await controller.GetAllProducts();
 
             // Assert
-            Assert.IsType<OkObjectResult>(result);
-            var listResult = ((OkObjectResult) result).Value as IEnumerable<dynamic>;
+            var objectResult = Assert.IsType<OkObjectResult>(result);
+            var listResult = objectResult.Value as IEnumerable<dynamic>;
             Assert.Equal(_productListForTest.Count, listResult?.Count());
             Assert.True(listResult?.Any(c => c.Name == _productListForTest[0].Name));
             Assert.True(listResult?.Any(c => c.Name == _productListForTest[1].Name));
@@ -89,9 +89,7 @@ namespace Fiap.McTech.Api.UnitTests.Controllers
             Assert.IsType<OkObjectResult>(task);
 
             var taskResult = task as OkObjectResult;
-            Assert.IsType<ProductOutputDto>(taskResult?.Value);
-
-            var objectResult = taskResult.Value as dynamic;
+            var objectResult = Assert.IsType<ProductOutputDto>(taskResult?.Value);
             Assert.Equal(p.Name, objectResult?.Name);
             Assert.Equal(p.Id, objectResult?.Id);
         }
@@ -231,6 +229,41 @@ namespace Fiap.McTech.Api.UnitTests.Controllers
             var task = await Assert.ThrowsAsync<EntityNotFoundException>(() => controller.DeleteProduct(guid));
             Assert.Contains(guid.ToString(), task.Message);
             _mockedProductRepository.Verify(repository => repository.RemoveAsync(It.IsAny<Product>()), Times.Never);
+        }
+
+        [Fact]
+        public async Task GetProductsByCategory_Returns_204NoContent()
+        {
+            // Arrange
+            _mockedProductRepository
+                .Setup(repository => repository.GetProductsByCategoryAsync(ProductCategory.None))
+                .ReturnsAsync(() => new List<Product>());
+            var controller = GetProductController();
+
+            // Act
+            var result = await controller.GetProductsByCategory(ProductCategory.None);
+
+            // Assert
+            Assert.IsType<NoContentResult>(result);
+        }
+
+        [Fact]
+        public async Task GetProductsByCategory_Returns_200Ok()
+        {
+            // Arrange
+            _mockedProductRepository
+                .Setup(repository => repository.GetProductsByCategoryAsync(ProductCategory.Snack))
+                .ReturnsAsync(() => _productListForTest);
+            var controller = GetProductController();
+
+            // Act
+            var result = await controller.GetProductsByCategory(ProductCategory.Snack);
+
+            // Assert
+            var objectResult = Assert.IsType<OkObjectResult>(result);
+            var listResult = objectResult.Value as IEnumerable<dynamic>;
+            Assert.Equal(_productListForTest.Count, listResult?.Count());
+            Assert.True(listResult?.Any(c => c.Name == _productListForTest[0].Name));
         }
 
         private ProductController GetProductController()

@@ -67,7 +67,8 @@
         /// <returns>True if the string represents a valid email address; otherwise, false.</returns>
         public static bool IsValidEmail(this string email)
         {
-            if (string.IsNullOrWhiteSpace(email)) return false;
+            if (string.IsNullOrWhiteSpace(email))
+                return false;
 
             try
             {

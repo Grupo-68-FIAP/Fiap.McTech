@@ -4,8 +4,8 @@ using Fiap.McTech.Infra.Context;
 
 namespace Fiap.McTech.Infra.Repositories.Cart
 {
-	public class CartItemRepository : RepositoryBase<CartItem>, ICartItemRepository
-	{
-		public CartItemRepository(DataContext context) : base(context) { }
-	}
+    public class CartItemRepository : RepositoryBase<CartItem>, ICartItemRepository
+    {
+        public CartItemRepository(DataContext context) : base(context) { }
+    }
 }

@@ -1,5 +1,4 @@
 ﻿using Fiap.McTech.Domain.Utils.Extensions;
-using System.Reflection.Metadata;
 
 namespace Fiap.McTech.Domain.ValuesObjects
 {

@@ -1,8 +1,6 @@
-﻿using Fiap.McTech.Domain.Utils.Extensions;
-
-namespace Fiap.McTech.Domain.ValuesObjects
+﻿namespace Fiap.McTech.Domain.ValuesObjects
 {
-    public class EmailUnitTests 
+    public class EmailUnitTests
     {
         const string STRING_VALID_EMAIL_1 = "test1@test.com";
         const string STRING_VALID_EMAIL_2 = "test2@test.com";

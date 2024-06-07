@@ -1,10 +1,8 @@
-﻿using Fiap.McTech.Infra.Context;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.EntityFrameworkCore;
-using Fiap.McTech.Domain.Entities.Cart;
-using Fiap.McTech.Domain.Entities.Clients;
-using Fiap.McTech.Domain.Entities.Orders;
+﻿using Fiap.McTech.Domain.Entities.Orders;
 using Fiap.McTech.Domain.Entities.Products;
+using Fiap.McTech.Infra.Context;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Fiap.McTech.Infra.EntityMapper
 {

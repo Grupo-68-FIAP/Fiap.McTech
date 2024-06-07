@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Fiap.McTech.Application.Dtos.Orders.Delete
+﻿namespace Fiap.McTech.Application.Dtos.Orders.Delete
 {
     /// <summary>
     /// Represents the output data for deleting an order.

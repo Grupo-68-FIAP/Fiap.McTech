@@ -1,7 +1,7 @@
-﻿using Fiap.McTech.Infra.Context;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Fiap.McTech.Domain.Entities.Cart;
+using Fiap.McTech.Infra.Context;
 using Microsoft.EntityFrameworkCore;
-using Fiap.McTech.Domain.Entities.Cart;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Fiap.McTech.Infra.EntityMapper
 {
@@ -22,7 +22,7 @@ namespace Fiap.McTech.Infra.EntityMapper
                 .HasForeignKey(cart => cart.ClientId);
 
             builder.Property(cart => cart.AllValue)
-                .HasPrecision(14,2);
+                .HasPrecision(14, 2);
         }
     }
 }

@@ -1,7 +1,7 @@
-﻿using Fiap.McTech.Infra.Context;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Fiap.McTech.Domain.Entities.Products;
+using Fiap.McTech.Infra.Context;
 using Microsoft.EntityFrameworkCore;
-using Fiap.McTech.Domain.Entities.Products;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Fiap.McTech.Infra.EntityMapper
 {
@@ -15,7 +15,7 @@ namespace Fiap.McTech.Infra.EntityMapper
                 .HasMaxLength(100)
                 .IsRequired();
             builder.Property(c => c.Value)
-                .HasPrecision(14,2)
+                .HasPrecision(14, 2)
                 .IsRequired();
             builder.Property(c => c.Description)
                 .HasMaxLength(250)

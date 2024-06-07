@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Fiap.McTech.Domain.ValuesObjects
+﻿namespace Fiap.McTech.Domain.ValuesObjects
 {
     /// <summary>
     /// Represents a base class for value objects.

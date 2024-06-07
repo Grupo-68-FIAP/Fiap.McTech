@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Fiap.McTech.Api.Controllers.Orders;
 using Fiap.McTech.Application.AppServices.Orders;
-using Fiap.McTech.Application.Dtos.Orders.Update;
 using Fiap.McTech.Application.ViewModels.Orders;
 using Fiap.McTech.CrossCutting.Ioc.Mappers.Profiles;
 using Fiap.McTech.Domain.Entities.Cart;
@@ -12,12 +11,9 @@ using Fiap.McTech.Domain.Exceptions;
 using Fiap.McTech.Domain.Interfaces.Repositories.Cart;
 using Fiap.McTech.Domain.Interfaces.Repositories.Orders;
 using Fiap.McTech.Domain.Interfaces.Repositories.Payments;
-using Fiap.McTech.Domain.Utils.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
-using Newtonsoft.Json.Linq;
-using System.Linq.Expressions;
 
 namespace Fiap.McTech.Api.UnitTests.Controllers
 {

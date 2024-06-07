@@ -1,7 +1,7 @@
-﻿using Fiap.McTech.Infra.Context;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Fiap.McTech.Domain.Entities.Orders;
+using Fiap.McTech.Infra.Context;
 using Microsoft.EntityFrameworkCore;
-using Fiap.McTech.Domain.Entities.Orders;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Fiap.McTech.Infra.EntityMapper
 {

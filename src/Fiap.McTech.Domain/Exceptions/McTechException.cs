@@ -6,11 +6,6 @@
     public abstract class McTechException : Exception
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="McTechException"/> class.
-        /// </summary>
-        protected McTechException() { }
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="McTechException"/> class with a specified error message.
         /// </summary>
         /// <param name="message">The message that describes the error.</param>

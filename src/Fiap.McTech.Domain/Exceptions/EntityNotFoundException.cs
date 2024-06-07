@@ -6,11 +6,6 @@
     public class EntityNotFoundException : McTechException
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="EntityNotFoundException"/> class.
-        /// </summary>
-        public EntityNotFoundException() { }
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="EntityNotFoundException"/> class with a specified error message.
         /// </summary>
         /// <param name="message">The message that describes the error.</param>

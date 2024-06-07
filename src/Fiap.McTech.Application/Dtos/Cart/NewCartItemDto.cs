@@ -1,5 +1,3 @@
-using Fiap.McTech.Domain.Entities.Cart;
-
 namespace Fiap.McTech.Application.Dtos.Cart
 {
     /// <summary>

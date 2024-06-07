@@ -61,9 +61,12 @@ namespace Fiap.McTech.Application.Dtos.Clients
         /// <returns>A <see cref="ValidationResult"/> indicating whether the field is valid or not.</returns>
         public static ValidationResult? Validate(string field, ValidationContext context)
         {
-            if (string.IsNullOrEmpty(field)) return new ValidationResult($"Invalid {context.DisplayName}.");
-            else if (context.DisplayName == nameof(Cpf) && field.IsValidCpf()) return ValidationResult.Success;
-            else if (context.DisplayName == nameof(Email) && field.IsValidEmail()) return ValidationResult.Success;
+            if (string.IsNullOrEmpty(field))
+                return new ValidationResult($"Invalid {context.DisplayName}.");
+            else if (context.DisplayName == nameof(Cpf) && field.IsValidCpf())
+                return ValidationResult.Success;
+            else if (context.DisplayName == nameof(Email) && field.IsValidEmail())
+                return ValidationResult.Success;
             return new ValidationResult($"Invalid {context.DisplayName}.");
         }
     }
