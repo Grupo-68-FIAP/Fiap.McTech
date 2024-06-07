@@ -21,6 +21,8 @@ namespace Fiap.McTech.Infra.Context
 
         public DataContext() : base() { }
 
+        public DataContext(DbContextOptions<DataContext> options) : base(options) { }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (optionsBuilder.IsConfigured)
@@ -33,10 +35,6 @@ namespace Fiap.McTech.Infra.Context
             Console.WriteLine("Connected: {0}", connectionString);
             base.OnConfiguring(optionsBuilder);
         }
-
-        public DataContext(DbContextOptions<DataContext> options)
-           : base(options)
-        { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
