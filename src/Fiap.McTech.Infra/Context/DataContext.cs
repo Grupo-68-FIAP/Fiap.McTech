@@ -19,7 +19,7 @@ namespace Fiap.McTech.Infra.Context
         public DbSet<Product>? Products { get; set; }
         public DbSet<Payment>? Payments { get; set; }
 
-        public DataContext() { }
+        public DataContext() : base() { }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
