@@ -154,7 +154,7 @@ namespace Fiap.McTech.Api.UnitTests.Controllers
             _mockedProductRepository
                 .Setup(repository => repository.UpdateAsync(p));
             var controller = GetProductController();
-            var input = new UpdateProductInputDto() { Id = p.Id, Category = p.Category, Description = p.Description, Name = p.Name, Value = p.Value };
+            var input = new UpdateProductInputDto(p.Id, p.Name, p.Value, p.Description, p.Image, p.Category);
 
             // Act
             var result = await controller.UpdateProduct(p.Id, input);
@@ -170,7 +170,7 @@ namespace Fiap.McTech.Api.UnitTests.Controllers
             // Arrange
             var p = _productListForTest[0];
             var guid = Guid.NewGuid();
-            var input = new UpdateProductInputDto() { Id = guid, Category = p.Category, Description = p.Description, Name = p.Name, Value = p.Value };
+            var input = new UpdateProductInputDto(guid, p.Name, p.Value, p.Description, p.Image, p.Category);
             _mockedProductRepository
                 .Setup(repository => repository.GetByIdAsync(guid))
                 .ReturnsAsync(() => null);
@@ -187,7 +187,7 @@ namespace Fiap.McTech.Api.UnitTests.Controllers
         {
             // Arrange
             var p = _productListForTest[0];
-            var input = new UpdateProductInputDto() { Id = p.Id };
+            var input = new UpdateProductInputDto(p.Id, "", 0, "", "", ProductCategory.None);
             _mockedProductRepository
                 .Setup(repository => repository.GetByIdAsync(p.Id))
                 .ReturnsAsync(() => p);

@@ -54,7 +54,7 @@ namespace Fiap.McTech.Domain.Entities.Cart
         public override bool IsValid()
         {
             return Id != Guid.Empty
-                && Items != null && Items.Count > 0 && Items.All(i => i.IsValid());
+                && Items != null && Items.Count > 0 && Items.TrueForAll(i => i.IsValid());
         }
 
         /// <summary>
