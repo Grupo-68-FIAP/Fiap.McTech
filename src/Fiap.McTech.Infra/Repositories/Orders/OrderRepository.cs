@@ -16,7 +16,6 @@ namespace Fiap.McTech.Infra.Repositories.Orders
                 .Include(o => o.Client)
                 .Include(o => o.Items)
                 .FirstOrDefaultAsync(o => o.Id == id);
-            ;
         }
 
         public async Task<List<Order>> GetOrderByStatusAsync(OrderStatus status)
@@ -26,7 +25,6 @@ namespace Fiap.McTech.Infra.Repositories.Orders
                 .Include(o => o.Items)
                 .Where(o => o.Status == status)
                 .ToListAsync();
-            ;
         }
     }
 }

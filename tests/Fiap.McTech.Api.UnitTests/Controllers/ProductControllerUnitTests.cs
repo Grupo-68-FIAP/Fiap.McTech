@@ -15,7 +15,7 @@ using Moq;
 
 namespace Fiap.McTech.Api.UnitTests.Controllers
 {
-    public class ProducControllerUnitTests
+    public class ProductControllerUnitTests
     {
         readonly Mock<IProductRepository> _mockedProductRepository;
         readonly Mock<ILogger<ProductAppService>> _mockedLogger;
@@ -27,7 +27,7 @@ namespace Fiap.McTech.Api.UnitTests.Controllers
             new ("Test 2", 20, "Product test 2", "", ProductCategory.Snack)
         };
 
-        public ProducControllerUnitTests()
+        public ProductControllerUnitTests()
         {
             _mockedProductRepository = new Mock<IProductRepository>();
             _mockedLogger = new Mock<ILogger<ProductAppService>>();

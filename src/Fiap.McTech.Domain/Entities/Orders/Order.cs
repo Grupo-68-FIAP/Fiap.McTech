@@ -14,6 +14,21 @@ namespace Fiap.McTech.Domain.Entities.Orders
         public Order() { }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="Order"/> class with the specified parameters.
+        /// </summary>
+        /// <param name="clientId">The unique identifier of the client associated with the order.</param>
+        /// <param name="client">The client associated with the order.</param>
+        /// <param name="totalAmount">The total amount of the order.</param>
+        /// <param name="status">The status of the order.</param>
+        public Order(Guid? clientId, Client? client, decimal totalAmount, OrderStatus status)
+        {
+            ClientId = clientId;
+            Client = client;
+            TotalAmount = totalAmount;
+            Status = status;
+        }
+
+        /// <summary>
         /// Gets or sets the unique identifier of the client associated with the order.
         /// </summary>
         public Guid? ClientId { get; private set; }
