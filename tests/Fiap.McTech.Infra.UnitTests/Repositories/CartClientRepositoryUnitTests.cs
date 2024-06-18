@@ -30,8 +30,8 @@ namespace Fiap.McTech.Infra.UnitTests.Repositories
             products.Add(product1);
             products.Add(product2);
 
-            var cart = new CartClient(client.Id, client, 0, new());
-            var cartItem = new CartItem(product1.Name, 1, product1.Value, product1.Id, cart.Id);
+            var cart = new CartClient(client.Id, 0);
+            var cartItem = new CartClient.Item(product1.Name, 1, product1.Value, product1.Id, cart.Id);
             cart.Items.Add(cartItem);
             return cart;
         }

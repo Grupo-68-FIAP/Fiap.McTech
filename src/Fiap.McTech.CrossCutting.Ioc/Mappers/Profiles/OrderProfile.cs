@@ -52,7 +52,7 @@ namespace Fiap.McTech.CrossCutting.Ioc.Mappers.Profiles
                 .ForMember(dest => dest.TotalAmount, opt => opt.MapFrom(src => src.AllValue))
                 .ForMember(dest => dest.Items, opt => opt.MapFrom(src => src.Items));
 
-            CreateMap<CartItem, OrderItem>()
+            CreateMap<CartClient.Item, OrderItem>()
                 .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.Name))
                 .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.Value))
                 ;

@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Fiap.McTech.Api.Controllers.Product;
-using Fiap.McTech.Application.AppServices.Product;
+using Fiap.McTech.Application.AppServices.Products;
 using Fiap.McTech.Application.Dtos.Products;
 using Fiap.McTech.Application.Dtos.Products.Add;
 using Fiap.McTech.Application.Dtos.Products.Update;

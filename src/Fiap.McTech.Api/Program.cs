@@ -26,6 +26,8 @@ builder.Services.AddSwaggerGen(c =>
                       "- **Vanessa Alves do Nascimento**: vanascimento.dev@gmail.com\n"
     });
 
+    c.CustomSchemaIds(type => $"{type.FullName?.Replace($"{type.Namespace}.", "").Replace("+", ".")}");
+
     var xmlFiles = new List<string> {
         $"{Assembly.GetExecutingAssembly().GetName().Name}.xml",
         "Fiap.McTech.Application.xml",

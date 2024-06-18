@@ -39,7 +39,6 @@ namespace Fiap.McTech.Infra.Context
         public static void RegisterRepositories(this IServiceCollection services)
         {
             services.AddScoped<ICartClientRepository, CartClientRepository>();
-            services.AddScoped<ICartItemRepository, CartItemRepository>();
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IClientRepository, ClientRepository>();
             services.AddScoped<IPaymentRepository, PaymentRepository>();

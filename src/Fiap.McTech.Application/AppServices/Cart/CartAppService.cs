@@ -2,6 +2,7 @@
 using Fiap.McTech.Application.Dtos.Cart;
 using Fiap.McTech.Application.Interfaces;
 using Fiap.McTech.Domain.Entities.Cart;
+using Fiap.McTech.Domain.Entities.Products;
 using Fiap.McTech.Domain.Exceptions;
 using Fiap.McTech.Domain.Interfaces.Repositories.Cart;
 using Microsoft.Extensions.Logging;
@@ -18,28 +19,24 @@ namespace Fiap.McTech.Application.AppServices.Cart
         private readonly IClientAppService _clientAppService;
         private readonly IProductAppService _productAppService;
         private readonly ICartClientRepository _cartClientRepository;
-        private readonly ICartItemRepository _cartItemRepository;
         private readonly IMapper _mapper;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CartAppService"/> class.
         /// </summary>
         /// <param name="cartClientRepository">The repository for cart clients.</param>
-        /// <param name="cartItemRepository">The repository for cart items.</param>
         /// <param name="productAppService">The service for managing products.</param>
         /// <param name="clientAppService">The service for managing clients.</param>
         /// <param name="logger">The logger.</param>
         /// <param name="mapper">The mapper.</param>
         public CartAppService(
             ICartClientRepository cartClientRepository,
-            ICartItemRepository cartItemRepository,
             IProductAppService productAppService,
             IClientAppService clientAppService,
             ILogger<CartAppService> logger,
             IMapper mapper)
         {
             _cartClientRepository = cartClientRepository;
-            _cartItemRepository = cartItemRepository;
             _clientAppService = clientAppService;
             _productAppService = productAppService;
             _logger = logger;
@@ -108,42 +105,37 @@ namespace Fiap.McTech.Application.AppServices.Cart
         }
 
         /// <inheritdoc/>
-        public async Task<CartClientOutputDto> AddCartItemToCartClientAsync(Guid id, Guid productId)
+        public async Task<CartClientOutputDto> AddCartItemToCartClientAsync(Guid cartId, Guid productId, int quantities = 1)
         {
-            _logger.LogInformation("Adding new item to cart with ID {Id}.", id);
+            _logger.LogInformation("Adding new item to cart with ID {Id}.", cartId);
 
-            var cartClient = await GetCartAsync(id);
+            var cartClient = await GetCartAsync(cartId);
 
-            var product = await _productAppService.GetProductByIdAsync(productId);
+            var productOutput = await _productAppService.GetProductByIdAsync(productId);
 
-            var newCartItem = new CartItem(product.Name, 1, product.Value, product.Id, cartClient.Id);
+            var product = _mapper.Map<Product>(productOutput);
 
-            await _cartItemRepository.AddAsync(newCartItem);
-
-            cartClient.CalculateValueCart();
+            cartClient.AddProduct(product, quantities);
 
             await _cartClientRepository.UpdateAsync(cartClient);
 
-            _logger.LogInformation("Added new item to cart with ID {Id}.", id);
+            _logger.LogInformation("Added new item to cart with ID {Id}.", cartId);
 
-            return _mapper.Map<CartClientOutputDto>(await GetCartAsync(id));
+            return _mapper.Map<CartClientOutputDto>(await GetCartAsync(cartId));
         }
 
         /// <inheritdoc/>
-        public async Task<CartClientOutputDto> RemoveCartItemFromCartClientAsync(Guid cartItemId)
+        public async Task<CartClientOutputDto> RemoveCartItemFromCartClientAsync(Guid cartId, Guid productId)
         {
-            _logger.LogInformation("Attempting to delete Card Item ID {cartItemId}.", cartItemId);
+            _logger.LogInformation("Attempting to delete Product with ID {Id} from Cart with ID {CartId}.", productId, cartId);
 
-            var cartItem = await GetCartItemAsync(cartItemId);
+            var cart = await GetCartAsync(cartId);
 
-            var cartClientId = cartItem.CartClientId;
-            await _cartItemRepository.RemoveAsync(cartItem);
+            cart.RemoveProduct(productId);
 
-            var cart = await GetCartAsync(cartClientId);
-            cart.CalculateValueCart();
             await _cartClientRepository.UpdateAsync(cart);
 
-            _logger.LogInformation("Cart Item with ID {Id} deleted successfully.", cartItemId);
+            _logger.LogInformation("Product with ID {Id} deleted from Cart with ID {CartId} successfully.", productId, cartId);
 
             return _mapper.Map<CartClientOutputDto>(cart);
         }
@@ -164,12 +156,6 @@ namespace Fiap.McTech.Application.AppServices.Cart
         {
             return await _cartClientRepository.GetByCartIdAsync(id)
                 ?? throw new EntityNotFoundException(string.Format("Cart with ID {0} not found.", id));
-        }
-
-        private async Task<CartItem> GetCartItemAsync(Guid id)
-        {
-            return await _cartItemRepository.GetByIdAsync(id)
-                    ?? throw new EntityNotFoundException(string.Format("Item with ID {0} not found.", id));
         }
     }
 }

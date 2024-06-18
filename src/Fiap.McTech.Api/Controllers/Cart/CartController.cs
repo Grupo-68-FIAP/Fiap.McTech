@@ -91,16 +91,17 @@ namespace Fiap.McTech.Api.Controllers.Cart
         /// <summary>
         /// Removes an item from the shopping cart.
         /// </summary>
-        /// <param name="cartItemId">The unique identifier of the cart item to be removed.</param>
+        /// <param name="cartId">The unique identifier of the shopping cart.</param>
+        /// <param name="productId">The unique identifier of the product to remove.</param>
         /// <returns>The updated shopping cart.</returns>
         /// <response code="200">Returns the updated shopping cart after the item has been removed.</response>
         /// <response code="404">If the cart item with the given ID is not found.</response>
         [HttpDelete("product/{cartItemId}")]
         [ProducesResponseType(typeof(CartClientOutputDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> RemoveCartItemFromCartClientAsync(Guid cartItemId)
+        public async Task<IActionResult> RemoveCartItemFromCartClientAsync(Guid cartId, Guid productId)
         {
-            return Ok(await _cartAppService.RemoveCartItemFromCartClientAsync(cartItemId));
+            return Ok(await _cartAppService.RemoveCartItemFromCartClientAsync(cartId, productId));
         }
 
         /// <summary>

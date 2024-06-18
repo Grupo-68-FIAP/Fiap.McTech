@@ -33,7 +33,6 @@ namespace Fiap.McTech.Api.UnitTests.Controllers
             var configuration = new MapperConfiguration(cfg =>
             {
                 cfg.AddProfile<CartClientProfile>();
-                cfg.AddProfile<CartItemProfile>();
                 cfg.AddProfile<ClientProfile>();
                 cfg.AddProfile<ProductProfile>();
                 cfg.AddProfile<OrderProfile>();
@@ -85,8 +84,8 @@ namespace Fiap.McTech.Api.UnitTests.Controllers
         public async Task CreateOrder_WithValidCartId_ReturnsCreatedOrder()
         {
             // Arrange
-            var cart = new CartClient(null, null, 0, new());
-            cart.Items.Add(new CartItem(product.Name, 1, product.Value, product.Id, cart.Id));
+            var cart = new CartClient(null, 0);
+            cart.Items.Add(new CartClient.Item(product.Name, 1, product.Value, product.Id, cart.Id));
             _mockedOrderRepository
                 .Setup(repository => repository.AddAsync(It.IsAny<Order>()))
                 .ReturnsAsync<Order, IOrderRepository, Order>(x => x);
