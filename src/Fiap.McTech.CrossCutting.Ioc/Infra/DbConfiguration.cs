@@ -53,14 +53,38 @@ namespace Fiap.McTech.Infra.Context
             var dbContext = scope.ServiceProvider.GetRequiredService<DataContext>();
             var pendingMigrations = dbContext.Database.GetPendingMigrations();
 
-            if (!dbContext.Database.CanConnect())
+            const int maxRetryAttempts = 3;
+            var tryCount = 0;
+            var connected = false;
+
+            do
             {
-                logger.LogWarning("Database {dbName} not found! Creating the database.", dbContext.Database.GetDbConnection().Database);
+                try
+                {
+                    connected = dbContext.Database.CanConnect();
+                }
+                catch (Exception ex)
+                {
+                    logger.LogError(ex, "Error while checking database connection.");
+                }
+
+                if (!connected)
+                {
+                    tryCount++;
+                    logger.LogWarning("Attempt {TryCount} of {MaxRetryAttempts}: Database connection failed. Retrying in 10 second...", tryCount, maxRetryAttempts);
+                    Task.Delay(10000).Wait();
+                }
+
+            } while (!connected && tryCount < maxRetryAttempts);
+
+            if (!connected)
+            {
+                logger.LogWarning("Database {DbName} not found! Creating the database.", dbContext.Database.GetDbConnection().Database);
                 dbContext.Database.Migrate();
             }
             else if (pendingMigrations.Any())
             {
-                logger.LogWarning("There are {count} migrations that haven't been run yet. Updating the database.", pendingMigrations.Count());
+                logger.LogWarning("There are {Count} migrations that haven't been run yet. Updating the database.", pendingMigrations.Count());
                 dbContext.Database.Migrate();
             }
             logger.LogInformation("Database is prepared.");
