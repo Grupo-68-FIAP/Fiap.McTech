@@ -12,16 +12,15 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwagger();
 
-// Configurando o AutoMapper
+// AutoMapper configuration
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.RegisterMappings();
-
 builder.Services.RegisterServices(builder.Configuration);
 
-
-var allowOrigins = builder.Configuration.GetValue<string>("ALLOW_ORIGINS") ?? "*";
+// Cors configuration
 builder.Services.AddCors(options =>
 {
+    var allowOrigins = builder.Configuration.GetValue<string>("ALLOW_ORIGINS") ?? "*";
     options.AddPolicy("CorsConfig", builder => builder.WithOrigins(allowOrigins.Split(';')).AllowAnyMethod().AllowAnyHeader());
 });
 
@@ -30,7 +29,7 @@ var app = builder.Build();
 using var scope = app.Services.CreateScope();
 scope.McTechDatabaseInitialize();
 
-app.UseTest(builder.Configuration);
+app.UseSwagger(builder.Configuration);
 
 app.UseCors("CorsConfig");
 

@@ -3,8 +3,15 @@ using System.Reflection;
 
 namespace Fiap.McTech.Api.Configurations
 {
-    public static class SwaggerConfig
+    /// <summary>
+    /// Swagger configuration class.
+    /// </summary>
+    internal static class SwaggerConfig
     {
+        /// <summary>
+        /// Add Swagger configuration to the application.
+        /// </summary>
+        /// <param name="services">ServiceCollection instance.</param>
         public static void AddSwagger(this IServiceCollection services)
         {
             services.AddSwaggerGen(c =>
@@ -38,7 +45,12 @@ namespace Fiap.McTech.Api.Configurations
             });
         }
 
-        public static void UseTest(this WebApplication app, ConfigurationManager configuration)
+        /// <summary>
+        /// Use Swagger configuration in the application.
+        /// </summary>
+        /// <param name="app">WebApplication instance.</param>
+        /// <param name="configuration">ConfigurationManager instance.</param>
+        public static void UseSwagger(this WebApplication app, ConfigurationManager configuration)
         {
             app.UseSwagger();
             var allowSwaggerUi = configuration.GetValue<bool>("ALLOW_SWAGGER_UI");
