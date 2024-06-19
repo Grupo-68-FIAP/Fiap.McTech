@@ -18,9 +18,11 @@ builder.Services.RegisterMappings();
 
 builder.Services.RegisterServices(builder.Configuration);
 
+
+var allowOrigins = builder.Configuration.GetValue<string>("ALLOW_ORIGINS") ?? "*";
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("CorsConfig", builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+    options.AddPolicy("CorsConfig", builder => builder.WithOrigins(allowOrigins.Split(';')).AllowAnyMethod().AllowAnyHeader());
 });
 
 var app = builder.Build();
