@@ -9,6 +9,7 @@ services:
       ASPNETCORE_Kestrel__Certificates__Default__Password: pws4mctech!
       ASPNETCORE_Kestrel__Certificates__Default__Path: /app/cert.pfx
       CONNECTION_STRING: Server=sqlserver,1433;Initial Catalog=mctech;User Id=sa;Password=pws4mctech!;
+      ALLOW_SWAGGER_UI: true
     ports:
       - "8080:80"
       - "8443:443"
