@@ -9,10 +9,12 @@ using Fiap.McTech.Infra.Repositories.Clients;
 using Fiap.McTech.Infra.Repositories.Orders;
 using Fiap.McTech.Infra.Repositories.Payments;
 using Fiap.McTech.Infra.Repositories.Products;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using System.Data.Common;
 
 namespace Fiap.McTech.Infra.Context
 {
@@ -51,42 +53,50 @@ namespace Fiap.McTech.Infra.Context
             logger.LogInformation("Preparing database.");
 
             var dbContext = scope.ServiceProvider.GetRequiredService<DataContext>();
-            var pendingMigrations = dbContext.Database.GetPendingMigrations();
-
             const int maxRetryAttempts = 3;
             var tryCount = 0;
-            var connected = false;
+            var dbConnection = false;
 
             do
             {
                 try
                 {
-                    connected = dbContext.Database.CanConnect();
+                    dbContext.Database.ExecuteSqlRaw("SELECT 1;");
+                    dbConnection = true;
                 }
-                catch (Exception ex)
+                catch (SqlException ex)
                 {
-                    logger.LogError(ex, "Error while checking database connection.");
+                    if(ex.ClientConnectionId == Guid.Empty)
+                    {
+                        tryCount++;
+                        logger.LogWarning(ex, "Attempt {TryCount} of {MaxRetryAttempts}: Database connection failed. Retrying in 10 second...", tryCount, maxRetryAttempts);
+                        Task.Delay(10000).Wait();
+                    }
+                    else
+                    {
+                        dbConnection = true;
+                    }
                 }
+            } while (!dbConnection && tryCount < maxRetryAttempts);
+            if (!dbConnection)
+            {
+                logger.LogError("Database connection failed after {MaxRetryAttempts} attempts. Exiting application.", maxRetryAttempts);
+                throw new InvalidOperationException("Database connection failed.");
+            }
 
-                if (!connected)
-                {
-                    tryCount++;
-                    logger.LogWarning("Attempt {TryCount} of {MaxRetryAttempts}: Database connection failed. Retrying in 10 second...", tryCount, maxRetryAttempts);
-                    Task.Delay(10000).Wait();
-                }
-
-            } while (!connected && tryCount < maxRetryAttempts);
-
-            if (!connected)
+            if (!dbContext.Database.CanConnect())
             {
                 logger.LogWarning("Database {DbName} not found! Creating the database.", dbContext.Database.GetDbConnection().Database);
                 dbContext.Database.Migrate();
             }
-            else if (pendingMigrations.Any())
+
+            var pendingMigrations = dbContext.Database.GetPendingMigrations();
+            if (pendingMigrations.Any())
             {
                 logger.LogWarning("There are {Count} migrations that haven't been run yet. Updating the database.", pendingMigrations.Count());
                 dbContext.Database.Migrate();
             }
+
             logger.LogInformation("Database is prepared.");
         }
     }
