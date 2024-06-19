@@ -76,6 +76,7 @@ namespace Fiap.McTech.Api.Controllers.Cart
         /// </summary>
         /// <param name="id">The unique identifier of the shopping cart.</param>
         /// <param name="productId">The unique identifier of the product to add.</param>
+        /// <param name="quantity">The quantity of the product to add.</param>
         /// <returns>The updated shopping cart.</returns>
         /// <response code="200">Returns the updated shopping cart.</response>
         /// <response code="400">If there are validation issues with the input data.</response>
@@ -83,25 +84,25 @@ namespace Fiap.McTech.Api.Controllers.Cart
         [HttpPut("{id}/product/{productId}")]
         [ProducesResponseType(typeof(CartClientOutputDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> AddCartItemToCartClientAsync(Guid id, Guid productId)
+        public async Task<IActionResult> AddCartItemToCartClientAsync(Guid id, Guid productId, [FromQuery] int quantity = 1)
         {
-            return Ok(await _cartAppService.AddCartItemToCartClientAsync(id, productId));
+            return Ok(await _cartAppService.AddCartItemToCartClientAsync(id, productId, quantity));
         }
 
         /// <summary>
         /// Removes an item from the shopping cart.
         /// </summary>
-        /// <param name="cartId">The unique identifier of the shopping cart.</param>
+        /// <param name="id">The unique identifier of the shopping cart.</param>
         /// <param name="productId">The unique identifier of the product to remove.</param>
         /// <returns>The updated shopping cart.</returns>
         /// <response code="200">Returns the updated shopping cart after the item has been removed.</response>
         /// <response code="404">If the cart item with the given ID is not found.</response>
-        [HttpDelete("product/{cartItemId}")]
+        [HttpDelete("{id}/product/{productId}")]
         [ProducesResponseType(typeof(CartClientOutputDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> RemoveCartItemFromCartClientAsync(Guid cartId, Guid productId)
+        public async Task<IActionResult> RemoveCartItemFromCartClientAsync(Guid id, Guid productId)
         {
-            return Ok(await _cartAppService.RemoveCartItemFromCartClientAsync(cartId, productId));
+            return Ok(await _cartAppService.RemoveCartItemFromCartClientAsync(id, productId));
         }
 
         /// <summary>

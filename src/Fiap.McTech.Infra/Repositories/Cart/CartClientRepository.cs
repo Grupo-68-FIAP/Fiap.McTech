@@ -26,5 +26,27 @@ namespace Fiap.McTech.Infra.Repositories.Cart
                 .ThenInclude(oi => oi.Product)
                 .FirstOrDefaultAsync(o => o.ClientId == clientId);
         }
+
+        public override async Task UpdateAsync(CartClient obj)
+        {
+            var original = await _db.Set<CartClient>()
+                .AsNoTracking()
+                .Include(o => o.Items)
+                .FirstAsync(o => o.Id == obj.Id);
+
+            foreach (var item in obj.Items)
+            {
+                if (original.Items.Any(oi => oi.Id == item.Id))
+                {
+                    _db.Entry(item).State = EntityState.Modified;
+                }
+                else
+                {
+                    _db.Entry(item).State = EntityState.Added;
+                }
+            }
+
+            await base.UpdateAsync(obj);
+        }
     }
 }

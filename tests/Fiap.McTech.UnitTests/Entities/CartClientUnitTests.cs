@@ -19,7 +19,7 @@ namespace Fiap.McTech.UnitTests.Entities
 
             // Assert
             Assert.Single(cartClient.Items);
-            Assert.Equal(1, cartClient.Items[0].Quantity);
+            Assert.Equal(1, cartClient.Items.First().Quantity);
         }
 
         [Theory]
@@ -34,7 +34,7 @@ namespace Fiap.McTech.UnitTests.Entities
                 cartClient.AddProduct(product1, qt1);
 
             // Act
-            Action act = () => cartClient.AddProduct(product1, qt2);
+            void act() => cartClient.AddProduct(product1, qt2);
 
             // Assert
             var exception = Assert.Throws<EntityValidationException>(act);
@@ -54,7 +54,7 @@ namespace Fiap.McTech.UnitTests.Entities
 
             // Assert
             Assert.Single(cartClient.Items);
-            Assert.Equal(3, cartClient.Items[0].Quantity);
+            Assert.Equal(3, cartClient.Items.First().Quantity);
         }
 
         [Fact]

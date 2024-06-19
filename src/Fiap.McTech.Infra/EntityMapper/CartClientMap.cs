@@ -20,8 +20,6 @@ namespace Fiap.McTech.Infra.EntityMapper
             builder.Property(cart => cart.AllValue)
                 .HasPrecision(14, 2);
 
-            builder.HasData(new CartClient(Guid.NewGuid(), 0));
-
             builder.OwnsMany(cart => cart.Items, items =>
             {
                 items.ToTable("CartItems");

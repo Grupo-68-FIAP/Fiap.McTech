@@ -265,12 +265,10 @@ namespace Fiap.McTech.Api.UnitTests.Controllers
             var task = await controller.RemoveCartItemFromCartClientAsync(cart.Id, cartItem.ProductId);
 
             // Assert
-            Assert.IsType<OkObjectResult>(task);
-            var taskResult = task as OkObjectResult;
-            Assert.IsType<CartClientOutputDto>(taskResult?.Value);
-            var objectResult = taskResult.Value as dynamic;
-            Assert.NotNull(objectResult?.Id);
-            Assert.Equal(0, objectResult?.AllValue);
+            var taskResult = Assert.IsType<OkObjectResult>(task);
+            var objectResult = Assert.IsType<CartClientOutputDto>(taskResult.Value);
+            Assert.Empty(objectResult.Items);
+            Assert.Equal(0, objectResult.AllValue);
             _mockedCartClientRepository.Verify(repository => repository.UpdateAsync(It.IsAny<CartClient>()), Times.Exactly(1));
         }
 

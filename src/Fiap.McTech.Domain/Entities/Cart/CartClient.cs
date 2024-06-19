@@ -18,7 +18,7 @@ namespace Fiap.McTech.Domain.Entities.Cart
         {
             ClientId = clientId;
             AllValue = allValue;
-            Items = new();
+            Items = new List<Item>();
         }
 
         /// <summary>
@@ -39,7 +39,7 @@ namespace Fiap.McTech.Domain.Entities.Cart
         /// <summary>
         /// Gets or sets the list of items in the cart.
         /// </summary>
-        public List<Item> Items { get; internal set; }
+        public ICollection<Item> Items { get; internal set; }
 
         /// <summary>
         /// Determines whether the cart is valid.
@@ -48,7 +48,7 @@ namespace Fiap.McTech.Domain.Entities.Cart
         public override bool IsValid()
         {
             return Id != Guid.Empty
-                && Items != null && Items.Count > 0 && Items.TrueForAll(i => i.IsValid());
+                && Items != null && Items.Count > 0 && Items.All(i => i.IsValid());
         }
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace Fiap.McTech.Domain.Entities.Cart
         /// <param name="quantity"> Quantity of the product to be added to the cart. </param>
         public void AddProduct(Product product, int quantity)
         {
-            var item = Items.Find(i => i.ProductId == product.Id);
+            var item = Items.FirstOrDefault(i => i.ProductId == product.Id);
 
             if (item == null && quantity > 0)
             {
@@ -74,7 +74,7 @@ namespace Fiap.McTech.Domain.Entities.Cart
             }
             else if (item != null && (item.Quantity + quantity) > 0)
             {
-                item.Quantity += quantity;
+                item.AddUnities(quantity);
             }
             else if (item != null && (item.Quantity + quantity) == 0)
             {
@@ -94,7 +94,7 @@ namespace Fiap.McTech.Domain.Entities.Cart
         /// <param name="productId">Identifier of the product to be removed from the cart.</param>
         public void RemoveProduct(Guid productId)
         {
-            var item = Items.Find(i => i.ProductId == productId)
+            var item = Items.FirstOrDefault(i => i.ProductId == productId)
                 ?? throw new EntityNotFoundException("Product not found in the cart.");
 
             Items.Remove(item);
