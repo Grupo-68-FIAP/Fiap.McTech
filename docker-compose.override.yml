@@ -1,5 +1,3 @@
-version: '3.4'
-
 services:
   fiap.mctech.api:
     container_name: mctech_api
