@@ -80,24 +80,24 @@ namespace Fiap.McTech.Infra.UnitTests.Repositories
                 Assert.Fail("Context is null");
 
             var order1 = MakeNewEntity();
-            order1.SendToNextStatus(); // None -> Pending
+            order1.SendToNextStatus(); // None -> WaitPayment
             await _context.Set<Order>().AddAsync(order1);
 
             var order2 = MakeNewEntity();
-            order2.SendToNextStatus();// None -> Pending
-            order2.SendToNextStatus();// Pending -> Processing
+            order2.SendToNextStatus();// None -> WaitPayment
+            order2.SendToNextStatus();// WaitPayment -> Received
             await _context.Set<Order>().AddAsync(order2);
 
             var order3 = MakeNewEntity();
-            order3.SendToNextStatus();// None -> Pending
-            order3.SendToNextStatus();// Pending -> Processing
-            order3.SendToNextStatus();// Processing -> Completed
+            order3.SendToNextStatus();// None -> WaitPayment
+            order3.SendToNextStatus();// WaitPayment -> Received
+            order3.SendToNextStatus();// Received -> InPreparation
             await _context.Set<Order>().AddAsync(order3);
 
             await _context.SaveChangesAsync();
 
             var repository = GetRepository(_context);
-            var result = await repository.GetOrderByStatusAsync(OrderStatus.Processing);
+            var result = await repository.GetOrderByStatusAsync(OrderStatus.Received);
 
             Assert.NotNull(result);
             Assert.NotEmpty(result);
@@ -114,7 +114,7 @@ namespace Fiap.McTech.Infra.UnitTests.Repositories
                 Assert.Fail("Context is null");
 
             var repository = GetRepository(_context);
-            var result = await repository.GetOrderByStatusAsync(OrderStatus.Completed);
+            var result = await repository.GetOrderByStatusAsync(OrderStatus.Finished);
 
             Assert.NotNull(result);
             Assert.Empty(result);
@@ -129,40 +129,51 @@ namespace Fiap.McTech.Infra.UnitTests.Repositories
             if (_context == null)
                 Assert.Fail("Context is null");
 
-            //Do not show completed orders
-            var order1 = MakeNewEntity();
-            order1.SendToNextStatus(); // None -> Pending
-            order1.SendToNextStatus();// Pending -> Processing
-            order1.SendToNextStatus();// Processing -> Completed
-            await _context.Set<Order>().AddAsync(order1);
-
-            // Second Item to show
-            var order2 = MakeNewEntity();
-            order2.SendToNextStatus();// None -> Pending
-            await _context.Set<Order>().AddAsync(order2);
-            await Task.Delay(1000);
-
             // Third Item to show
-            var order3 = MakeNewEntity();
-            order3.SendToNextStatus();// None -> Pending
-            order3.SendToNextStatus();// Pending -> Processing
-            await _context.Set<Order>().AddAsync(order3);
+            var order_inPreparation_2 = MakeNewEntity();
+            order_inPreparation_2.SendToNextStatus();// None -> WaitPayment
+            order_inPreparation_2.SendToNextStatus();// WaitPayment -> Received
+            order_inPreparation_2.SendToNextStatus();// Received -> InPreparation
+            await _context.Set<Order>().AddAsync(order_inPreparation_2);
+
+            // Fourth Item to show
             await Task.Delay(1000);
+            var order_received = MakeNewEntity();
+            order_received.SendToNextStatus();// None -> WaitPayment
+            order_received.SendToNextStatus();// WaitPayment -> Received
+            await _context.Set<Order>().AddAsync(order_received);
 
             // First Item to show
-            var order4 = MakeNewEntity();
-            order4.SendToNextStatus();// None -> Pending
-            await _context.Set<Order>().AddAsync(order4);
             await Task.Delay(1000);
+            var order_ready = MakeNewEntity();
+            order_ready.SendToNextStatus();// None -> WaitPayment
+            order_ready.SendToNextStatus();// WaitPayment -> Received
+            order_ready.SendToNextStatus();// Received -> InPreparation
+            order_ready.SendToNextStatus();// InPreparation -> Ready
+            await _context.Set<Order>().AddAsync(order_ready);
+
+            // Second Item to show
+            await Task.Delay(1000);
+            var order_inPreparation_1 = MakeNewEntity();
+            order_inPreparation_1.SendToNextStatus();// None -> WaitPayment
+            order_inPreparation_1.SendToNextStatus();// WaitPayment -> Received
+            order_inPreparation_1.SendToNextStatus();// Received -> InPreparation
+            await _context.Set<Order>().AddAsync(order_inPreparation_1);
+
+            // Do not show no payed orders
+            await Task.Delay(1000);
+            var order_waitPayment = MakeNewEntity();
+            order_waitPayment.SendToNextStatus();// None -> WaitPayment
+            await _context.Set<Order>().AddAsync(order_waitPayment);
 
             // Do not show canceled orders
-            var order5 = MakeNewEntity();
-            order5.Cancel();
-            await _context.Set<Order>().AddAsync(order5);
+            var order_canceled = MakeNewEntity();
+            order_canceled.Cancel();
+            await _context.Set<Order>().AddAsync(order_canceled);
 
             // Do not show none status orders
-            var order6 = MakeNewEntity();
-            await _context.Set<Order>().AddAsync(order6);
+            var order_noned = MakeNewEntity();
+            await _context.Set<Order>().AddAsync(order_noned);
 
             await _context.SaveChangesAsync();
 
@@ -171,13 +182,15 @@ namespace Fiap.McTech.Infra.UnitTests.Repositories
 
             Assert.NotNull(result);
             Assert.NotEmpty(result);
-            Assert.Equal(3, result.Count);
-            Assert.Equal(order4.Id, result[0].Id);
-            Assert.Equal(order2.Id, result[1].Id);
-            Assert.Equal(order3.Id, result[2].Id);
-            Assert.DoesNotContain(order1.Id, result.Select(o => o.Id));
-            Assert.DoesNotContain(order5.Id, result.Select(o => o.Id));
-            Assert.DoesNotContain(order6.Id, result.Select(o => o.Id));
+            Assert.Equal(4, result.Count);
+            Assert.DoesNotContain(order_waitPayment.Id, result.Select(o => o.Id));
+            Assert.DoesNotContain(order_canceled.Id, result.Select(o => o.Id));
+            Assert.DoesNotContain(order_noned.Id, result.Select(o => o.Id));
+            // Verify order
+            Assert.Equal(order_ready.Id, result[0].Id);
+            Assert.Equal(order_inPreparation_1.Id, result[1].Id);
+            Assert.Equal(order_inPreparation_2.Id, result[2].Id);
+            Assert.Equal(order_received.Id, result[3].Id);
 
             After();
         }

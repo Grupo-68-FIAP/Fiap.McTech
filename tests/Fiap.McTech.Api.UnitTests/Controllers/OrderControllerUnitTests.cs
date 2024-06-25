@@ -218,12 +218,12 @@ namespace Fiap.McTech.Api.UnitTests.Controllers
             // Assert
             var resultObj = Assert.IsType<OkObjectResult>(result);
             var updatedOrder = Assert.IsType<OrderOutputDto>(resultObj.Value);
-            Assert.Equal(OrderStatus.Pending, updatedOrder.Status);
-            _mockedOrderRepository.Verify(x => x.UpdateAsync(It.Is<Order>(x => x.Status == OrderStatus.Pending)));
+            Assert.Equal(OrderStatus.WaitPayment, updatedOrder.Status);
+            _mockedOrderRepository.Verify(x => x.UpdateAsync(It.Is<Order>(x => x.Status == OrderStatus.WaitPayment)));
         }
 
         [Fact]
-        public async Task MoveOrderToNextStatus_Throws_EntityNotFoundException()
+        public async Task MoveOrderToNextStatus_WhenNoOrder_ThrowsEntityNotFoundException()
         {
             // Arrange
             var guid = Guid.NewGuid();
@@ -237,7 +237,7 @@ namespace Fiap.McTech.Api.UnitTests.Controllers
         }
 
         [Fact]
-        public async Task MoveOrderToNextStatus_Throws_PaymentRequiredException()
+        public async Task MoveOrderToNextStatus_WhenOrderNoPayed_ThrowsPaymentRequiredException()
         {
             // Arrange
             var order = new Order(null, 0);
@@ -250,6 +250,24 @@ namespace Fiap.McTech.Api.UnitTests.Controllers
             // Act & Assert
             var exception = await Assert.ThrowsAsync<PaymentRequiredException>(() => controller.MoveOrderToNextStatus(order.Id));
             Assert.Contains("payment", exception.Message);
+            _mockedOrderRepository.Verify(x => x.UpdateAsync(It.IsAny<Order>()), Times.Never);
+        }
+
+        [Fact]
+        public async Task MoveOrderToNextStatus_WhenOrderWasFinished_ThrowsInvalidOperationException()
+        {
+            // Arrange
+            var order = new Order(null, 0);
+            for (var i = 0; i <= 4; i++)
+                order.SendToNextStatus();
+            _mockedOrderRepository
+                .Setup(x => x.GetByIdAsync(order.Id))
+                .ReturnsAsync(() => order);
+            var controller = CreateOrderController();
+
+            // Act & Assert
+            var exception = await Assert.ThrowsAsync<InvalidOperationException>(() => controller.MoveOrderToNextStatus(order.Id));
+            Assert.Contains("finished", exception.Message);
             _mockedOrderRepository.Verify(x => x.UpdateAsync(It.IsAny<Order>()), Times.Never);
         }
 

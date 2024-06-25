@@ -25,7 +25,7 @@ namespace Fiap.McTech.Domain.Interfaces.Repositories.Orders
         /// <summary>
         /// Asynchronously retrieves the current orders.
         /// </summary>
-        /// <returns>List of order with status <see cref="OrderStatus.Pending"/>, <see cref="OrderStatus.Processing"/> end order by CreateDate</returns>
+        /// <returns>List of order with status <see cref="OrderStatus.Received"/>, <see cref="OrderStatus.InPreparation"/>, <see cref="OrderStatus.Ready"/> end order by CreateDate</returns>
         Task<List<Order>> GetCurrrentOrders();
     }
 }

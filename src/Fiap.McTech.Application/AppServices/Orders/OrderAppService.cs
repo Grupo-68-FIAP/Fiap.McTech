@@ -131,7 +131,7 @@ namespace Fiap.McTech.Application.AppServices.Orders
             var originalOrder = await _orderRepository.GetByIdAsync(id)
                 ?? throw new EntityNotFoundException(string.Format("Order with ID {0} not found. Update aborted.", id));
 
-            if (originalOrder.Status == OrderStatus.Pending)
+            if (originalOrder.Status == OrderStatus.WaitPayment)
                 _ = await _paymentRepository.GetByOrderIdAsync(id)
                     ?? throw new PaymentRequiredException("Waiting for payment.");
 

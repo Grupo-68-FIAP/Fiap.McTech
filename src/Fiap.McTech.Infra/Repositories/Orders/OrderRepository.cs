@@ -51,10 +51,11 @@ namespace Fiap.McTech.Infra.Repositories.Orders
 
         public async Task<List<Order>> GetCurrrentOrders()
         {
+            var showStatus = new List<OrderStatus> { OrderStatus.Received, OrderStatus.InPreparation, OrderStatus.Ready };
+
             return await _dbSet.Include(o => o.Client).Include(o => o.Items)
-                // TODO: Rever isso pois a ordem de retorno é Pronto > Em Preparo > Recebido e só temos status referente ao processo de pagamento
-                .Where(o => o.Status == OrderStatus.Processing || o.Status == OrderStatus.Pending)
-                .OrderBy(o => o.Status)
+                .Where(o => showStatus.Contains(o.Status))
+                .OrderByDescending(o => o.Status)
                 .ThenByDescending(o => o.CreatedDate)
                 .ToListAsync();
         }

@@ -111,11 +111,13 @@ namespace Fiap.McTech.Api.Controllers.Orders
         /// <param name="status">
         /// Status to filter orders. Possible values are:
         /// <list type="bullet">
+        /// <item><description><c>Canceled</c> (-2): Orders that are canceled.</description></item>
         /// <item><description><c>None</c> (-1): No specific status.</description></item>
-        /// <item><description><c>Pending</c> (0): Orders that are pending.</description></item>
-        /// <item><description><c>Processing</c> (1): Orders that are being processed.</description></item>
-        /// <item><description><c>Completed</c> (2): Orders that are completed.</description></item>
-        /// <item><description><c>Canceled</c> (3): Orders that are canceled.</description></item>
+        /// <item><description><c>WaitPayment</c> (0): Orders that are waiting for payment.</description></item>
+        /// <item><description><c>Received</c> (1): Orders that have been received.</description></item>
+        /// <item><description><c>InPreparation</c> (2): Orders that are being prepared.</description></item>
+        /// <item><description><c>Ready</c> (3): Orders that are ready.</description></item>
+        /// <item><description><c>Finished</c> (4): Orders that are completed and delivered.</description></item>
         /// </list>
         /// </param>
         /// <returns>A list of orders matching the specified status.</returns>
