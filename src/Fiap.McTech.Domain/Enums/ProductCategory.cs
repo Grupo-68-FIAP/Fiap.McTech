@@ -3,7 +3,14 @@
 namespace Fiap.McTech.Domain.Enums
 {
     /// <summary>
-    /// Represents the category of a product.
+    /// Represents the category of a product:<br></br>
+    /// <list type="bullet">
+    /// <item><description><c>None</c> (-1): No specific category.</description></item>
+    /// <item><description><c>Snack</c> (0): Category for snacks.</description></item>
+    /// <item><description><c>SideDish</c> (1): Category for side dishes.</description></item>
+    /// <item><description><c>Beverage</c> (2): Category for beverages.</description></item>
+    /// <item><description><c>Dessert</c> (3): Category for desserts.</description></item>
+    /// </list>
     /// </summary>
     public enum ProductCategory
     {

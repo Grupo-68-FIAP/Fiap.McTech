@@ -46,7 +46,7 @@ namespace Fiap.McTech.Infra.Repositories
             return await _dbSet.FindAsync(id);
         }
 
-        public async Task<IEnumerable<TEntity>> GetAll()
+        public virtual async Task<IEnumerable<TEntity>> GetAll()
         {
             return await _dbSet.ToListAsync();
         }
@@ -56,7 +56,7 @@ namespace Fiap.McTech.Infra.Repositories
             _db.Entry(obj).State = EntityState.Modified;
         }
 
-        public async Task UpdateAsync(TEntity obj)
+        public virtual async Task UpdateAsync(TEntity obj)
         {
             _db.Entry(obj).State = EntityState.Modified;
             await _db.SaveChangesAsync();

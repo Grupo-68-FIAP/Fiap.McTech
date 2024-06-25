@@ -28,6 +28,7 @@ namespace Fiap.McTech.Api.Configurations
                                   "- **José Maria dos Reis Lisboa**: josemrlisboa@gmail.com\n" +
                                   "- **Vanessa Alves do Nascimento**: vanascimento.dev@gmail.com\n"
                 });
+                c.CustomSchemaIds(type => $"{type.FullName?.Replace($"{type.Namespace}.", "").Replace("+", ".")}");
 
                 var xmlFiles = new List<string> {
                     $"{Assembly.GetExecutingAssembly().GetName().Name}.xml",

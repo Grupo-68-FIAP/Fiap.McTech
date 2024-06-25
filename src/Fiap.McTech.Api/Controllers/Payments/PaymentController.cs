@@ -37,11 +37,7 @@ namespace Fiap.McTech.Api.Controllers.Payments
         public async Task<IActionResult> GenerateQRCode([FromRoute] Guid orderId)
         {
             var qrCodeUrl = await _paymentAppService.GenerateQRCodeAsync(orderId);
-
-            if (qrCodeUrl == null)
-                return BadRequest(new { Message = "Error to generate Qr Code" });
-
-            return Ok(new { QRCodeUrl = qrCodeUrl });
+            return Ok(qrCodeUrl);
         }
 
         /// <summary>

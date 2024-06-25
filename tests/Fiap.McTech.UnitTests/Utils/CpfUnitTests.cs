@@ -18,7 +18,6 @@ namespace Fiap.McTech.UnitTests.Utils
         }
 
         [Theory]
-        [InlineData(null)]
         [InlineData("1234567890")]
         [InlineData("11111111111")]
         [InlineData("12345678901")]

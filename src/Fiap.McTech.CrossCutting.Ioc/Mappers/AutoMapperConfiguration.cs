@@ -16,7 +16,6 @@ namespace Fiap.McTech.CrossCutting.Ioc.Mappers
                 cfg.CreateMap<Payment, PaymentOutputDto>();
 
                 cfg.AddProfile<CartClientProfile>();
-                cfg.AddProfile<CartItemProfile>();
                 cfg.AddProfile<OrderProfile>();
                 cfg.AddProfile<ClientProfile>();
                 cfg.AddProfile<ProductProfile>();

@@ -8,7 +8,7 @@ using Fiap.McTech.Domain.Exceptions;
 using Fiap.McTech.Domain.Interfaces.Repositories.Products;
 using Microsoft.Extensions.Logging;
 
-namespace Fiap.McTech.Application.AppServices.Product
+namespace Fiap.McTech.Application.AppServices.Products
 {
     /// <summary>
     /// Service for managing products.

@@ -12,10 +12,8 @@ namespace Fiap.McTech.Infra.Context
     public class DataContext : DbContext
     {
         public DbSet<CartClient>? CartClients { get; set; }
-        public DbSet<CartItem>? CartItems { get; set; }
         public DbSet<Client>? Clients { get; set; }
         public DbSet<Order>? Orders { get; set; }
-        public DbSet<OrderItem>? OrderItems { get; set; }
         public DbSet<Product>? Products { get; set; }
         public DbSet<Payment>? Payments { get; set; }
 
@@ -39,11 +37,9 @@ namespace Fiap.McTech.Infra.Context
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new CartClientMap());
-            modelBuilder.ApplyConfiguration(new CartItemMap());
             modelBuilder.ApplyConfiguration(new ClientMap());
             modelBuilder.ApplyConfiguration(new ProductMap());
             modelBuilder.ApplyConfiguration(new OrderMap());
-            modelBuilder.ApplyConfiguration(new OrderItemMap());
             modelBuilder.ApplyConfiguration(new PaymentMap());
         }
     }

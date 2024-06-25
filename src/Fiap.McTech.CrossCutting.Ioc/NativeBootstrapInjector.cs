@@ -2,7 +2,7 @@
 using Fiap.McTech.Application.AppServices.Clients;
 using Fiap.McTech.Application.AppServices.Orders;
 using Fiap.McTech.Application.AppServices.Payment;
-using Fiap.McTech.Application.AppServices.Product;
+using Fiap.McTech.Application.AppServices.Products;
 using Fiap.McTech.Application.Interfaces;
 using Fiap.McTech.Infra.Context;
 using Fiap.McTech.Infra.Services;
