@@ -27,6 +27,20 @@ namespace Fiap.McTech.Api.Controllers.Orders
         }
 
         /// <summary>
+        /// Obtains a list of all orders.
+        /// </summary>
+        /// <response code="200">Returns all orders.</response>
+        /// <response code="204">If no orders are found.</response>
+        [HttpGet]
+        [ProducesResponseType(typeof(List<OrderOutputDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<IActionResult> GetOrders()
+        {
+            var orders = await _orderAppService.GetCurrrentOrders();
+            return (orders == null || !orders.Any()) ? new NoContentResult() : Ok(orders);
+        }
+
+        /// <summary>
         /// Retrieves an order by its unique identifier.
         /// </summary>
         /// <param name="id">The unique identifier of the order.</param>

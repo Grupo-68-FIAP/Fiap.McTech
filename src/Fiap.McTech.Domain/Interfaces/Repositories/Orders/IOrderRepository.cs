@@ -21,5 +21,11 @@ namespace Fiap.McTech.Domain.Interfaces.Repositories.Orders
         /// <param name="status">The status of orders to retrieve.</param>
         /// <returns>A task representing the asynchronous operation, containing a list of orders with the specified status.</returns>
         Task<List<Order>> GetOrderByStatusAsync(OrderStatus status);
+
+        /// <summary>
+        /// Asynchronously retrieves the current orders.
+        /// </summary>
+        /// <returns>List of order with status <see cref="OrderStatus.Pending"/>, <see cref="OrderStatus.Processing"/> end order by CreateDate</returns>
+        Task<List<Order>> GetCurrrentOrders();
     }
 }

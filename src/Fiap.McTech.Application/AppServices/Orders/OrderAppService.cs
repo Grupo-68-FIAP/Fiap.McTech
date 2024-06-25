@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
-using Fiap.McTech.Application.Dtos.Orders.Add;
-using Fiap.McTech.Application.Dtos.Orders.Update;
+using Fiap.McTech.Application.Dtos.Orders;
 using Fiap.McTech.Application.Interfaces;
 using Fiap.McTech.Application.ViewModels.Orders;
 using Fiap.McTech.Domain.Entities.Orders;
@@ -9,7 +8,6 @@ using Fiap.McTech.Domain.Exceptions;
 using Fiap.McTech.Domain.Interfaces.Repositories.Cart;
 using Fiap.McTech.Domain.Interfaces.Repositories.Orders;
 using Fiap.McTech.Domain.Interfaces.Repositories.Payments;
-using Fiap.McTech.Domain.Utils.Extensions;
 using Microsoft.Extensions.Logging;
 
 namespace Fiap.McTech.Application.AppServices.Orders
@@ -137,14 +135,26 @@ namespace Fiap.McTech.Application.AppServices.Orders
                 _ = await _paymentRepository.GetByOrderIdAsync(id)
                     ?? throw new PaymentRequiredException("Waiting for payment.");
 
-            var modifierOrder = _mapper.Map<UpdateOrderInputDto>(originalOrder);
-            modifierOrder.Status = originalOrder.Status.NextStatus();
-
-            _mapper.Map(modifierOrder, originalOrder);
+            originalOrder.SendToNextStatus();
 
             await _orderRepository.UpdateAsync(originalOrder);
 
             return _mapper.Map<OrderOutputDto>(await _orderRepository.GetOrderByIdAsync(id));
+        }
+
+        /// <inheritdoc/>
+        public async Task<List<OrderOutputDto>> GetCurrrentOrders()
+        {
+            _logger.LogInformation("Retrieving all orders.");
+
+            var orders = await _orderRepository.GetCurrrentOrders();
+
+            if (orders == null || !orders.Any())
+                return new List<OrderOutputDto>();
+
+            _logger.LogInformation("All orders retrieved successfully.");
+
+            return _mapper.Map<List<OrderOutputDto>>(orders);
         }
     }
 }

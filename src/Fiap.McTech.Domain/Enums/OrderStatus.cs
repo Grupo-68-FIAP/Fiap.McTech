@@ -25,6 +25,8 @@ namespace Fiap.McTech.Domain.Enums
         [Description("Processando")]
         Processing,
 
+        // TODO: Rever isso pois a ordem de retorno é Pronto > Em Preparo > Recebido e só temos status referente ao processo de pagamento
+
         /// <summary>
         /// The order is completed.
         /// </summary>

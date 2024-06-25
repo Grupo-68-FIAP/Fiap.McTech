@@ -49,8 +49,8 @@ namespace Fiap.McTech.Api.UnitTests.Controllers
         public async Task GetOrderById_WithValidId_ReturnsOrder()
         {
             // Arrange
-            var order = new Order(null, null, 0, Domain.Enums.OrderStatus.None);
-            order.Items.Add(new OrderItem(product.Id, order.Id, product.Name, product.Value, 1));
+            var order = new Order(null, 0);
+            order.Items.Add(new Order.Item(product.Id, order.Id, product.Name, product.Value, 1));
             _mockedOrderRepository
                 .Setup(x => x.GetOrderByIdAsync(order.Id))
                 .ReturnsAsync(order);
@@ -124,7 +124,7 @@ namespace Fiap.McTech.Api.UnitTests.Controllers
         public async Task DeleteOrder_WithValidId_ReturnsNoContent()
         {
             // Arrange
-            var order = new Order(null, null, 0, Domain.Enums.OrderStatus.None);
+            var order = new Order(null, 0);
             _mockedOrderRepository
                 .Setup(x => x.GetByIdAsync(order.Id))
                 .ReturnsAsync(order);
@@ -161,10 +161,10 @@ namespace Fiap.McTech.Api.UnitTests.Controllers
             // Arrange
             var orders = new List<Order>
             {
-                new (null, null, 10, Domain.Enums.OrderStatus.None),
-                new (null, null, 20, Domain.Enums.OrderStatus.None)
+                new (null, 10),
+                new (null, 20)
             };
-            orders.ForEach(order => order.Items.Add(new OrderItem(product.Id, order.Id, product.Name, product.Value, 1)));
+            orders.ForEach(order => order.Items.Add(new Order.Item(product.Id, order.Id, product.Name, product.Value, 1)));
             _mockedOrderRepository
                 .Setup(x => x.GetOrderByStatusAsync(Domain.Enums.OrderStatus.None))
                 .ReturnsAsync(orders);
@@ -202,7 +202,7 @@ namespace Fiap.McTech.Api.UnitTests.Controllers
         public async Task MoveOrderToNextStatus_WithValidId_ReturnsOrder()
         {
             // Arrange
-            var order = new Order(null, null, 0, Domain.Enums.OrderStatus.None);
+            var order = new Order(null, 0);
             _mockedOrderRepository
                 .Setup(x => x.GetByIdAsync(order.Id))
                 .ReturnsAsync(() => order);
@@ -240,7 +240,8 @@ namespace Fiap.McTech.Api.UnitTests.Controllers
         public async Task MoveOrderToNextStatus_Throws_PaymentRequiredException()
         {
             // Arrange
-            var order = new Order(null, null, 0, Domain.Enums.OrderStatus.Pending);
+            var order = new Order(null, 0);
+            order.SendToNextStatus();
             _mockedOrderRepository
                 .Setup(x => x.GetByIdAsync(order.Id))
                 .ReturnsAsync(() => order);
@@ -250,6 +251,48 @@ namespace Fiap.McTech.Api.UnitTests.Controllers
             var exception = await Assert.ThrowsAsync<PaymentRequiredException>(() => controller.MoveOrderToNextStatus(order.Id));
             Assert.Contains("payment", exception.Message);
             _mockedOrderRepository.Verify(x => x.UpdateAsync(It.IsAny<Order>()), Times.Never);
+        }
+
+        [Fact]
+        public async Task GetOrders_ReturnsOrders()
+        {
+            // Arrange
+            var orders = new List<Order>
+            {
+                new (null, 10),
+                new (null, 20)
+            };
+            orders.ForEach(order => order.Items.Add(new Order.Item(product.Id, order.Id, product.Name, product.Value, 1)));
+            _mockedOrderRepository
+                .Setup(x => x.GetCurrrentOrders())
+                .ReturnsAsync(orders);
+            var controller = CreateOrderController();
+
+            // Act
+            var result = await controller.GetOrders();
+
+            // Assert
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            var orderOutputDtos = Assert.IsType<List<OrderOutputDto>>(okResult.Value);
+            Assert.Equal(2, orderOutputDtos.Count);
+            _mockedOrderRepository.Verify(x => x.GetCurrrentOrders(), Times.Once);
+        }
+
+        [Fact]
+        public async Task GetOrders_WithNoOrders_ReturnsNoContentResult()
+        {
+            // Arrange
+            _mockedOrderRepository
+                .Setup(x => x.GetCurrrentOrders())
+                .ReturnsAsync(() => new());
+            var controller = CreateOrderController();
+
+            // Act
+            var result = await controller.GetOrders();
+
+            // Assert
+            Assert.IsType<NoContentResult>(result);
+            _mockedOrderRepository.Verify(x => x.GetCurrrentOrders(), Times.Once);
         }
 
         private OrderController CreateOrderController()

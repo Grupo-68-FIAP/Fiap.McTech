@@ -26,5 +26,37 @@ namespace Fiap.McTech.Infra.Repositories.Orders
                 .Where(o => o.Status == status)
                 .ToListAsync();
         }
+
+        public override async Task UpdateAsync(Order obj)
+        {
+            var original = await _db.Set<Order>()
+                .AsNoTracking()
+                .Include(o => o.Items)
+                .FirstAsync(o => o.Id == obj.Id);
+
+            foreach (var item in obj.Items)
+            {
+                if (original.Items.Any(oi => oi.Id == item.Id))
+                {
+                    _db.Entry(item).State = EntityState.Modified;
+                }
+                else
+                {
+                    _db.Entry(item).State = EntityState.Added;
+                }
+            }
+
+            await base.UpdateAsync(obj);
+        }
+
+        public async Task<List<Order>> GetCurrrentOrders()
+        {
+            return await _dbSet.Include(o => o.Client).Include(o => o.Items)
+                // TODO: Rever isso pois a ordem de retorno é Pronto > Em Preparo > Recebido e só temos status referente ao processo de pagamento
+                .Where(o => o.Status == OrderStatus.Processing || o.Status == OrderStatus.Pending)
+                .OrderBy(o => o.Status)
+                .ThenByDescending(o => o.CreatedDate)
+                .ToListAsync();
+        }
     }
 }

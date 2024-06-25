@@ -46,7 +46,7 @@ namespace Fiap.McTech.Infra.Repositories
             return await _dbSet.FindAsync(id);
         }
 
-        public async Task<IEnumerable<TEntity>> GetAll()
+        public virtual async Task<IEnumerable<TEntity>> GetAll()
         {
             return await _dbSet.ToListAsync();
         }

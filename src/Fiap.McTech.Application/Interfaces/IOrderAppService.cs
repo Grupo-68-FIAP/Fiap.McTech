@@ -42,5 +42,11 @@ namespace Fiap.McTech.Application.Interfaces
         /// <param name="id">The ID of the order to move to the next status.</param>
         /// <returns>A task representing the asynchronous operation that returns the updated order output DTO.</returns>
         Task<OrderOutputDto> MoveOrderToNextStatus(Guid id);
+
+        /// <summary>
+        /// Retrieves the current orders asynchronously.
+        /// </summary>
+        /// <returns>Currrent orders.</returns>
+        Task<List<OrderOutputDto>> GetCurrrentOrders();
     }
 }

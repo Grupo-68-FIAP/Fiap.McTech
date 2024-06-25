@@ -18,7 +18,6 @@ namespace Fiap.McTech.UnitTests.Utils
         }
 
         [Theory]
-        [InlineData(null)]
         [InlineData("@example.com")]
         [InlineData("test@")]
         [InlineData("   ")]

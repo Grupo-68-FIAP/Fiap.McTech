@@ -14,7 +14,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using System.Data.Common;
 
 namespace Fiap.McTech.Infra.Context
 {
@@ -66,7 +65,7 @@ namespace Fiap.McTech.Infra.Context
                 }
                 catch (SqlException ex)
                 {
-                    if(ex.ClientConnectionId == Guid.Empty)
+                    if (ex.ClientConnectionId == Guid.Empty)
                     {
                         tryCount++;
                         logger.LogWarning(ex, "Attempt {TryCount} of {MaxRetryAttempts}: Database connection failed. Retrying in 10 second...", tryCount, maxRetryAttempts);

@@ -14,7 +14,6 @@ namespace Fiap.McTech.Infra.Context
         public DbSet<CartClient>? CartClients { get; set; }
         public DbSet<Client>? Clients { get; set; }
         public DbSet<Order>? Orders { get; set; }
-        public DbSet<OrderItem>? OrderItems { get; set; }
         public DbSet<Product>? Products { get; set; }
         public DbSet<Payment>? Payments { get; set; }
 
@@ -41,7 +40,6 @@ namespace Fiap.McTech.Infra.Context
             modelBuilder.ApplyConfiguration(new ClientMap());
             modelBuilder.ApplyConfiguration(new ProductMap());
             modelBuilder.ApplyConfiguration(new OrderMap());
-            modelBuilder.ApplyConfiguration(new OrderItemMap());
             modelBuilder.ApplyConfiguration(new PaymentMap());
         }
     }
