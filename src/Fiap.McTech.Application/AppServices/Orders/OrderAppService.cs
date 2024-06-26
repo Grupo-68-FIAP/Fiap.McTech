@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Fiap.McTech.Application.Dtos.Orders;
 using Fiap.McTech.Application.Interfaces;
 using Fiap.McTech.Application.ViewModels.Orders;
 using Fiap.McTech.Domain.Entities.Orders;
@@ -63,28 +62,13 @@ namespace Fiap.McTech.Application.AppServices.Orders
         }
 
         /// <inheritdoc/>
-        public async Task<OrderOutputDto> CreateOrderAsync(CreateOrderInputDto orderDto)
-        {
-
-            _logger.LogInformation("Creating a new order.");
-
-            var order = _mapper.Map<Domain.Entities.Orders.Order>(orderDto);
-
-            var createdOrder = await _orderRepository.AddAsync(order);
-
-            _logger.LogInformation("Order created successfully with ID {OrderId}.", createdOrder.Id);
-
-            return _mapper.Map<OrderOutputDto>(createdOrder);
-        }
-
-        /// <inheritdoc/>
         public async Task<OrderOutputDto> CreateOrderByCartAsync(Guid cartId)
         {
-            _logger.LogInformation("Creating a new order by cart id {cartId}.", cartId);
+            _logger.LogInformation("Creating a new order by cart id {CartId}.", cartId);
             var cart = await _cartClientRepository.GetByCartIdAsync(cartId);
             if (cart == null)
             {
-                _logger.LogWarning("Cart with ID {cartId} not found", cartId);
+                _logger.LogWarning("Cart with ID {CartId} not found", cartId);
                 throw new EntityNotFoundException(string.Format("Cart with ID {0} not found.", cartId));
             }
 

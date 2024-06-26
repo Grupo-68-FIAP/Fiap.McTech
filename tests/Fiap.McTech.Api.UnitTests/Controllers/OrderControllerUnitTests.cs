@@ -272,6 +272,23 @@ namespace Fiap.McTech.Api.UnitTests.Controllers
         }
 
         [Fact]
+        public async Task MoveOrderToNextStatus_WhenOrderWasCanceled_ThrowsInvalidOperationException()
+        {
+            // Arrange
+            var order = new Order(null, 0);
+            order.Cancel();
+            _mockedOrderRepository
+                .Setup(x => x.GetByIdAsync(order.Id))
+                .ReturnsAsync(() => order);
+            var controller = CreateOrderController();
+
+            // Act & Assert
+            var exception = await Assert.ThrowsAsync<InvalidOperationException>(() => controller.MoveOrderToNextStatus(order.Id));
+            Assert.Contains("canceled", exception.Message);
+            _mockedOrderRepository.Verify(x => x.UpdateAsync(It.IsAny<Order>()), Times.Never);
+        }
+
+        [Fact]
         public async Task GetOrders_ReturnsOrders()
         {
             // Arrange

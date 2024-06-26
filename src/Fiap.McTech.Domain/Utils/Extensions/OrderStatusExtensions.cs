@@ -22,7 +22,7 @@ namespace Fiap.McTech.Domain.Utils.Extensions
                 OrderStatus.InPreparation => OrderStatus.Ready,
                 OrderStatus.Ready => OrderStatus.Finished,
                 OrderStatus.Finished => throw new InvalidOperationException("The order is already finished."),
-                OrderStatus.Canceled => OrderStatus.Canceled,
+                OrderStatus.Canceled => throw new InvalidOperationException("The order is already canceled."),
                 _ => OrderStatus.None,
             };
         }

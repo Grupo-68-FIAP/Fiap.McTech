@@ -10,6 +10,7 @@ using Fiap.McTech.Domain.ValuesObjects;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
+using System.ComponentModel.DataAnnotations;
 
 namespace Fiap.McTech.Api.UnitTests.Controllers
 {
@@ -234,6 +235,40 @@ namespace Fiap.McTech.Api.UnitTests.Controllers
             var task = await Assert.ThrowsAsync(expectedExceptionType, () => controller.CreateClient(new ClientInputDto(name, cpf, email)));
             Assert.Contains(msgPart, task.Message);
             _mockedClientRepository.Verify(clientRepository => clientRepository.AddAsync(It.IsAny<Client>()), Times.Never);
+        }
+
+        [Fact]
+        public void Validate_ClientInputDto_Validation()
+        {
+            // Arrange
+            var clientInputDto = new ClientInputDto("Test", "52884751050", "test@test.com");
+            var validationContext = new ValidationContext(clientInputDto);
+            var validationResults = new List<ValidationResult>();
+
+            // Act
+            var isValid = Validator.TryValidateObject(clientInputDto, validationContext, validationResults, validateAllProperties: true);
+
+            // Assert
+            Assert.True(isValid);
+        }
+
+        [Theory]
+        [InlineData("", "52884751050", "test@test.com")]
+        [InlineData("Test", "52884751050", "test")]
+        [InlineData("Test", "11111111111", "test@test.com")]
+        [InlineData("Test", "", "")]
+        public void Validate_ClientInputDto_InvalidData(string name, string cpf, string email)
+        {
+            // Arrange
+            var clientInputDto = new ClientInputDto(name, cpf, email);
+            var validationContext = new ValidationContext(clientInputDto);
+            var validationResults = new List<ValidationResult>();
+
+            // Act
+            var isValid = Validator.TryValidateObject(clientInputDto, validationContext, validationResults, validateAllProperties: true);
+
+            // Assert
+            Assert.False(isValid);
         }
 
         [Fact]

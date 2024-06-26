@@ -45,15 +45,6 @@ namespace Fiap.McTech.Application.Dtos.Clients
         public string Email { get; set; }
 
         /// <summary>
-        /// Converts the DTO to a domain entity.
-        /// </summary>
-        /// <returns>A <see cref="Client"/> instance.</returns>
-        public Client ToClient()
-        {
-            return new Client(Name, new Domain.ValuesObjects.Cpf(Cpf), new Domain.ValuesObjects.Email(Email));
-        }
-
-        /// <summary>
         /// Validates the CPF or email.
         /// </summary>
         /// <param name="field">The field value.</param>
