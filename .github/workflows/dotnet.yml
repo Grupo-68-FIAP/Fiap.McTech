@@ -52,10 +52,10 @@ jobs:
         echo "GitHub ref is: ${{ github.ref }}"
         if [[ "${{ github.ref }}" == "refs/heads/master" ]]; then
             echo "Setting tag to 'latest'"
-            echo "::set-output name=tag::latest"
+            echo "::save-state name=tag::latest"
         else
             echo "Setting tag to '${{ github.ref }}'"
-            echo "::set-output name=tag::${{ github.ref }}"
+            echo "::save-state name=tag::${{ github.ref }}"
         fi | sed 's#refs/heads/##'
 
     - name: Debug docker_tag output
