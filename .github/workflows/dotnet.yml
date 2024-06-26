@@ -46,19 +46,22 @@ jobs:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-    - name: Read Docker tag from file
-      id: read_tag
+    - name: Set Docker tag
+      id: docker_tag
       run: |
-        echo "::set-env name=DOCKER_TAG::$(if [[ '${{ github.ref }}' == 'refs/heads/master' ]]; then echo 'latest'; else cat API_TAG.txt; fi)"
-        echo "DOCKER_TAG=$DOCKER_TAG" >> $GITHUB_ENV
+        if [[ "${{ github.ref }}" == "refs/heads/master" ]]; then
+          echo "DOCKER_TAG=latest" > $GITHUB_ENV
+        else
+          echo "DOCKER_TAG=${{ github.ref }}" | sed 's#refs/heads/##' > $GITHUB_ENV
+        fi
 
-    - name: Debug DOCKER_TAG
+    - name: Debug docker_tag output
       run: |
-        echo "DOCKER_TAG is $DOCKER_TAG"
+        echo "Docker tag is $DOCKER_TAG"
 
     - name: Build and push Docker image
       uses: docker/build-push-action@v4
       with:
         context: ./src/Fiap.McTech.Api
         push: true
-        tags: ${{ secrets.DOCKERHUB_USERNAME }}/fiap-mctech-api:${{ env.DOCKER_TAG }}
+        tags: ${{ secrets.DOCKERHUB_USERNAME }}/fiap-mctech-api:${{ steps.docker_tag.outputs.tag }}
