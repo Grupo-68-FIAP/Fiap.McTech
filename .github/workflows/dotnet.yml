@@ -57,11 +57,12 @@ jobs:
 
     - name: Debug docker_tag output
       run: |
-        echo "Docker tag is $(cat API_TAG.txt)"
+        TAG=$(cat API_TAG.txt)
+        echo "Docker tag is $TAG"
 
     - name: Build and push Docker image
       uses: docker/build-push-action@v4
       with:
         context: ./src/Fiap.McTech.Api
         push: true
-        tags: ${{ secrets.DOCKERHUB_USERNAME }}/fiap-mctech-api:$(cat API_TAG.txt)
+        tags: ${{ secrets.DOCKERHUB_USERNAME }}/fiap-mctech-api:${{ steps.docker_tag.outputs.tag }}
