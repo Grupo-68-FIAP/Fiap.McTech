@@ -57,6 +57,7 @@ jobs:
 
     - name: Build and push Docker image
       run: |
+        ls -la
         cd ./build_output
         docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/fiap-mctech-api:${{ env.DOCKER_TAG }}
         docker push ${{ secrets.DOCKERHUB_USERNAME }}/fiap-mctech-api:${{ env.DOCKER_TAG }}
