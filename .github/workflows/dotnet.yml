@@ -64,4 +64,4 @@ jobs:
       with:
         context: ./src/Fiap.McTech.Api
         push: true
-        tags: ${{ secrets.DOCKERHUB_USERNAME }}/fiap-mctech-api:${{ steps.docker_tag.outputs.tag }}
+        tags: ${{ secrets.DOCKERHUB_USERNAME }}/fiap-mctech-api:$DOCKER_TAG
