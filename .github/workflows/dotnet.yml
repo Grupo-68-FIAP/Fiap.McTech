@@ -61,7 +61,6 @@ jobs:
     - name: Debug docker_tag output
       run: |
           echo "Docker tag is ${{ steps.docker_tag.outputs.tag }}"
-          echo "Docker tag is ${{ steps.docker_tag }}"
 
     - name: Build and push Docker image
       uses: docker/build-push-action@v4
