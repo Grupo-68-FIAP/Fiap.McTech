@@ -48,7 +48,12 @@ jobs:
 
     - name: Set Docker tag
       id: docker_tag
-      run: echo "::set-output name=tag::$(if [[ '${{ github.ref }}' == 'refs/heads/master' ]]; then echo 'latest'; else echo '${{ github.ref#refs/heads/ }}'; fi)"
+      run: |
+        if [[ "${{ github.ref }}" == "refs/heads/master" ]]; then
+          echo "latest"
+        else
+          echo "${{ github.ref/refs/heads/ }}"
+        fi
 
     - name: Build and push Docker image
       uses: docker/build-push-action@v4
