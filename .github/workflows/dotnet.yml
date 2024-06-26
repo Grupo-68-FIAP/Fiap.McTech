@@ -55,13 +55,9 @@ jobs:
           echo "DOCKER_TAG=${{ github.ref }}" | sed 's#refs/heads/##' > $GITHUB_ENV
         fi
 
-    - name: Debug docker_tag output
-      run: |
-        echo "Docker tag is $DOCKER_TAG"
-
     - name: Build and push Docker image
       uses: docker/build-push-action@v4
       with:
         context: ./src/Fiap.McTech.Api
         push: true
-        tags: ${{ secrets.DOCKERHUB_USERNAME }}/fiap-mctech-api:$DOCKER_TAG
+        tags: ${{ secrets.DOCKERHUB_USERNAME }}/fiap-mctech-api:${{ env.DOCKER_TAG }}
