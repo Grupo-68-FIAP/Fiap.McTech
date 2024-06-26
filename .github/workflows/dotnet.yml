@@ -52,8 +52,8 @@ jobs:
         if [[ "${{ github.ref }}" == "refs/heads/master" ]]; then
           echo "latest"
         else
-          echo "${{ github.ref/refs/heads/ }}"
-        fi
+          echo "${{ github.ref }}"
+        fi | sed 's#refs/heads/##'
 
     - name: Build and push Docker image
       uses: docker/build-push-action@v4
