@@ -55,7 +55,9 @@ jobs:
           echo "DOCKER_TAG=${{ github.ref }}" | sed 's#refs/heads/##' > $GITHUB_ENV
         fi
 
-    - name: Create and push Docker image 
-      run: |
-        docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/fiap-mctech-api:${{ env.DOCKER_TAG }} ./src/Fiap.McTech.Api
-        docker push ${{ secrets.DOCKERHUB_USERNAME }}/fiap-mctech-api:${{ env.DOCKER_TAG }}
+    - name: Create and push Docker image
+      uses: docker/build-push-action@v4
+      with:
+        context: ./src/Fiap.McTech.Api
+        push: true
+        tags: ${{ secrets.DOCKERHUB_USERNAME }}/fiap-mctech-api:${{ env.DOCKER_TAG }}
