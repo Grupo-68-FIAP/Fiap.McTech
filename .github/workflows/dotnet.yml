@@ -49,14 +49,19 @@ jobs:
     - name: Set Docker tag
       id: docker_tag
       run: |
+        echo "GitHub ref is: ${{ github.ref }}"
         if [[ "${{ github.ref }}" == "refs/heads/master" ]]; then
-          echo "latest"
+            echo "Setting tag to 'latest'"
+            echo "::set-output name=tag::latest"
         else
-          echo "${{ github.ref }}"
+            echo "Setting tag to '${{ github.ref }}'"
+            echo "::set-output name=tag::${{ github.ref }}"
         fi | sed 's#refs/heads/##'
 
     - name: Debug docker_tag output
-      run: echo "Docker tag is ${{ steps.docker_tag.outputs.tag }}"
+      run: |
+          echo "Docker tag is ${{ steps.docker_tag.outputs.tag }}"
+          echo "Docker tag is ${{ steps.docker_tag }}"
 
     - name: Build and push Docker image
       uses: docker/build-push-action@v4
