@@ -50,10 +50,10 @@ jobs:
       id: docker_tag
       run: |
         if [[ "${{ github.ref }}" == "refs/heads/master" ]]; then
-          echo "latest" > API_TAG.txt
+          echo "latest"
         else
-          echo "${{ github.ref }}" | sed 's#refs/heads/##' > API_TAG.txt
-        fi
+          echo "${{ github.ref }}" | sed 's#refs/heads/##'
+        fi > API_TAG.txt
 
     - name: Debug docker_tag output
       run: |
@@ -65,4 +65,4 @@ jobs:
       with:
         context: ./src/Fiap.McTech.Api
         push: true
-        tags: ${{ secrets.DOCKERHUB_USERNAME }}/fiap-mctech-api:${{ steps.docker_tag.outputs.tag }}
+        tags: ${{ secrets.DOCKERHUB_USERNAME }}/fiap-mctech-api:$(cat API_TAG.txt)
