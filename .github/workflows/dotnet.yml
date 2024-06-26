@@ -24,7 +24,7 @@ jobs:
       run: dotnet restore src/Fiap.McTech.Api/Fiap.McTech.Api.csproj
 
     - name: Build
-      run: dotnet build src/Fiap.McTech.Api/Fiap.McTech.Api.csproj --configuration Release
+      run: dotnet build src/Fiap.McTech.Api/Fiap.McTech.Api.csproj --configuration Release -o ./build_output
 
     - name: Test
       run: dotnet test src/Fiap.McTech.Api/Fiap.McTech.Api.csproj --verbosity normal
@@ -56,8 +56,6 @@ jobs:
         fi
 
     - name: Build and push Docker image
-      uses: docker/build-push-action@v4
-      with:
-        context: ./src/Fiap.McTech.Api
-        push: true
-        tags: ${{ secrets.DOCKERHUB_USERNAME }}/fiap-mctech-api:${{ env.DOCKER_TAG }}
+      run: |
+        docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/fiap-mctech-api:${{ env.DOCKER_TAG }} ./build_output
+        docker push ${{ secrets.DOCKERHUB_USERNAME }}/fiap-mctech-api:${{ env.DOCKER_TAG }}
