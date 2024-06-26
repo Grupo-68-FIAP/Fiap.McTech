@@ -55,6 +55,9 @@ jobs:
           echo "${{ github.ref }}"
         fi | sed 's#refs/heads/##'
 
+    - name: Debug docker_tag output
+      run: echo "Docker tag is ${{ steps.docker_tag.outputs.tag }}"
+
     - name: Build and push Docker image
       uses: docker/build-push-action@v4
       with:
