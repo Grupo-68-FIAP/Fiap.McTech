@@ -52,9 +52,8 @@ jobs:
         if [[ "${{ github.ref }}" == "refs/heads/master" ]]; then
           echo "latest" > API_TAG.txt
         else
-          echo "${{ github.ref }}" > API_TAG.txt
+          echo "${{ github.ref }}" | sed 's#refs/heads/##' > API_TAG.txt
         fi
-        cat API_TAG.txt
 
     - name: Debug docker_tag output
       run: |
