@@ -6,6 +6,7 @@ EXPOSE 443
 ARG ALLOW_SWAGGER_UI=false
 ARG ALLOW_ORIGINS=*
 COPY ["src/Fiap.McTech.Api/cert.pfx", "/app"]
+RUN ls -la .
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 ARG BUILD_CONFIGURATION=Release
