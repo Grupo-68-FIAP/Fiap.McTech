@@ -37,14 +37,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Validate presence of cert.pfx
-        run: ls -R src/Fiap.McTech.Api/
-      - name: Ensure cert.pfx exists
-        run: |
-          if [ ! -f src/Fiap.McTech.Api/cert.pfx ]; then
-            echo "cert.pfx not found"
-            exit 1
-          fi
+      - name: Set permissions recursively for project directory
+        run: chmod -R 755 .
 
       # Install the cosign tool except on PR
       # https://github.com/sigstore/cosign-installer
