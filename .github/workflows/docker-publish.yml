@@ -110,3 +110,10 @@ jobs:
           for image_id in $dangling_images; do
             curl -X DELETE -H "Authorization: token $GITHUB_TOKEN" "https://api.github.com/orgs/Grupo-68-FIAP/packages/container/mctech%2Fapi/versions/$image_id"
           done
+
+          # Get list of image IDs with tags longer than 20 characters
+          long_tag_images=$(curl -s -H "Authorization: token $GITHUB_TOKEN" "https://api.github.com/orgs/Grupo-68-FIAP/packages/container/mctech%2Fapi/versions" | jq -r '.[] | select((.metadata.container.tags | join(" ") | length) > 20) | .id')
+          # Loop through and delete each image with long tags
+          for image_id in $long_tag_images; do
+            curl -X DELETE -H "Authorization: token $GITHUB_TOKEN" "https://api.github.com/orgs/Grupo-68-FIAP/packages/container/mctech%2Fapi/versions/$image_id"
+          done
