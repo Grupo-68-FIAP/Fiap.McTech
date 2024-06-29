@@ -72,8 +72,6 @@ jobs:
             type=raw,value=dev,enable=${{ github.ref == format('refs/heads/{0}', 'develop') }}
             type=ref,event=tag
             type=sha
-          labels: |
-            org.opencontainers.image.version: dev
 
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
