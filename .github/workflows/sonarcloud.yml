@@ -50,8 +50,8 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: powershell
         run: |
-          .\.sonar\scanner\dotnet-sonarscanner begin /k:"Grupo-68-FIAP_Fiap.McTech" /o:"grupo-68-fiap" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"  /d:sonar.cs.vscoveragexml.reportsPaths="**.coveragexml" /d:sonar.cs.vstest.reportsPaths="**.trx"
+          .\.sonar\scanner\dotnet-sonarscanner begin /k:"Grupo-68-FIAP_Fiap.McTech" /o:"grupo-68-fiap" /d:sonar.token="$SONAR_TOKEN" /d:sonar.host.url="https://sonarcloud.io"  /d:sonar.cs.vscoveragexml.reportsPaths="**.coveragexml" /d:sonar.cs.vstest.reportsPaths="**.trx"
           dotnet test "Fiap.McTech.sln" --collect "Code Coverage" --logger trx --results-directory "TestsResults"
           .\.sonar\scanner\dotnet-coverageconverter -f "." -p true -r
-          .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+          .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="$SONAR_TOKEN"
 
