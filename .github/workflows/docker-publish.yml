@@ -1,18 +1,15 @@
 name: Docker
 
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-
 on:
   schedule:
     - cron: '27 19 * * *'
   push:
     branches: [ "master", "develop" ]
     tags: [ 'v*.*.*' ]
+    paths-ignore: [ '**/*.md', '.github/workflows/*', '!.github/workflows/docker-publish.yml']
   pull_request:
     branches: [ "master", "develop"  ]
+    paths-ignore: [ '**/*.md', '.github/workflows/*', '!.github/workflows/docker-publish.yml']
 
 env:
   # Use docker.io for Docker Hub if empty

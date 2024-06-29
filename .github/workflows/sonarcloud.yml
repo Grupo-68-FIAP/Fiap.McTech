@@ -2,8 +2,10 @@ name: SonarCloud analysis
 on:
   push:
     branches: [ master, develop ]
+    paths-ignore: [ '**/*.md', '.github/workflows/*', '!.github/workflows/sonarcloud.yml']
   pull_request:
     types: [opened, synchronize, reopened]
+    paths-ignore: [ '**/*.md', '.github/workflows/*', '!.github/workflows/sonarcloud.yml']
 jobs:
   build:
     name: Build and analyze
