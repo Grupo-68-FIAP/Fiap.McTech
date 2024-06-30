@@ -1,0 +1,43 @@
+# 01-deployment-config-sqlserver.yml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mctech-sqlserver
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mctech-sqlserver
+  strategy:
+    type: Recreate    
+  template:
+    metadata:
+      labels:
+        app: mctech-sqlserver
+    spec:
+      containers:
+      - name: mctech-sqlserver
+        image: mcr.microsoft.com/mssql/server:latest
+        env:
+        - name: SQLSERVER_DB
+          value: mctech
+        - name: MSSQL_SA_PASSWORD
+          value: pws4mctech!
+        - name: ACCEPT_EULA
+          value: "Y"
+        - name: MSSQL_PID
+          value: Developer
+        ports:
+        - containerPort: 1433
+          name: sqlserver
+        livenessProbe:
+          tcpSocket:
+            port: 1433
+          initialDelaySeconds: 30
+        volumeMounts:
+          - name: sqlserver-persistence-storage
+            mountPath: /data/sqlserver
+      volumes:
+        - name: sqlserver-persistence-storage
+          persistentVolumeClaim:
+            claimName: mctech-pvc-sqlserver

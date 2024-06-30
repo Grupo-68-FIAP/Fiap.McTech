@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: sqlserver
+  name: mctech-sqlserver-svc
+spec:
+  ports:
+    - name: tcp
+      port: 1433
+      protocol: TCP
+      targetPort: 1433
+      nodePort: 32000
+  selector:
+    app: mctech-sqlserver
+  type: NodePort
