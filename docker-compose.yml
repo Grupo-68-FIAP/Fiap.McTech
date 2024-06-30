@@ -2,7 +2,7 @@ services:
   fiap.mctech.api:
     depends_on:
       - sqlserver
-    image: ${DOCKER_REGISTRY-}fiapmctechapi
+    image: ${DOCKER_REGISTRY-}mctech/api
     build:
       context: .
       dockerfile: src/Fiap.McTech.Api/Dockerfile
