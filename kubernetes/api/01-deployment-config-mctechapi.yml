@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mctechapi
+  labels:
+    app: mctechapi
+spec:
+  template:
+    metadata:
+      name: mctechapi
+      labels:
+        app: mctechapi
+    spec:
+      containers:
+        - name: mctechapi-container
+          image: josemrl7/mctechapi:latest
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: Development
+            - name: ASPNETCORE_URLS
+              value: https://+:443;http://+:80
+            - name: ASPNETCORE_Kestrel__Certificates__Default__Password
+              value: pws4mctech!
+            - name: ASPNETCORE_Kestrel__Certificates__Default__Path
+              value: /app/cert.pfx
+            - name: CONNECTION_STRING
+              value: Server=sqlserver,1433;Initial Catalog=mctech;User Id=sa;Password=pws4mctech!;
+            - name: ALLOW_SWAGGER_UI
+              value: "true"
+          ports:
+            - containerPort: 80
+              name: "http"
+            - containerPort: 443
+              name: "https"
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+            periodSeconds: 10
+            failureThreshold: 3
+            initialDelaySeconds: 120
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            periodSeconds: 10
+            failureThreshold: 5
+            initialDelaySeconds: 60
+          startupProbe:
+            httpGet:
+              path: /
+              port: 80
+            failureThreshold: 30
+            periodSeconds: 10  
+          resources:
+            requests:
+              memory: 64Mi
+              cpu: 100m
+            limits:
+              memory: 128Mi
+              cpu: 500m
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mctechapi
