@@ -24,40 +24,34 @@ spec:
             - name: ASPNETCORE_Kestrel__Certificates__Default__Path
               value: /app/cert.pfx
             - name: CONNECTION_STRING
-              value: Server=sqlserver,1433;Initial Catalog=mctech;User Id=sa;Password=pws4mctech!;
+              value: Server=mctech-sqlserver-svc,1433;Initial Catalog=mctech;User Id=sa;Password=pws4mctech!;
             - name: ALLOW_SWAGGER_UI
               value: "true"
           ports:
             - containerPort: 80
-              name: "http"
+              name: http
             - containerPort: 443
-              name: "https"
-          livenessProbe:
-            httpGet:
-              path: /
-              port: 80
-            periodSeconds: 10
-            failureThreshold: 3
-            initialDelaySeconds: 120
-          readinessProbe:
-            httpGet:
-              path: /
-              port: 80
-            periodSeconds: 10
-            failureThreshold: 5
-            initialDelaySeconds: 60
-          startupProbe:
-            httpGet:
-              path: /
-              port: 80
-            failureThreshold: 30
-            periodSeconds: 10  
+              name: https
+          # livenessProbe: Comentado por enquanto, pois está gerando restarts desnecessários do pod
+          #   httpGet:
+          #     path: /
+          #     port: 80
+          #   periodSeconds: 10
+          #   failureThreshold: 3
+          #   initialDelaySeconds: 30
+          # readinessProbe:
+          #   httpGet:
+          #     path: /
+          #     port: 80
+          #   periodSeconds: 10
+          #   failureThreshold: 5
+          #   initialDelaySeconds: 30
           resources:
             requests:
               memory: 64Mi
-              cpu: 100m
+              cpu: 5m
             limits:
-              memory: 128Mi
+              memory: 1024Mi
               cpu: 500m
   replicas: 1
   selector:
