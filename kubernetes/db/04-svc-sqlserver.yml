@@ -5,12 +5,11 @@ metadata:
     app: sqlserver
   name: mctech-sqlserver-svc
 spec:
-  ports:
-    - name: tcp
-      port: 1433
-      protocol: TCP
-      targetPort: 1433
-      nodePort: 32000
   selector:
     app: mctech-sqlserver
-  type: NodePort
+  ports:
+    - name: tcp
+      protocol: TCP
+      port: 1433
+      targetPort: 1433
+  clusterIP: None
