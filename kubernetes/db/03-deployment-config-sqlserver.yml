@@ -1,4 +1,3 @@
-# 01-deployment-config-sqlserver.yml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -30,6 +29,10 @@ spec:
         ports:
         - containerPort: 1433
           name: sqlserver
+        resources:
+          limits:
+            memory: 3Gi
+            cpu: 1000m
         livenessProbe:
           tcpSocket:
             port: 1433
