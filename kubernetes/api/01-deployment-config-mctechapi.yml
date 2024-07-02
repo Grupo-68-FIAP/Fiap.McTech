@@ -32,20 +32,20 @@ spec:
               name: http
             - containerPort: 443
               name: https
-          # livenessProbe: Comentado por enquanto, pois está gerando restarts desnecessários do pod
-          #   httpGet:
-          #     path: /
-          #     port: 80
-          #   periodSeconds: 10
-          #   failureThreshold: 3
-          #   initialDelaySeconds: 30
-          # readinessProbe:
-          #   httpGet:
-          #     path: /
-          #     port: 80
-          #   periodSeconds: 10
-          #   failureThreshold: 5
-          #   initialDelaySeconds: 30
+          livenessProbe:
+            httpGet:
+              path: /swagger
+              port: 80
+            periodSeconds: 10
+            failureThreshold: 3
+            initialDelaySeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /swagger
+              port: 80
+            periodSeconds: 10
+            failureThreshold: 5
+            initialDelaySeconds: 30
           resources:
             requests:
               memory: 64Mi
