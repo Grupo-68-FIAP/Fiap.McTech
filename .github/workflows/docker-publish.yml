@@ -101,21 +101,3 @@ jobs:
         # This step uses the identity token to provision an ephemeral certificate
         # against the sigstore community Fulcio instance.
         run: echo "${TAGS}" | xargs -I {} cosign sign --yes {}@${DIGEST}
-
-#      - name: Remove dangling images from GitHub Packages
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#        run: |
-#          # Get list of image IDs that are dangling (not tagged) in GitHub Packages
-#          dangling_images=$(curl -s -H "Authorization: token $GITHUB_TOKEN" "https://api.github.com/orgs/Grupo-68-FIAP/packages/container/mctech%2Fapi/versions" | jq -r '.[] | select(.metadata.container.tags == []) | .id')
-#          # Loop through and delete each dangling image
-#          for image_id in $dangling_images; do
-#            curl -X DELETE -H "Authorization: token $GITHUB_TOKEN" "https://api.github.com/orgs/Grupo-68-FIAP/packages/container/mctech%2Fapi/versions/$image_id"
-#          done
-#
-#          # Get list of image IDs with tags longer than 20 characters
-#          long_tag_images=$(curl -s -H "Authorization: token $GITHUB_TOKEN" "https://api.github.com/orgs/Grupo-68-FIAP/packages/container/mctech%2Fapi/versions" | jq -r '.[] | select((.metadata.container.tags | join(" ") | length) > 20) | .id')
-#          # Loop through and delete each image with long tags
-#          for image_id in $long_tag_images; do
-#            curl -X DELETE -H "Authorization: token $GITHUB_TOKEN" "https://api.github.com/orgs/Grupo-68-FIAP/packages/container/mctech%2Fapi/versions/$image_id"
-#          done
