@@ -13,7 +13,7 @@ spec:
     spec:
       containers:
         - name: mctechapi-container
-          image: josemrl7/mctechapi:latest
+          image: ghcr.io/grupo-68-fiap/mctech/api:dev
           env:
             - name: ASPNETCORE_ENVIRONMENT
               value: Development
