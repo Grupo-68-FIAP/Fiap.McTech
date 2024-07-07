@@ -26,14 +26,14 @@ namespace Fiap.McTech.Api.UnitTests.Controllers
     {
         readonly Mock<IPaymentRepository> _mockedPaymentRepository;
         readonly Mock<IOrderRepository> _mockedOrderRepository;
-        readonly Mock<IPayPalPaymentService> _mockedPayPalPaymentService;
+        readonly Mock<IMercadoPagoService> _mockedmercadoPagoService;
         readonly Mock<ILogger<PaymentAppService>> _mockedLogger;
 
         public PaymentControllerUnitTests()
         {
             _mockedPaymentRepository = new Mock<IPaymentRepository>();
             _mockedOrderRepository = new Mock<IOrderRepository>();
-            _mockedPayPalPaymentService = new Mock<IPayPalPaymentService>();
+            _mockedmercadoPagoService = new Mock<IMercadoPagoService>();
             _mockedLogger = new Mock<ILogger<PaymentAppService>>();
         }
 
@@ -47,7 +47,7 @@ namespace Fiap.McTech.Api.UnitTests.Controllers
             var payment = new Payment(Guid.NewGuid(), order.Id, order.TotalAmount, "", "", PaymentMethod.QrCode, PaymentStatus.Pending);
 
             _mockedOrderRepository.Setup(x => x.GetByIdAsync(order.Id)).ReturnsAsync(order);
-            _mockedPayPalPaymentService.Setup(x => x.GeneratePaymentLinkAsync(order.TotalAmount)).ReturnsAsync(paymentLink);
+            _mockedmercadoPagoService.Setup(x => x.GeneratePaymentLinkAsync(order.TotalAmount)).ReturnsAsync(paymentLink);
             _mockedPaymentRepository.Setup(x => x.AddAsync(It.IsAny<Payment>())).ReturnsAsync(payment);
 
             var paymentController = GetPaymentController();
@@ -87,7 +87,7 @@ namespace Fiap.McTech.Api.UnitTests.Controllers
             order.SendToNextStatus();
 
             _mockedOrderRepository.Setup(x => x.GetByIdAsync(order.Id)).ReturnsAsync(order);
-            _mockedPayPalPaymentService.Setup(x => x.GeneratePaymentLinkAsync(order.TotalAmount)).ReturnsAsync("");
+            _mockedmercadoPagoService.Setup(x => x.GeneratePaymentLinkAsync(order.TotalAmount)).ReturnsAsync("");
 
             var paymentController = GetPaymentController();
 
@@ -108,7 +108,7 @@ namespace Fiap.McTech.Api.UnitTests.Controllers
             var qrCode = "qr-code";
 
             _mockedPaymentRepository.Setup(x => x.GetByIdAsync(payment.Id)).ReturnsAsync(payment);
-            _mockedPayPalPaymentService.Setup(x => x.ProcessPaymentFromQRCodeAsync(qrCode)).ReturnsAsync(true);
+            _mockedmercadoPagoService.Setup(x => x.ProcessPaymentFromQRCodeAsync(qrCode)).ReturnsAsync(true);
 
             var paymentController = GetPaymentController();
 
@@ -132,7 +132,7 @@ namespace Fiap.McTech.Api.UnitTests.Controllers
 
         private PaymentController GetPaymentController()
         {
-            var paymentAppService = new PaymentAppService(_mockedLogger.Object, _mockedPaymentRepository.Object, _mockedOrderRepository.Object, _mockedPayPalPaymentService.Object);
+            var paymentAppService = new PaymentAppService(_mockedLogger.Object, _mockedPaymentRepository.Object, _mockedOrderRepository.Object, _mockedmercadoPagoService.Object);
             return new PaymentController(paymentAppService);
         }
     }

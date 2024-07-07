@@ -17,7 +17,7 @@ namespace Fiap.McTech.Application.AppServices.Payment
         private readonly ILogger<PaymentAppService> _logger;
         private readonly IPaymentRepository _paymentRepository;
         private readonly IOrderRepository _orderRepository;
-        private readonly IPayPalPaymentService _payPalPaymentService;
+        private readonly IMercadoPagoService _mercadoPagoService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PaymentAppService"/> class.
@@ -25,17 +25,17 @@ namespace Fiap.McTech.Application.AppServices.Payment
         /// <param name="logger">The logger instance for logging.</param>
         /// <param name="paymentRepository">The repository for managing payments.</param>
         /// <param name="orderRepository">The repository for managing orders.</param>
-        /// <param name="payPalPaymentService">The PayPal payment service.</param>
+        /// <param name="mercadoPagoService">The Mercado Pago payment service.</param>
         public PaymentAppService(
             ILogger<PaymentAppService> logger,
             IPaymentRepository paymentRepository,
             IOrderRepository orderRepository,
-            IPayPalPaymentService payPalPaymentService)
+            IMercadoPagoService mercadoPagoService)
         {
             _logger = logger;
             _paymentRepository = paymentRepository;
             _orderRepository = orderRepository;
-            _payPalPaymentService = payPalPaymentService;
+            _mercadoPagoService = mercadoPagoService;
         }
 
         /// <inheritdoc/>
@@ -46,7 +46,7 @@ namespace Fiap.McTech.Application.AppServices.Payment
             var order = await _orderRepository.GetByIdAsync(orderId)
                 ?? throw new EntityNotFoundException($"Order [{orderId}] not found.");
 
-            var paymentLink = await _payPalPaymentService.GeneratePaymentLinkAsync(order.TotalAmount);
+            var paymentLink = await _mercadoPagoService.GeneratePaymentLinkAsync(order.TotalAmount);
             if (string.IsNullOrEmpty(paymentLink))
             {
                 _logger.LogInformation("Error to create QrCode for ID {OrderId}.", orderId);
@@ -70,7 +70,7 @@ namespace Fiap.McTech.Application.AppServices.Payment
                 return new PaymentOutputDto(success: false, message: "Payment Not Found.");
             }
 
-            var paymentResult = await _payPalPaymentService.ProcessPaymentFromQRCodeAsync(qrCode);
+            var paymentResult = await _mercadoPagoService.ProcessPaymentFromQRCodeAsync(qrCode);
             if (!paymentResult)
             {
                 _logger.LogInformation("Payment failed for order with ID {OrderId}.", paymentId);

@@ -5,10 +5,11 @@ using Fiap.McTech.Application.AppServices.Payment;
 using Fiap.McTech.Application.AppServices.Products;
 using Fiap.McTech.Application.Interfaces;
 using Fiap.McTech.Infra.Context;
-using Fiap.McTech.Infra.Services;
 using Fiap.McTech.Infra.Services.Interfaces;
+using Fiap.McTech.Services.Services.MercadoPago;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Http;
 
 namespace Fiap.McTech.CrossCutting.Ioc
 {
@@ -21,7 +22,15 @@ namespace Fiap.McTech.CrossCutting.Ioc
             services.RegisterRepositories();
 
             //SERVICES
-            services.AddScoped<IPayPalPaymentService, PayPalPaymentService>();
+            services.Configure<MercadoPagoConfig>(config => { configuration.GetSection(nameof(MercadoPagoConfig)); });
+           
+            services.AddHttpClient("MercadoPago", client =>
+            {
+                client.BaseAddress = new Uri(configuration["MercadoPago:BaseUrl"]);
+                client.DefaultRequestHeaders.Add("X-Idempotency-Key", configuration["MercadoPago:IdempotencyKey"]);
+            });
+
+            services.AddScoped<IMercadoPagoService, MercadoPagoService>();
 
             //APP Services
             services.AddScoped<IClientAppService, ClientAppService>();
