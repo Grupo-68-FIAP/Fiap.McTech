@@ -36,11 +36,14 @@ spec:
         livenessProbe:
           tcpSocket:
             port: 1433
-          initialDelaySeconds: 30
+          initialDelaySeconds: 60
         volumeMounts:
-          - name: sqlserver-persistence-storage
-            mountPath: /data/sqlserver
+          - mountPath: /var/opt/mssql
+            name: mssql            
       volumes:
-        - name: sqlserver-persistence-storage
+        - name: mssql
           persistentVolumeClaim:
             claimName: mctech-pvc-sqlserver
+      securityContext:
+        fsGroup: 10001 #configuração necessária por conta de erro de permissão ao criar pasta do volumeMount dentro do container
+        runAsUser: 0
