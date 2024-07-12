@@ -17,4 +17,4 @@ sonar:
       reportsPaths:
         - **.trx
 
-#sonar.projectSettings=./sonar-project.yml
+#/d:sonar.projectSettings=./sonar-project.yml
