@@ -1,0 +1,6 @@
+sonar.projectKey: Grupo-68-FIAP_Fiap.McTech
+sonar.projectName: Fiap.McTech
+
+sonar.exclusions:
+  - **/src/Fiap.McTech.CrossCutting.Ioc/**
+  - **/src/Fiap.McTech.Api/Configurations/**
