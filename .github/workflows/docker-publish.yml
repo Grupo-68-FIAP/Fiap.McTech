@@ -6,10 +6,10 @@ on:
   push:
     branches: [ "master", "develop" ]
     tags: [ 'v*.*.*' ]
-    paths-ignore: [ '**/*.md', '.github/workflows/*', '!.github/workflows/docker-publish.yml']
+    paths-ignore: [ '**/*.md', '.github/workflows/*', '!.github/workflows/docker-publish.yml', '**/sonar-project.yml']
   pull_request:
     branches: [ "master", "develop"  ]
-    paths-ignore: [ '**/*.md', '.github/workflows/*', '!.github/workflows/docker-publish.yml']
+    paths-ignore: [ '**/*.md', '.github/workflows/*', '!.github/workflows/docker-publish.yml', '**/sonar-project.yml']
 
 env:
   # Use docker.io for Docker Hub if empty
