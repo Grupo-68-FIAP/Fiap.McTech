@@ -69,18 +69,18 @@ namespace Fiap.McTech.Services.Services.MercadoPago
             }
         }
 
-        public async Task<bool> ProcessPaymentFromQRCodeAsync(string qrCode)
+        public async Task<bool> ProcessPaymentAsync(Guid paymentId)
         {
             try
             {
-                _logger.LogInformation("Processing payment from QR code: {QRCode}.", qrCode);
+                _logger.LogInformation("Processing payment from paymentId: {paymentId}.", paymentId);
 
                 //MOCK VALUE
                 return await Task.Run(() => { return true; });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Failed to process payment from QR code: {QRCode}.", qrCode);
+                _logger.LogError(ex, "Failed to process payment from paymentId: {paymentId}.", paymentId);
 
                 return await Task.Run(() => { return false; });
             }

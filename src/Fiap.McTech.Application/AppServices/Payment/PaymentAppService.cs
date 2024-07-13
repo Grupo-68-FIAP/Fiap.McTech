@@ -59,7 +59,7 @@ namespace Fiap.McTech.Application.AppServices.Payment
         }
 
         /// <inheritdoc/>
-        public async Task<PaymentOutputDto> PayAsync(Guid paymentId, string qrCode)
+        public async Task<PaymentOutputDto> UpdatePayment(Guid paymentId, string status)
         {
             _logger.LogInformation("Processing payment for order with ID {PaymentId}.", paymentId);
 
@@ -70,7 +70,7 @@ namespace Fiap.McTech.Application.AppServices.Payment
                 return new PaymentOutputDto(success: false, message: "Payment Not Found.");
             }
 
-            var paymentResult = await _mercadoPagoService.ProcessPaymentFromQRCodeAsync(qrCode);
+            var paymentResult = await _mercadoPagoService.ProcessPaymentAsync(paymentId);
             if (!paymentResult)
             {
                 _logger.LogInformation("Payment failed for order with ID {OrderId}.", paymentId);

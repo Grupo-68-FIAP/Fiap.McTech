@@ -105,15 +105,14 @@ namespace Fiap.McTech.Api.UnitTests.Controllers
         {
             // Arrange
             var payment = new Payment(Guid.NewGuid(), Guid.NewGuid(), 10, "", "", PaymentMethod.QrCode, PaymentStatus.Pending);
-            var qrCode = "qr-code";
 
             _mockedPaymentRepository.Setup(x => x.GetByIdAsync(payment.Id)).ReturnsAsync(payment);
-            _mockedmercadoPagoService.Setup(x => x.ProcessPaymentFromQRCodeAsync(qrCode)).ReturnsAsync(true);
+            _mockedmercadoPagoService.Setup(x => x.ProcessPaymentAsync(payment.Id)).ReturnsAsync(true);
 
             var paymentController = GetPaymentController();
 
             // Act
-            var result = await paymentController.Pay(payment.Id, qrCode);
+            var result = await paymentController.UpdatePayment(payment.Id, payment.Status.ToString());
 
             // Assert
             var okResult = Assert.IsType<OkObjectResult>(result);

@@ -3,6 +3,6 @@
     public interface IMercadoPagoService
     {
         Task<string> GeneratePaymentLinkAsync(decimal amount);
-        Task<bool> ProcessPaymentFromQRCodeAsync(string qrCode);
+        Task<bool> ProcessPaymentAsync(Guid paymentId);
     }
 }
