@@ -16,5 +16,3 @@ sonar:
     vstest:
       reportsPaths:
         - **.trx
-
-#/d:sonar.projectSettings=./sonar-project.yml
