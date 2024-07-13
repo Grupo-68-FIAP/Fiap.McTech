@@ -25,29 +25,10 @@ namespace Fiap.McTech.Services.Services.MercadoPago
             _mercadoPagoConfig = mercadoPagoConfig.Value;
         }
 
-        public async Task<string> GeneratePaymentLinkAsync(decimal amount)
+        public async Task<string> GeneratePaymentLinkAsync(PaymentRequest paymentRequest)
         {
             try
             {
-                //TODO - Preencher com valores reais
-                var paymentRequest = new PaymentRequest
-                {
-                    TransactionAmount = amount,
-                    Description = "Descrição do Produto",
-                    PaymentMethodId = "qrCode",
-                    Payer = new Payer
-                    {
-                        Email = "email_do_comprador@example.com",
-                        FirstName = "Nome",
-                        LastName = "Sobrenome",
-                        Identification = new Identification
-                        {
-                            Type = "CPF",
-                            Number = "12345678909"
-                        }
-                    }
-                };
-
                 string json = JsonConvert.SerializeObject(paymentRequest);
                 HttpContent content = new StringContent(json, Encoding.UTF8, "application/json");
 
@@ -64,7 +45,7 @@ namespace Fiap.McTech.Services.Services.MercadoPago
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Falha ao gerar link de pagamento para o valor {Amount}.", amount);
+                _logger.LogError(ex, "Falha ao gerar link de pagamento para o valor {Amount}.", paymentRequest.TransactionAmount);
                 throw;
             }
         }

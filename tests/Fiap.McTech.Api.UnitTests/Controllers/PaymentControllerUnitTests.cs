@@ -1,24 +1,18 @@
 ﻿using AutoMapper;
-using Fiap.McTech.Api.Controllers.Payments;
-using Fiap.McTech.Application.AppServices.Clients;
+using Fiap.McTech.Api.Controllers.Payments; 
 using Fiap.McTech.Application.AppServices.Payment;
 using Fiap.McTech.Application.Dtos.Payments;
 using Fiap.McTech.Domain.Entities.Orders;
 using Fiap.McTech.Domain.Entities.Payments;
 using Fiap.McTech.Domain.Enums;
-using Fiap.McTech.Domain.Exceptions;
-using Fiap.McTech.Domain.Interfaces.Repositories.Clients;
+using Fiap.McTech.Domain.Exceptions; 
 using Fiap.McTech.Domain.Interfaces.Repositories.Orders;
 using Fiap.McTech.Domain.Interfaces.Repositories.Payments;
 using Fiap.McTech.Infra.Services.Interfaces;
+using Fiap.McTech.Services.Services.MercadoPago.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Fiap.McTech.Api.UnitTests.Controllers
 {
@@ -47,7 +41,7 @@ namespace Fiap.McTech.Api.UnitTests.Controllers
             var payment = new Payment(Guid.NewGuid(), order.Id, order.TotalAmount, "", "", PaymentMethod.QrCode, PaymentStatus.Pending);
 
             _mockedOrderRepository.Setup(x => x.GetByIdAsync(order.Id)).ReturnsAsync(order);
-            _mockedmercadoPagoService.Setup(x => x.GeneratePaymentLinkAsync(order.TotalAmount)).ReturnsAsync(paymentLink);
+            _mockedmercadoPagoService.Setup(x => x.GeneratePaymentLinkAsync(new PaymentRequest() { TransactionAmount = order.TotalAmount })).ReturnsAsync(paymentLink);
             _mockedPaymentRepository.Setup(x => x.AddAsync(It.IsAny<Payment>())).ReturnsAsync(payment);
 
             var paymentController = GetPaymentController();
@@ -87,7 +81,7 @@ namespace Fiap.McTech.Api.UnitTests.Controllers
             order.SendToNextStatus();
 
             _mockedOrderRepository.Setup(x => x.GetByIdAsync(order.Id)).ReturnsAsync(order);
-            _mockedmercadoPagoService.Setup(x => x.GeneratePaymentLinkAsync(order.TotalAmount)).ReturnsAsync("");
+            _mockedmercadoPagoService.Setup(x => x.GeneratePaymentLinkAsync(new PaymentRequest() { TransactionAmount = order.TotalAmount })).ReturnsAsync("");
 
             var paymentController = GetPaymentController();
 

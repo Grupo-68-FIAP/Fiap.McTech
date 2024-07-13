@@ -1,8 +1,10 @@
-﻿namespace Fiap.McTech.Infra.Services.Interfaces
+﻿using Fiap.McTech.Services.Services.MercadoPago.Models;
+
+namespace Fiap.McTech.Infra.Services.Interfaces
 {
     public interface IMercadoPagoService
     {
-        Task<string> GeneratePaymentLinkAsync(decimal amount);
+        Task<string> GeneratePaymentLinkAsync(PaymentRequest request);
         Task<bool> ProcessPaymentAsync(Guid paymentId);
     }
 }

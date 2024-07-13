@@ -1,10 +1,14 @@
-﻿using Fiap.McTech.Application.Dtos.Payments;
+﻿using Fiap.McTech.Application.AppServices.Payment.Mappers;
+using Fiap.McTech.Application.Dtos.Payments;
 using Fiap.McTech.Application.Interfaces;
+using Fiap.McTech.Domain.Entities.Orders;
 using Fiap.McTech.Domain.Enums;
 using Fiap.McTech.Domain.Exceptions;
 using Fiap.McTech.Domain.Interfaces.Repositories.Orders;
 using Fiap.McTech.Domain.Interfaces.Repositories.Payments;
+using Fiap.McTech.Domain.ValuesObjects;
 using Fiap.McTech.Infra.Services.Interfaces;
+using Fiap.McTech.Services.Services.MercadoPago.Models;
 using Microsoft.Extensions.Logging;
 
 namespace Fiap.McTech.Application.AppServices.Payment
@@ -46,7 +50,7 @@ namespace Fiap.McTech.Application.AppServices.Payment
             var order = await _orderRepository.GetByIdAsync(orderId)
                 ?? throw new EntityNotFoundException($"Order [{orderId}] not found.");
 
-            var paymentLink = await _mercadoPagoService.GeneratePaymentLinkAsync(order.TotalAmount);
+            var paymentLink = await _mercadoPagoService.GeneratePaymentLinkAsync(order.MapPaymentToServiceModel());
             if (string.IsNullOrEmpty(paymentLink))
             {
                 _logger.LogInformation("Error to create QrCode for ID {OrderId}.", orderId);
