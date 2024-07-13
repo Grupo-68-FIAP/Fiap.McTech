@@ -4,15 +4,14 @@ sonar:
   projectName: Fiap.McTech
   host:
     url: https://sonarcloud.io
-
   exclusions:
-  - **/src/Fiap.McTech.CrossCutting.Ioc/**
-  - **/src/Fiap.McTech.Api/Configurations/**
+    - "**/src/Fiap.McTech.CrossCutting.Ioc/**"
+    - "**/src/Fiap.McTech.Api/Configurations/**"
   cs:
     vscoveragexml:
       reportsPaths:
-        - **.coveragexml
+        - "**.coveragexml"
   cs:
     vstest:
       reportsPaths:
-        - **.trx
+        - "**.trx"
