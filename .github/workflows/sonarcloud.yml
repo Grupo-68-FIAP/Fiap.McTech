@@ -50,7 +50,7 @@ jobs:
         shell: powershell
         run: |
           Get-ChildItem -Path . -Force
-          dotnet sonarscanner begin /k:"Grupo-68-FIAP_Fiap.McTech" /o:"grupo-68-fiap" /d:sonar.token="$env:SONAR_TOKEN" /d:sonar.projectSettings="sonar-project.properties"
+          dotnet sonarscanner begin /k:"Grupo-68-FIAP_Fiap.McTech" /o:"grupo-68-fiap" /d:sonar.token="$env:SONAR_TOKEN" /dproject.settings="sonar-project.properties" /d:sonar.projectSettings="sonar-project.properties"
           dotnet test "Fiap.McTech.sln" --collect "Code Coverage" --logger trx --results-directory "TestsResults"
           dotnet-coverageconverter -f "." -p true -r
           dotnet sonarscanner end /d:sonar.token="$env:SONAR_TOKEN"
