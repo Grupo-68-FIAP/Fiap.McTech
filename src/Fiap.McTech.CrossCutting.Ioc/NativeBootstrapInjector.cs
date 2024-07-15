@@ -9,7 +9,7 @@ using Fiap.McTech.Infra.Services.Interfaces;
 using Fiap.McTech.Services.Services.MercadoPago;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Http;
+using System.Net.Http.Headers;
 
 namespace Fiap.McTech.CrossCutting.Ioc
 {
@@ -22,15 +22,14 @@ namespace Fiap.McTech.CrossCutting.Ioc
             services.RegisterRepositories();
 
             //SERVICES
-            services.Configure<MercadoPagoConfig>(config => { configuration.GetSection(nameof(MercadoPagoConfig)); });
-           
-            services.AddHttpClient("MercadoPago", client =>
-            {
-                client.BaseAddress = new Uri(configuration["MercadoPago:BaseUrl"]);
-                client.DefaultRequestHeaders.Add("X-Idempotency-Key", configuration["MercadoPago:IdempotencyKey"]);
-            });
-
             services.AddScoped<IMercadoPagoService, MercadoPagoService>();
+
+            services.AddHttpClient<IMercadoPagoService, MercadoPagoService>((serviceProvider, client) =>
+            {
+                client.BaseAddress = new Uri(configuration["MercadoPagoConfig:BaseUrl"]);
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", configuration["MercadoPagoConfig:AccessToken"]);
+                client.DefaultRequestHeaders.Add("X-Idempotency-Key", configuration["MercadoPagoConfig:IdempotencyKey"]);
+            });
 
             //APP Services
             services.AddScoped<IClientAppService, ClientAppService>();

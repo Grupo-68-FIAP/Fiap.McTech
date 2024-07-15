@@ -2,9 +2,8 @@
 using Fiap.McTech.Services.Services.MercadoPago.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
-using System.Net.Http.Headers;
 using System.Text;
+using System.Text.Json;
 
 namespace Fiap.McTech.Services.Services.MercadoPago
 {
@@ -29,17 +28,15 @@ namespace Fiap.McTech.Services.Services.MercadoPago
         {
             try
             {
-                string json = JsonConvert.SerializeObject(paymentRequest);
+                string json = JsonSerializer.Serialize(paymentRequest);
                 HttpContent content = new StringContent(json, Encoding.UTF8, "application/json");
 
-                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "");
-
-                HttpResponseMessage response = await _httpClient.PostAsync("payments", content);
+                HttpResponseMessage response = await _httpClient.PostAsync("v1/payments", content);
 
                 response.EnsureSuccessStatusCode();
                 string responseString = await response.Content.ReadAsStringAsync();
 
-                var paymentResponse = JsonConvert.DeserializeObject<PaymentResponse>(responseString);
+                var paymentResponse = JsonSerializer.Deserialize<PaymentResponse>(responseString);
 
                 return paymentResponse?.PointOfInteraction?.TransactionData?.TicketUrl ?? throw new InvalidOperationException("Falha ao recuperar o QR code.");
             }

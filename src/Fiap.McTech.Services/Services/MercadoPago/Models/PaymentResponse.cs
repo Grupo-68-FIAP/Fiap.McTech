@@ -5,11 +5,13 @@ namespace Fiap.McTech.Services.Services.MercadoPago.Models
 {
     public class PaymentResponse
     {
+        [JsonPropertyName("point_of_interaction")]
         public PointOfInteraction PointOfInteraction { get; set; }
     }
 
     public class PointOfInteraction
     {
+        [JsonPropertyName("transaction_data")]
         public TransactionData TransactionData { get; set; }
     }
 
@@ -18,7 +20,7 @@ namespace Fiap.McTech.Services.Services.MercadoPago.Models
         [JsonPropertyName("ticket_url")]
         public string TicketUrl { get; set; }
 
-        [JsonPropertyName("qr_code_base64")]
+        [JsonPropertyName("qr_code")]
         public string QrCodeBase64 { get; set; }
     }
 }

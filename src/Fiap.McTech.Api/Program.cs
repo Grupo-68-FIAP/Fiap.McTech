@@ -3,6 +3,7 @@ using Fiap.McTech.Api.Handlers;
 using Fiap.McTech.CrossCutting.Ioc;
 using Fiap.McTech.CrossCutting.Ioc.Mappers;
 using Fiap.McTech.Infra.Context;
+using Fiap.McTech.Services.Services.MercadoPago;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Configuration.AddCommandLine(args);
@@ -11,6 +12,8 @@ builder.Configuration.AddCommandLine(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwagger();
+
+builder.Services.Configure<MercadoPagoConfig>(builder.Configuration.GetSection("MercadoPagoConfig"));
 
 // AutoMapper configuration
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());

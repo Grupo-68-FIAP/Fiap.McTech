@@ -6,6 +6,7 @@ namespace Fiap.McTech.Services.Services.MercadoPago
     public class MercadoPagoConfig
     {
         public string BaseUrl { get; set; }
+        public string AccessToken { get; set; }
         public string IdempotencyKey { get; set; }
     }
 }
