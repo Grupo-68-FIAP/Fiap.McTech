@@ -44,12 +44,11 @@ namespace Fiap.McTech.Application.AppServices.Payment
         /// <inheritdoc/>
         public async Task<GenerateQRCodeResultDto> GenerateQRCodeAsync(Guid orderId)
         {
-            //_logger.LogInformation("Generating QR code for order with ID {OrderId}.", orderId);
+            _logger.LogInformation("Generating QR code for order with ID {OrderId}.", orderId);
 
-            //var order = await _orderRepository.GetByIdAsync(orderId)
-            //    ?? throw new EntityNotFoundException($"Order [{orderId}] not found.");
+            var order = await _orderRepository.GetByIdAsync(orderId)
+                ?? throw new EntityNotFoundException($"Order [{orderId}] not found.");
 
-            var order = new Order(Guid.NewGuid(), 50);
             var paymentLink = await _mercadoPagoService.GeneratePaymentLinkAsync(order.MapPaymentToServiceModel());
             if (string.IsNullOrEmpty(paymentLink))
             {
@@ -57,9 +56,9 @@ namespace Fiap.McTech.Application.AppServices.Payment
                 throw new InvalidOperationException($"Error to create QrCode for ID {orderId}.");
             }
 
-            //var payment = await _paymentRepository.AddAsync(new Domain.Entities.Payments.Payment(order.ClientId, order.Id, order.TotalAmount, order.Client.Name, order.Client.Email.ToString(), PaymentMethod.QrCode, PaymentStatus.Pending));
+            var payment = await _paymentRepository.AddAsync(new Domain.Entities.Payments.Payment(order.ClientId, order.Id, order.TotalAmount, order.Client?.Name, order.Client?.Email.ToString(), PaymentMethod.QrCode, PaymentStatus.Pending));
 
-            return new GenerateQRCodeResultDto(success: true, message: "QR code generated successfully.", Guid.NewGuid(), qrCode: paymentLink);
+            return new GenerateQRCodeResultDto(success: true, message: "QR code generated successfully.", payment.Id, qrCode: paymentLink);
         }
 
         /// <inheritdoc/>
