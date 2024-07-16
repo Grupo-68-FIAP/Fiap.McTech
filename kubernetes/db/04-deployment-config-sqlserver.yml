@@ -19,9 +19,15 @@ spec:
         image: mcr.microsoft.com/mssql/server:latest
         env:
         - name: SQLSERVER_DB
-          value: mctech
+          valueFrom:
+            secretKeyRef:
+              name: mctech-secret-sqlserver
+              key: SQLSERVER_DB
         - name: MSSQL_SA_PASSWORD
-          value: pws4mctech!
+          valueFrom:
+            secretKeyRef:
+              name: mctech-secret-sqlserver
+              key: MSSQL_SA_PASSWORD
         - name: ACCEPT_EULA
           value: "Y"
         - name: MSSQL_PID

@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-      app: mctechapi
+      app: mctechapi-svc
   name: mctechapi-svc
 spec:
   type: NodePort
@@ -11,7 +11,9 @@ spec:
   ports:
     - name: http
       port: 80
+      targetPort: 80
       nodePort: 30000
     - name: https
       port: 443
+      targetPort: 443
       nodePort: 30001

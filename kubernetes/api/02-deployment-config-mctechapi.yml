@@ -20,11 +20,17 @@ spec:
             - name: ASPNETCORE_URLS
               value: https://+:443;http://+:80
             - name: ASPNETCORE_Kestrel__Certificates__Default__Password
-              value: pws4mctech!
+              valueFrom:
+                secretKeyRef:
+                  name: mctechapi-secret
+                  key: ASPNETCORE_Kestrel__Certificates__Default__Password
             - name: ASPNETCORE_Kestrel__Certificates__Default__Path
               value: /app/cert.pfx
             - name: CONNECTION_STRING
-              value: Server=mctech-sqlserver-svc,1433;Initial Catalog=mctech;User Id=sa;Password=pws4mctech!;
+              valueFrom:
+                secretKeyRef:
+                  name: mctechapi-secret
+                  key: CONNECTION_STRING
             - name: ALLOW_SWAGGER_UI
               value: "true"
           ports:
@@ -34,14 +40,14 @@ spec:
               name: https
           livenessProbe:
             httpGet:
-              path: /swagger
+              path: /swagger # adicionar URL de health
               port: 80
             periodSeconds: 10
             failureThreshold: 3
             initialDelaySeconds: 30
           readinessProbe:
             httpGet:
-              path: /swagger
+              path: /swagger # adicionar URL de health
               port: 80
             periodSeconds: 10
             failureThreshold: 5
