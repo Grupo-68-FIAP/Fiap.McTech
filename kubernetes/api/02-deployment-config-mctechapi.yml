@@ -15,10 +15,6 @@ spec:
         - name: mctechapi-container
           image: ghcr.io/grupo-68-fiap/mctech/api:dev
           env:
-            - name: ASPNETCORE_ENVIRONMENT
-              value: Development
-            - name: ASPNETCORE_URLS
-              value: https://+:443;http://+:80
             - name: ASPNETCORE_Kestrel__Certificates__Default__Password
               valueFrom:
                 secretKeyRef:
@@ -31,8 +27,9 @@ spec:
                 secretKeyRef:
                   name: mctechapi-secret
                   key: CONNECTION_STRING
-            - name: ALLOW_SWAGGER_UI
-              value: "true"
+          envFrom:
+            - configMapRef:
+                name: mctechapi-configmap
           ports:
             - containerPort: 80
               name: http

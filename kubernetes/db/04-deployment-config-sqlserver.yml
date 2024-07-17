@@ -18,20 +18,19 @@ spec:
       - name: mctech-sqlserver
         image: mcr.microsoft.com/mssql/server:latest
         env:
-        - name: SQLSERVER_DB
-          valueFrom:
-            secretKeyRef:
-              name: mctech-secret-sqlserver
-              key: SQLSERVER_DB
-        - name: MSSQL_SA_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: mctech-secret-sqlserver
-              key: MSSQL_SA_PASSWORD
-        - name: ACCEPT_EULA
-          value: "Y"
-        - name: MSSQL_PID
-          value: Developer
+          - name: SQLSERVER_DB
+            valueFrom:
+              secretKeyRef:
+                name: mctech-secret-sqlserver
+                key: SQLSERVER_DB
+          - name: MSSQL_SA_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: mctech-secret-sqlserver
+                key: MSSQL_SA_PASSWORD
+        envFrom:
+          - configMapRef:
+              name: mctech-configmap-sqlserver
         ports:
         - containerPort: 1433
           name: sqlserver
