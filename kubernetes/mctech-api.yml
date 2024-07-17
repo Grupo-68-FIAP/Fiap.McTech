@@ -1,0 +1,127 @@
+apiVersion: v1 # secret com dados sensíveis usados na API
+kind: Secret
+metadata:
+  name: mctechapi-secret
+type: Opaque
+data:
+  ASPNETCORE_Kestrel__Certificates__Default__Password: cHdzNG1jdGVjaCE=
+  CONNECTION_STRING: U2VydmVyPW1jdGVjaC1zcWxzZXJ2ZXItc3ZjLDE0MzM7SW5pdGlhbCBDYXRhbG9nPW1jdGVjaDtVc2VyIElkPXNhO1Bhc3N3b3JkPXB3czRtY3RlY2ghOw==
+  
+---
+
+apiVersion: v1 # ConfigMap com valores variáveis usados no deploymentConfig
+kind: ConfigMap
+metadata:
+  name: mctechapi-configmap
+data:
+  ASPNETCORE_ENVIRONMENT: Development
+  ASPNETCORE_URLS: https://+:443;http://+:80
+  ALLOW_SWAGGER_UI: 'true'
+
+---
+
+apiVersion: apps/v1 # DeploymentConfig da API
+kind: Deployment
+metadata:
+  name: mctechapi
+  labels:
+    app: mctechapi
+spec:
+  template:
+    metadata:
+      name: mctechapi
+      labels:
+        app: mctechapi
+    spec:
+      containers:
+        - name: mctechapi-container
+          image: ghcr.io/grupo-68-fiap/mctech/api:dev
+          env:
+            - name: ASPNETCORE_Kestrel__Certificates__Default__Password
+              valueFrom:
+                secretKeyRef:
+                  name: mctechapi-secret
+                  key: ASPNETCORE_Kestrel__Certificates__Default__Password
+            - name: ASPNETCORE_Kestrel__Certificates__Default__Path
+              value: /app/cert.pfx
+            - name: CONNECTION_STRING
+              valueFrom:
+                secretKeyRef:
+                  name: mctechapi-secret
+                  key: CONNECTION_STRING
+          envFrom:
+            - configMapRef:
+                name: mctechapi-configmap
+          ports:
+            - containerPort: 80
+              name: http
+            - containerPort: 443
+              name: https
+          livenessProbe:
+            httpGet:
+              path: /swagger # adicionar URL de health
+              port: 80
+            periodSeconds: 10
+            failureThreshold: 3
+            initialDelaySeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /swagger # adicionar URL de health
+              port: 80
+            periodSeconds: 10
+            failureThreshold: 5
+            initialDelaySeconds: 30
+          resources:
+            requests:
+              memory: 64Mi
+              cpu: 5m
+            limits:
+              memory: 1024Mi
+              cpu: 500m
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mctechapi
+
+---
+
+apiVersion: v1 # Service da API do tipo LoadBalancer
+kind: Service
+metadata:
+  labels:
+      app: mctechapi-svc
+  name: mctechapi-svc
+spec:
+  type: LoadBalancer
+  selector:
+    app: mctechapi
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 80
+      protocol: TCP
+    - name: https
+      port: 8443
+      targetPort: 443
+      protocol: TCP
+
+---
+
+apiVersion: autoscaling/v2 # HPA para a API
+kind: HorizontalPodAutoscaler
+metadata:
+  name: mctechapi-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: mctechapi
+  minReplicas: 1
+  maxReplicas: 10
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
