@@ -85,7 +85,7 @@ namespace Fiap.McTech.Application.AppServices.Orders
         /// <inheritdoc/>
         public async Task DeleteOrderAsync(Guid orderId)
         {
-            _logger.LogInformation("Attempting to delete order with ID: {OrderId}", orderId);
+            _logger.LogInformation("Attempting to delete order with ID: {OrderId}.", orderId);
 
             var existingOrder = await _orderRepository.GetByIdAsync(orderId)
                 ?? throw new EntityNotFoundException(string.Format("Order with ID {0} not found.", orderId));
@@ -98,7 +98,7 @@ namespace Fiap.McTech.Application.AppServices.Orders
         /// <inheritdoc/>
         public async Task<List<OrderOutputDto>> GetOrderByStatusAsync(OrderStatus status)
         {
-            _logger.LogInformation("Retrieving order with status code {Status}.", status);
+            _logger.LogInformation("Retrieving order with status code {Status}. ", status);
 
             var orders = await _orderRepository.GetOrderByStatusAsync(status);
             if (!orders.Any())
