@@ -12,7 +12,7 @@
         public void IsValid_Return_True()
         {
             // Act
-            var result = !validEmail1.IsValid();
+            var result = validEmail1.IsValid();
 
             // Assert
             Assert.True(result);
