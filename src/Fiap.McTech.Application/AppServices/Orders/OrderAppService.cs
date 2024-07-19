@@ -98,7 +98,7 @@ namespace Fiap.McTech.Application.AppServices.Orders
         /// <inheritdoc/>
         public async Task<List<OrderOutputDto>> GetOrderByStatusAsync(OrderStatus status)
         {
-            _logger.LogInformation("Retrieving order with status code {Status}. ", status);
+            _logger.LogInformation("Retrieving order with status code {Status}.", status.ToString());
 
             var orders = await _orderRepository.GetOrderByStatusAsync(status);
             if (!orders.Any())
