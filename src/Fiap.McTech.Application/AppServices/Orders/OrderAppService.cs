@@ -104,7 +104,7 @@ namespace Fiap.McTech.Application.AppServices.Orders
             if (!orders.Any())
                 return new List<OrderOutputDto>();
 
-            _logger.LogInformation("Order with status code {Status} retrieved successfully.", status);
+            _logger.LogInformation("Order with status code {Status} retrieved successfully.", status.ToString());
 
             return _mapper.Map<List<OrderOutputDto>>(orders);
         }
