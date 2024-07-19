@@ -29,4 +29,3 @@ jobs:
 
     - name: Test
       run: dotnet test src/Fiap.McTech.Api/Fiap.McTech.Api.csproj --verbosity normal
-      
