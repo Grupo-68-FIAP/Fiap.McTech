@@ -14,12 +14,13 @@ namespace Fiap.McTech.Domain.Entities.Orders
         /// </summary>
         /// <param name="clientId">The unique identifier of the client associated with the order.</param>
         /// <param name="totalAmount">The total amount of the order.</param>
-        public Order(Guid? clientId, decimal totalAmount)
+        public Order(Guid? clientId, decimal totalAmount, Client? client = null)
         {
             ClientId = clientId;
             TotalAmount = totalAmount;
             Status = OrderStatus.None;
             Items = new List<Item>();
+            Client = client;
         }
 
         /// <summary>
@@ -30,7 +31,7 @@ namespace Fiap.McTech.Domain.Entities.Orders
         /// <summary>
         /// Gets or sets the client associated with the order.
         /// </summary>
-        public Client? Client { get; internal set; }
+        public Client? Client { get; private set; }
 
         /// <summary>
         /// Gets or sets the total amount of the order.

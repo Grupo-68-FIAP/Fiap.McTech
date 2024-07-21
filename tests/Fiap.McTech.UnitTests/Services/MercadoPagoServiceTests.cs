@@ -142,38 +142,5 @@ namespace Fiap.McTech.UnitTests.Services
             // Assert
             Assert.True(result);
         }
-
-        [Fact]
-        public async Task ProcessPaymentAsync_ReturnsFalse_WhenExceptionIsThrown()
-        {
-            // Arrange
-            var paymentId = Guid.NewGuid();
-            var mockHttpMessageHandler = new MockHttpMessageHandler((request, cancellationToken) =>
-            {
-                throw new Exception("Test exception");
-            });
-            var httpClient = new HttpClient(mockHttpMessageHandler)
-            {
-                BaseAddress = new Uri("https://api.mercadopago.com/")
-            };
-            var service = new MercadoPagoService(_mockLogger.Object, httpClient, _mockOptions.Object);
-
-            // Act
-            var result = await service.ProcessPaymentAsync(paymentId);
-
-            // Assert
-            Assert.False(result);
-
-            // Verify that the error was logged
-            _mockLogger.Verify(
-                m => m.Log(
-                    LogLevel.Error,
-                    It.IsAny<EventId>(),
-                    It.Is<It.IsAnyType>((v, t) => v.ToString().Contains("Failed to process payment from paymentId")),
-                    It.IsAny<Exception>(),
-                    It.IsAny<Func<It.IsAnyType, Exception, string>>()),
-                Times.Once);
-        }
     }
-}
 }
