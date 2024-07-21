@@ -43,7 +43,7 @@ jobs:
           New-Item -Path .\.sonar\scanner -ItemType Directory
           dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
           dotnet tool update dotnet-coverageconverter  --tool-path .\.sonar\scanner
-
+  
       - name: Test and analyze
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -54,4 +54,3 @@ jobs:
           dotnet test "Fiap.McTech.sln" --collect "Code Coverage" --logger trx --results-directory "TestsResults"
           .\.sonar\scanner\dotnet-coverageconverter -f "." -p true -r
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="$env:SONAR_TOKEN"
-

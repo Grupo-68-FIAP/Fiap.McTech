@@ -3,10 +3,10 @@ name: .NET
 on:
   push:
     branches: [ "master", "develop" ]
-    paths-ignore: [ '**/*.md', '.github/workflows/*', '!.github/workflows/dotnet.yml']
+    paths-ignore: [ '**/*.md', '.github/workflows/*', '!.github/workflows/dotnet.yml', '**/sonar-project.*']
   pull_request:
     branches: [ "*" ]
-    paths-ignore: [ '**/*.md', '.github/workflows/*', '!.github/workflows/dotnet.yml']
+    paths-ignore: [ '**/*.md', '.github/workflows/*', '!.github/workflows/dotnet.yml', '**/sonar-project.*']
     types: [ opened, synchronize, reopened ]
 
 jobs:
