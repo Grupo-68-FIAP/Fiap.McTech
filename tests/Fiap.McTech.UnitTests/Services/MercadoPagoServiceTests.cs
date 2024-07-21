@@ -21,7 +21,9 @@ namespace Fiap.McTech.UnitTests.Services
             _mockLogger = new Mock<ILogger<MercadoPagoService>>();
             _mercadoPagoConfig = new MercadoPagoConfig
             {
-                // Adicione aqui as configurações necessárias para o teste
+                AccessToken = Guid.NewGuid().ToString(),
+                BaseUrl = "http:localhost",
+                IdempotencyKey = Guid.NewGuid().ToString()
             };
             _mockOptions = new Mock<IOptions<MercadoPagoConfig>>();
             _mockOptions.Setup(opt => opt.Value).Returns(_mercadoPagoConfig);
