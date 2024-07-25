@@ -59,14 +59,14 @@ spec:
               name: https
           livenessProbe:
             httpGet:
-              path: /swagger # adicionar URL de health
+              path: /swagger
               port: 80
             periodSeconds: 10
             failureThreshold: 3
             initialDelaySeconds: 30
           readinessProbe:
             httpGet:
-              path: /swagger # adicionar URL de health
+              path: /swagger
               port: 80
             periodSeconds: 10
             failureThreshold: 5
@@ -76,8 +76,8 @@ spec:
               memory: 64Mi
               cpu: 5m
             limits:
-              memory: 1024Mi
-              cpu: 500m
+              memory: 256Mi
+              cpu: 200m
   replicas: 1
   selector:
     matchLabels:
@@ -124,4 +124,4 @@ spec:
         name: cpu
         target:
           type: Utilization
-          averageUtilization: 30
+          averageUtilization: 70
