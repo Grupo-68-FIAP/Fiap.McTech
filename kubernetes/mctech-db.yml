@@ -105,7 +105,7 @@ spec:
           persistentVolumeClaim:
             claimName: mctech-pvc-sqlserver
       securityContext:
-        fsGroup: 10001 #configuração necessária por conta de erro de permissão ao criar pasta do volumeMount dentro do container
+        fsGroup: 10001 # configuração necessária por conta de erro de permissão ao criar pasta do volumeMount dentro do container
         runAsUser: 0
 
 --- 
