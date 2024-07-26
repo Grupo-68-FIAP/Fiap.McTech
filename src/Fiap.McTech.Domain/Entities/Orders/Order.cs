@@ -22,6 +22,12 @@ namespace Fiap.McTech.Domain.Entities.Orders
             Items = new List<Item>();
         }
 
+        /// <summary>
+        /// Inicializa uma nova instância da classe <see cref="Order"/>.
+        /// </summary>
+        /// <param name="clientId">O ID do cliente.</param>
+        /// <param name="totalAmount">O valor total do pedido.</param>
+        /// <param name="client">O cliente associado ao pedido.</param>
         public Order(Guid? clientId, decimal totalAmount, Client? client = null)
         {
             ClientId = clientId;
