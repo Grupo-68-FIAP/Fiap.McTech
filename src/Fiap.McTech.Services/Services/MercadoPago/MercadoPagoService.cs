@@ -37,15 +37,10 @@ namespace Fiap.McTech.Services.Services.MercadoPago
 
                 return paymentResponse?.PointOfInteraction?.TransactionData?.TicketUrl ?? throw new InvalidOperationException("Falha ao recuperar o QR code.");
             }
-            catch (HttpRequestException httpEx)
+            catch (InvalidOperationException httpEx)
             {
                 _logger.LogError(httpEx, "HTTP error while generating payment link for the amount {Amount}.", request.TransactionAmount);
-                throw new ApplicationException("There was a problem communicating with the payment service.", httpEx);
-            }
-            catch (JsonException jsonEx)
-            {
-                _logger.LogError(jsonEx, "JSON error while processing the payment response for the amount {Amount}.", request.TransactionAmount);
-                throw new ApplicationException("There was a problem processing the payment response.", jsonEx);
+                throw new InvalidOperationException("There was a problem communicating with the payment service.", httpEx);
             }
             catch (Exception ex)
             {

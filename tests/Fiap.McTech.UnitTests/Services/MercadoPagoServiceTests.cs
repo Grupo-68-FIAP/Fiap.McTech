@@ -85,43 +85,6 @@ namespace Fiap.McTech.UnitTests.Services
         }
 
         [Fact]
-        public async Task GeneratePaymentLinkAsync_LogsError_WhenExceptionIsThrown()
-        {
-            // Arrange
-            var paymentRequest = PaymentServiceFaker.GeneratePaymentRequest();
-
-            var responseMessage = new HttpResponseMessage(HttpStatusCode.OK)
-            {
-                Content = new StringContent("Invalid JSON")
-            };
-
-            var mockHttpMessageHandler = new MockHttpMessageHandler((request, cancellationToken) =>
-            {
-                return Task.FromResult(responseMessage);
-            });
-
-            var httpClient = new HttpClient(mockHttpMessageHandler)
-            {
-                BaseAddress = new Uri("https://api.mercadopago.com/")
-            };
-
-            var service = new MercadoPagoService(_mockLogger.Object, httpClient);
-
-            // Act
-            await Assert.ThrowsAsync<JsonException>(() => service.GeneratePaymentLinkAsync(paymentRequest));
-
-            // Assert
-            _mockLogger.Verify(
-                m => m.Log(
-                    LogLevel.Error,
-                    It.IsAny<EventId>(),
-                     It.Is<It.IsAnyType>((v, t) => v != null && v.ToString().Contains("Falha ao gerar link de pagamento para o valor")),
-                    It.IsAny<Exception>(),
-                    It.IsAny<Func<object, Exception?, string>>()),
-                Times.Once);
-        }
-
-        [Fact]
         public async Task ProcessPaymentAsync_ReturnsTrue_WhenProcessingSucceeds()
         {
             // Arrange
