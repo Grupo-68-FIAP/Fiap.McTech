@@ -15,11 +15,11 @@ namespace Fiap.McTech.Application.Interfaces
         Task<GenerateQRCodeResultDto> GenerateQRCodeAsync(Guid orderId);
 
         /// <summary>
-        /// Processes a payment asynchronously using the provided payment ID and QR code.
+        /// Processes a payment asynchronously using the provided payment ID and status by web hook.
         /// </summary>
         /// <param name="paymentId">The ID of the payment to process.</param>
-        /// <param name="qrCode">The QR code scanned by the customer for payment.</param>
+        /// <param name="status">The status for payment.</param>
         /// <returns>A task representing the asynchronous operation that returns the payment output DTO.</returns>
-        Task<PaymentOutputDto> PayAsync(Guid paymentId, string qrCode);
+        Task<PaymentOutputDto> UpdatePayment(Guid paymentId, string status);
     }
 }
