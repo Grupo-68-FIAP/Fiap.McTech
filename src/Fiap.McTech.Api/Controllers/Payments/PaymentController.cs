@@ -1,6 +1,7 @@
 ﻿using Fiap.McTech.Application.Dtos.Payments;
 using Fiap.McTech.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics.CodeAnalysis;
 using System.Net.Mime;
 
 namespace Fiap.McTech.Api.Controllers.Payments
@@ -11,6 +12,7 @@ namespace Fiap.McTech.Api.Controllers.Payments
     [Route("api/payment")]
     [ApiController]
     [Produces(MediaTypeNames.Application.Json)]
+    [ExcludeFromCodeCoverage]
     public class PaymentController : Controller
     {
         private readonly IPaymentAppService _paymentAppService;

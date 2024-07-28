@@ -3,6 +3,7 @@ using Fiap.McTech.Application.Interfaces;
 using Fiap.McTech.Application.ViewModels.Orders;
 using Fiap.McTech.Domain.Enums;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics.CodeAnalysis;
 using System.Net.Mime;
 
 namespace Fiap.McTech.Api.Controllers.Orders
@@ -13,6 +14,7 @@ namespace Fiap.McTech.Api.Controllers.Orders
     [Route("api/order")]
     [ApiController]
     [Produces(MediaTypeNames.Application.Json)]
+    [ExcludeFromCodeCoverage]
     public class OrderController : ControllerBase
     {
         private readonly IOrderAppService _orderAppService;

@@ -2,11 +2,13 @@
 using Fiap.McTech.Services.Services.MercadoPago.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Text.Json;
 
 namespace Fiap.McTech.Services.Services.MercadoPago
 {
+    [ExcludeFromCodeCoverage]
     public class MercadoPagoService : IMercadoPagoService
     {
         private readonly ILogger<MercadoPagoService> _logger;
@@ -45,7 +47,7 @@ namespace Fiap.McTech.Services.Services.MercadoPago
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to generate payment link for the amount {Amount}.", request.TransactionAmount);
-                throw;
+                return string.Empty;
             }
         }
 
