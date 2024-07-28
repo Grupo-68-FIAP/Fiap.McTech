@@ -22,13 +22,13 @@ namespace Fiap.McTech.Application.AppServices.Payment.Mappers
                 PaymentMethodId = "qrCode",
                 Payer = new Payer
                 {
-                    Email =order?.Client?.Email.ToString() ?? string.Empty,
-                    FirstName = order?.Client?.Name ?? string.Empty,
-                    LastName = order?.Client?.Name ?? string.Empty,
+                    Email = order.Client?.Email.ToString() ?? string.Empty,
+                    FirstName = order.Client?.Name ?? string.Empty,
+                    LastName = order.Client?.Name ?? string.Empty,
                     Identification = new Identification
                     {
                         Type = "CPF",
-                        Number = order?.Client?.Cpf.ToString() ?? string.Empty
+                        Number = order.Client?.Cpf.ToString() ?? string.Empty
                     }
                 }
             };

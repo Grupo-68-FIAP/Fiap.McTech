@@ -11,24 +11,21 @@ namespace Fiap.McTech.Services.Services.MercadoPago
     {
         private readonly ILogger<MercadoPagoService> _logger;
         private readonly HttpClient _httpClient;
-        private readonly MercadoPagoConfig _mercadoPagoConfig;
 
         public MercadoPagoService(
             ILogger<MercadoPagoService> logger, 
-            HttpClient httpClient,
-            IOptions<MercadoPagoConfig> mercadoPagoConfig
+            HttpClient httpClient
         )
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
-            _mercadoPagoConfig = mercadoPagoConfig.Value;
         }
 
-        public async Task<string> GeneratePaymentLinkAsync(PaymentRequest paymentRequest)
+        public async Task<string> GeneratePaymentLinkAsync(PaymentRequest request)
         {
             try
             {
-                string json = JsonSerializer.Serialize(paymentRequest);
+                string json = JsonSerializer.Serialize(request);
                 HttpContent content = new StringContent(json, Encoding.UTF8, "application/json");
 
                 HttpResponseMessage response = await _httpClient.PostAsync("v1/payments", content);
@@ -42,7 +39,7 @@ namespace Fiap.McTech.Services.Services.MercadoPago
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Falha ao gerar link de pagamento para o valor {Amount}.", paymentRequest.TransactionAmount);
+                _logger.LogError(ex, "Falha ao gerar link de pagamento para o valor {Amount}.", request.TransactionAmount);
                 throw;
             }
         }

@@ -51,13 +51,13 @@ namespace Fiap.McTech.UnitTests.Services
                 BaseAddress = new Uri("https://api.mercadopago.com/")
             };
 
-            var service = new MercadoPagoService(_mockLogger.Object, httpClient, _mockOptions.Object);
+            var service = new MercadoPagoService(_mockLogger.Object, httpClient);
 
             // Act
             var result = await service.GeneratePaymentLinkAsync(paymentRequest);
 
             // Assert
-            Assert.Equal(paymentResponse.PointOfInteraction.TransactionData.TicketUrl, result);
+            Assert.Equal(paymentResponse?.PointOfInteraction?.TransactionData?.TicketUrl, result);
         }
 
         [Fact]
@@ -78,7 +78,7 @@ namespace Fiap.McTech.UnitTests.Services
                 BaseAddress = new Uri("https://api.mercadopago.com/")
             };
 
-            var service = new MercadoPagoService(_mockLogger.Object, httpClient, _mockOptions.Object);
+            var service = new MercadoPagoService(_mockLogger.Object, httpClient);
 
             // Act & Assert
             await Assert.ThrowsAsync<HttpRequestException>(() => service.GeneratePaymentLinkAsync(paymentRequest));
@@ -105,7 +105,7 @@ namespace Fiap.McTech.UnitTests.Services
                 BaseAddress = new Uri("https://api.mercadopago.com/")
             };
 
-            var service = new MercadoPagoService(_mockLogger.Object, httpClient, _mockOptions.Object);
+            var service = new MercadoPagoService(_mockLogger.Object, httpClient);
 
             // Act
             await Assert.ThrowsAsync<JsonException>(() => service.GeneratePaymentLinkAsync(paymentRequest));
@@ -134,7 +134,7 @@ namespace Fiap.McTech.UnitTests.Services
             {
                 BaseAddress = new Uri("https://api.mercadopago.com/")
             };
-            var service = new MercadoPagoService(_mockLogger.Object, httpClient, _mockOptions.Object);
+            var service = new MercadoPagoService(_mockLogger.Object, httpClient);
 
             // Act
             var result = await service.ProcessPaymentAsync(paymentId);

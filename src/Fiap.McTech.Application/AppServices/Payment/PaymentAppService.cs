@@ -56,7 +56,7 @@ namespace Fiap.McTech.Application.AppServices.Payment
                 throw new InvalidOperationException($"Error to create QrCode for ID {orderId}.");
             }
 
-            var payment = await _paymentRepository.AddAsync(new Domain.Entities.Payments.Payment(order.ClientId, order.Id, order.TotalAmount, order?.Client?.Name ?? string.Empty, order?.Client?.Email.ToString() ?? string.Empty, PaymentMethod.QrCode, PaymentStatus.Pending));
+            var payment = await _paymentRepository.AddAsync(new Domain.Entities.Payments.Payment(order.ClientId, order.Id, order.TotalAmount, order.Client?.Name ?? string.Empty, order.Client?.Email.ToString() ?? string.Empty, PaymentMethod.QrCode, PaymentStatus.Pending));
 
             return new GenerateQRCodeResultDto(success: true, message: "QR code generated successfully.", payment.Id, qrCode: paymentLink);
         }

@@ -73,8 +73,7 @@ namespace Fiap.McTech.UnitTests.AppServices
         {
             // Arrange
             var orderId = Guid.NewGuid();
-            _mockOrderRepository.Setup(repo => repo.GetByIdAsync(orderId)).ReturnsAsync((Order) null);
-
+       
             // Act & Assert
             await Assert.ThrowsAsync<EntityNotFoundException>(() => _paymentAppService.GenerateQRCodeAsync(orderId));
         }
@@ -102,8 +101,7 @@ namespace Fiap.McTech.UnitTests.AppServices
         {
             // Arrange
             var paymentId = Guid.NewGuid();
-            _mockPaymentRepository.Setup(repo => repo.GetByIdAsync(paymentId)).ReturnsAsync((Payment) null);
-
+ 
             // Act
             var result = await _paymentAppService.UpdatePayment(paymentId, "completed");
 
