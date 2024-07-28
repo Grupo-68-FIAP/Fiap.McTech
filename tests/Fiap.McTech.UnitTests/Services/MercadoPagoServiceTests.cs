@@ -115,9 +115,9 @@ namespace Fiap.McTech.UnitTests.Services
                 m => m.Log(
                     LogLevel.Error,
                     It.IsAny<EventId>(),
-                    It.Is<It.IsAnyType>((v, t) => v.ToString().Contains("Falha ao gerar link de pagamento para o valor")),
+                     It.Is<It.IsAnyType>((v, t) => v != null && v.ToString().Contains("Falha ao gerar link de pagamento para o valor")),
                     It.IsAny<Exception>(),
-                    It.IsAny<Func<It.IsAnyType, Exception, string>>()),
+                    It.IsAny<Func<object, Exception?, string>>()),
                 Times.Once);
         }
 
