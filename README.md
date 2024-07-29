@@ -35,8 +35,10 @@ Utilizando tecnologias modernas e práticas arquiteturais, o MeTech oferece uma 
 
 ![DDD do Sistema](./ddd-sistema.jpg)
 
-## Visão Geral da Arquitetura 
+## Visão Geral da Arquitetura
 ![image](https://github.com/user-attachments/assets/a9d9e5e4-46c9-4c6f-9a58-c8dd113d4382)
+
+Para mais detalhes sobre arquitetura, consulte a nossa Wiki: [Fase 2 ‐ Tech Challenge](https://github.com/Grupo-68-FIAP/Fiap.McTech/wiki/Fase-2-%E2%80%90-Tech-Challenge)
 
 ## Como Contribuir
 
@@ -49,41 +51,17 @@ Utilizando tecnologias modernas e práticas arquiteturais, o MeTech oferece uma 
 
 ## Como Configurar e Executar o Projeto
 
-1 - Verifique a instalação do Docker:
+1 - Clone o repositório do projeto.
 
-```sh
-docker --version
-```
+2 - Inicie o Minikube com o comando `minikube start`. Nesta etapa, lembre-se de ter o Docker Desktop instalado e fazer a instalação do minikube também.
 
-2 - Verifique a instalação do Docker Compose:
+3 - Verifique se o pod está disponível com `kubectl get pods`.
 
-```sh
-docker-compose --version
-```
+4 - Acesse a pasta kubernetes e execute os arquivos de configuração do banco de dados e da API com os comandos, respectivamente: `kubectl apply -f .\mctech-db.yml` e `kubectl apply -f .\mctech-api.yml`. Aguarde e verifique se os pods estão disponíveis com o comando anterior.
 
-3 - Navegue até o diretório do projeto:
+5 - Agora disponibilizaremos o serviço da aplicação com o comando: `minikube service mctechapi-svc`. A saída do console apresentará um link para acesso à API, na qual os endpoints poderão ser testados e a sua documentação verificada. O link será algo parecido com: `http://127.0.0.1:60399`. Alterar a porta para aquela gerada pelo minikube e adicionar `/swagger` ao fim do endereço. No browser, portanto, deve ficar algo assim: `http://127.0.0.1:60399/swagger`.
 
-```sh
-cd Fiap.McTech
-```
-
-4 - Construir e iniciar os serviços:
-
-```sh
-docker-compose up -d
-```
-
-5 - Verificar se os containers estão rodando:
-
-```sh
-docker-compose ps
-```
-
-6 - Veja a documentação do projeto e teste as API's:
-
-```sh
-http://localhost:8080/swagger
-```
+Para mais detalhes sobre a confuguração do Kubernetes, consulte a nossa Wiki: [Fase 2 ‐ Tech Challenge](https://github.com/Grupo-68-FIAP/Fiap.McTech/wiki/Fase-2-%E2%80%90-Tech-Challenge)
 
 ## Equipe McTech
 Agradecemos por considerar contribuir para o MeTech! Se tiver alguma dúvida ou precisar de assistência, não hesite em entrar em contato conosco.
