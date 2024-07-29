@@ -1,6 +1,7 @@
 ﻿using Fiap.McTech.Application.Dtos.Payments;
 using Fiap.McTech.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics.CodeAnalysis;
 using System.Net.Mime;
 
 namespace Fiap.McTech.Api.Controllers.Payments
@@ -11,6 +12,7 @@ namespace Fiap.McTech.Api.Controllers.Payments
     [Route("api/payment")]
     [ApiController]
     [Produces(MediaTypeNames.Application.Json)]
+    [ExcludeFromCodeCoverage]
     public class PaymentController : Controller
     {
         private readonly IPaymentAppService _paymentAppService;
@@ -37,27 +39,26 @@ namespace Fiap.McTech.Api.Controllers.Payments
         public async Task<IActionResult> GenerateQRCode([FromRoute] Guid orderId)
         {
             var qrCodeUrl = await _paymentAppService.GenerateQRCodeAsync(orderId);
+            if (!qrCodeUrl.Success)
+                return BadRequest(new { message = qrCodeUrl.Message });
 
-            if (qrCodeUrl == null)
-                return BadRequest(new { Message = "Error to generate Qr Code" });
-
-            return Ok(new { QRCodeUrl = qrCodeUrl });
+            return Ok(qrCodeUrl);
         }
 
         /// <summary>
-        /// Processes a payment using the specified payment ID and QR code.
+        /// Processes a payment using the specified payment ID and Status
         /// </summary>
         /// <param name="paymentId">The unique identifier of the payment to be processed.</param>
-        /// <param name="qrCode">The QR code associated with the payment.</param>
+        /// <param name="status">The status associated with the payment.</param>
         /// <returns>The result of the payment processing.</returns>
         /// <response code="200">Returns the result of the payment processing.</response>
         /// <response code="400">Indicates that there was an error processing the payment.</response>
         [HttpPost("{paymentId}/checkout")]
         [ProducesResponseType(typeof(PaymentOutputDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Pay([FromRoute] Guid paymentId, [FromBody] string qrCode)
+        public async Task<IActionResult> UpdatePayment([FromRoute] Guid paymentId, [FromBody] string status)
         {
-            var paymentResult = await _paymentAppService.PayAsync(paymentId, qrCode);
+            var paymentResult = await _paymentAppService.UpdatePayment(paymentId, status);
             if (!paymentResult.Success)
                 return BadRequest(new { message = paymentResult.Message });
 

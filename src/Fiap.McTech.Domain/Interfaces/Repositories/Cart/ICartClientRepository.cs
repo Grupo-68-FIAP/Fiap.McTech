@@ -10,9 +10,9 @@ namespace Fiap.McTech.Domain.Interfaces.Repositories.Cart
         /// <summary>
         /// Asynchronously retrieves a cart client by their cart identifier.
         /// </summary>
-        /// <param name="clientId">The identifier of the cart.</param>
+        /// <param name="id">The identifier of the cart.</param>
         /// <returns>A task representing the asynchronous operation, containing the cart client with the specified cart identifier, if found; otherwise, null.</returns>
-        Task<CartClient?> GetByCartIdAsync(Guid clientId);
+        Task<CartClient?> GetByCartIdAsync(Guid id);
 
         /// <summary>
         /// Asynchronously retrieves a cart client by their client identifier.

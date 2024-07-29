@@ -16,11 +16,13 @@ namespace Fiap.McTech.Domain.Utils.Extensions
         {
             return currentStatus switch
             {
-                OrderStatus.None => OrderStatus.Pending,
-                OrderStatus.Pending => OrderStatus.Processing,
-                OrderStatus.Processing => OrderStatus.Completed,
-                OrderStatus.Completed => OrderStatus.Completed,
-                OrderStatus.Canceled => OrderStatus.Canceled,
+                OrderStatus.None => OrderStatus.WaitPayment,
+                OrderStatus.WaitPayment => OrderStatus.Received,
+                OrderStatus.Received => OrderStatus.InPreparation,
+                OrderStatus.InPreparation => OrderStatus.Ready,
+                OrderStatus.Ready => OrderStatus.Finished,
+                OrderStatus.Finished => throw new InvalidOperationException("The order is already finished."),
+                OrderStatus.Canceled => throw new InvalidOperationException("The order is already canceled."),
                 _ => OrderStatus.None,
             };
         }

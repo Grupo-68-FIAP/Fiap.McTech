@@ -7,6 +7,7 @@ namespace Fiap.McTech.Application.Dtos.Clients
     /// <summary>
     /// Represents the input data for a client.
     /// </summary>
+    [Serializable]
     public class ClientInputDto
     {
         /// <summary>
@@ -44,15 +45,6 @@ namespace Fiap.McTech.Application.Dtos.Clients
         public string Email { get; set; }
 
         /// <summary>
-        /// Converts the DTO to a domain entity.
-        /// </summary>
-        /// <returns>A <see cref="Client"/> instance.</returns>
-        public Client ToClient()
-        {
-            return new Client(Name, new Domain.ValuesObjects.Cpf(Cpf), new Domain.ValuesObjects.Email(Email));
-        }
-
-        /// <summary>
         /// Validates the CPF or email.
         /// </summary>
         /// <param name="field">The field value.</param>
@@ -60,9 +52,12 @@ namespace Fiap.McTech.Application.Dtos.Clients
         /// <returns>A <see cref="ValidationResult"/> indicating whether the field is valid or not.</returns>
         public static ValidationResult? Validate(string field, ValidationContext context)
         {
-            if (string.IsNullOrEmpty(field)) return new ValidationResult($"Invalid {context.DisplayName}.");
-            else if (context.DisplayName == nameof(Cpf) && field.IsValidCpf()) return ValidationResult.Success;
-            else if (context.DisplayName == nameof(Email) && field.IsValidEmail()) return ValidationResult.Success;
+            if (string.IsNullOrEmpty(field))
+                return new ValidationResult($"Invalid {context.DisplayName}.");
+            else if (context.DisplayName == nameof(Cpf) && field.IsValidCpf())
+                return ValidationResult.Success;
+            else if (context.DisplayName == nameof(Email) && field.IsValidEmail())
+                return ValidationResult.Success;
             return new ValidationResult($"Invalid {context.DisplayName}.");
         }
     }

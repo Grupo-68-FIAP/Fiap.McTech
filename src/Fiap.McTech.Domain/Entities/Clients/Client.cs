@@ -23,7 +23,7 @@ namespace Fiap.McTech.Domain.Entities.Clients
         /// <summary>
         /// Gets or sets the name of the client.
         /// </summary>
-        public string Name { get; internal set; } = string.Empty;
+        public string Name { get; internal set; }
 
         /// <summary>
         /// Gets or sets the CPF (Brazilian individual taxpayer registry) of the client.

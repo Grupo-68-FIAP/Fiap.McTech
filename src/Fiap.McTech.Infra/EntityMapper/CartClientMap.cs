@@ -1,7 +1,7 @@
-﻿using Fiap.McTech.Infra.Context;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Fiap.McTech.Domain.Entities.Cart;
+using Fiap.McTech.Infra.Context;
 using Microsoft.EntityFrameworkCore;
-using Fiap.McTech.Domain.Entities.Cart;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Fiap.McTech.Infra.EntityMapper
 {
@@ -13,16 +13,40 @@ namespace Fiap.McTech.Infra.EntityMapper
 
             builder.HasKey(cart => cart.Id);
 
-            builder.HasMany(cart => cart.Items)
-                .WithOne(cart => cart.CartClient)
-                .HasForeignKey(cart => cart.CartClientId);
-
             builder.HasOne(cart => cart.Client)
                 .WithMany()
                 .HasForeignKey(cart => cart.ClientId);
 
             builder.Property(cart => cart.AllValue)
-                .HasPrecision(14,2);
+                .HasPrecision(14, 2);
+
+            builder.OwnsMany(cart => cart.Items, items =>
+            {
+                items.ToTable("CartItems");
+
+                items.HasKey(item => item.Id);
+
+                items.WithOwner(item => item.CartClient)
+                    .HasForeignKey(item => item.CartClientId);
+
+                items.HasOne(item => item.Product)
+                    .WithMany()
+                    .HasForeignKey(item => item.ProductId)
+                    .IsRequired();
+
+                items.Property(item => item.Name)
+                    .HasMaxLength(100)
+                    .IsRequired();
+
+                items.Property(item => item.Quantity)
+                    .IsRequired();
+
+                items.Property(item => item.Value)
+                    .HasPrecision(14, 2)
+                    .IsRequired();
+            });
+
+            builder.Navigation(cart => cart.Items).UsePropertyAccessMode(PropertyAccessMode.Property);
         }
     }
 }

@@ -1,6 +1,4 @@
 ﻿using AutoMapper;
-using Fiap.McTech.Application.Dtos.Orders.Add;
-using Fiap.McTech.Application.Dtos.Orders.Update;
 using Fiap.McTech.Application.Interfaces;
 using Fiap.McTech.Application.ViewModels.Orders;
 using Fiap.McTech.Domain.Entities.Orders;
@@ -9,7 +7,6 @@ using Fiap.McTech.Domain.Exceptions;
 using Fiap.McTech.Domain.Interfaces.Repositories.Cart;
 using Fiap.McTech.Domain.Interfaces.Repositories.Orders;
 using Fiap.McTech.Domain.Interfaces.Repositories.Payments;
-using Fiap.McTech.Domain.Utils.Extensions;
 using Microsoft.Extensions.Logging;
 
 namespace Fiap.McTech.Application.AppServices.Orders
@@ -50,160 +47,98 @@ namespace Fiap.McTech.Application.AppServices.Orders
         /// <inheritdoc/>
         public async Task<OrderOutputDto?> GetOrderByIdAsync(Guid id)
         {
-            try
+            _logger.LogInformation("Retrieving order with ID {OrderId}.", id);
+
+            var order = await _orderRepository.GetOrderByIdAsync(id);
+            if (order == null)
             {
-                _logger.LogInformation("Retrieving order with ID {OrderId}.", id);
-
-                var order = await _orderRepository.GetOrderByIdAsync(id);
-                if (order == null)
-                {
-                    _logger.LogInformation("Order with ID {OrderId} not found.", id);
-                    throw new EntityNotFoundException(string.Format("Order with ID {0} not found.", id));
-                }
-
-                _logger.LogInformation("Order with ID {OrderId} retrieved successfully.", id);
-
-                return _mapper.Map<OrderOutputDto>(order);
+                _logger.LogInformation("Order with ID {OrderId} not found.", id);
+                throw new EntityNotFoundException(string.Format("Order with ID {0} not found.", id));
             }
-            catch (McTechException) { throw; }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Failed to retrieve order with ID {OrderId}.", id);
-                throw;
-            }
-        }
 
-        /// <inheritdoc/>
-        public async Task<OrderOutputDto> CreateOrderAsync(CreateOrderInputDto orderDto)
-        {
-            try
-            {
-                _logger.LogInformation("Creating a new order.");
+            _logger.LogInformation("Order with ID {OrderId} retrieved successfully.", id);
 
-                var order = _mapper.Map<Domain.Entities.Orders.Order>(orderDto);
-
-                var createdOrder = await _orderRepository.AddAsync(order);
-
-                _logger.LogInformation("Order created successfully with ID {OrderId}.", createdOrder.Id);
-
-                return _mapper.Map<OrderOutputDto>(createdOrder);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Failed to create order");
-                throw;
-            }
+            return _mapper.Map<OrderOutputDto>(order);
         }
 
         /// <inheritdoc/>
         public async Task<OrderOutputDto> CreateOrderByCartAsync(Guid cartId)
         {
-            try
+            _logger.LogInformation("Creating a new order by cart id {CartId}.", cartId);
+            var cart = await _cartClientRepository.GetByCartIdAsync(cartId);
+            if (cart == null)
             {
-                _logger.LogInformation("Creating a new order by cart id {cartId}.", cartId);
-                var cart = await _cartClientRepository.GetByCartIdAsync(cartId);
-                if (cart == null)
-                {
-                    _logger.LogWarning("Cart with ID {cartId} not found", cartId);
-                    throw new EntityNotFoundException(string.Format("Cart with ID {0} not found.", cartId));
-                }
-
-                var order = _mapper.Map<Order>(cart);
-
-                var createdOrder = await _orderRepository.AddAsync(order);
-                _logger.LogInformation("Order created successfully with ID {OrderId}.", createdOrder.Id);
-
-                await _cartClientRepository.RemoveAsync(cart);
-
-                return _mapper.Map<OrderOutputDto>(createdOrder);
+                _logger.LogWarning("Cart with ID {CartId} not found", cartId);
+                throw new EntityNotFoundException(string.Format("Cart with ID {0} not found.", cartId));
             }
-            catch (McTechException) { throw; }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Failed to create order");
-                throw;
-            }
+
+            var order = _mapper.Map<Order>(cart);
+
+            var createdOrder = await _orderRepository.AddAsync(order);
+            _logger.LogInformation("Order created successfully with ID {OrderId}.", createdOrder.Id);
+
+            await _cartClientRepository.RemoveAsync(cart);
+
+            return _mapper.Map<OrderOutputDto>(createdOrder);
         }
 
         /// <inheritdoc/>
         public async Task DeleteOrderAsync(Guid orderId)
         {
-            try
-            {
-                _logger.LogInformation("Attempting to delete order with ID: {OrderId}", orderId);
+            _logger.LogInformation("Attempting to delete order with ID: {OrderId}.", orderId);
 
-                var existingOrder = await _orderRepository.GetByIdAsync(orderId)
-                    ?? throw new EntityNotFoundException(string.Format("Order with ID {0} not found.", orderId));
+            var existingOrder = await _orderRepository.GetByIdAsync(orderId)
+                ?? throw new EntityNotFoundException(string.Format("Order with ID {0} not found.", orderId));
 
-                await _orderRepository.RemoveAsync(existingOrder);
+            await _orderRepository.RemoveAsync(existingOrder);
 
-                _logger.LogInformation("Order with ID {OrderId} deleted successfully.", orderId);
-            }
-            catch (McTechException) { throw; }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Failed to delete order with ID: {OrderId}", orderId);
-                throw;
-            }
+            _logger.LogInformation("Order with ID {OrderId} deleted successfully.", orderId);
         }
 
         /// <inheritdoc/>
         public async Task<List<OrderOutputDto>> GetOrderByStatusAsync(OrderStatus status)
         {
-            try
-            {
-                _logger.LogInformation("Retrieving order with status code {status}.", status);
+            _logger.LogInformation("Retrieving order with status code {Status}.", status.ToString());
 
-                var orders = await _orderRepository.GetOrderByStatusAsync(status);
-                if (orders == null)
-                {
-                    _logger.LogInformation("Order with status code {status} not found.", status);
-                    throw new EntityNotFoundException(string.Format("Order with status code {0} not found.", status));
-                }
+            var orders = await _orderRepository.GetOrderByStatusAsync(status);
+            if (!orders.Any())
+                return new List<OrderOutputDto>();
 
-                _logger.LogInformation("Order with status code {status} retrieved successfully.", status);
+            _logger.LogInformation("Order with status code {Status} retrieved successfully.", status.ToString());
 
-                return _mapper.Map<List<OrderOutputDto>>(orders);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Failed to retrieve order with status code {status}.", status);
-                throw;
-            }
+            return _mapper.Map<List<OrderOutputDto>>(orders);
         }
 
         /// <inheritdoc/>
         public async Task<OrderOutputDto> MoveOrderToNextStatus(Guid id)
         {
-            try
-            {
-                var originalOrder = await _orderRepository.GetByIdAsync(id);
-                if (originalOrder == null)
-                {
-                    _logger.LogWarning("Order with ID {OrderId} not found. Update aborted.", id);
-                    throw new EntityNotFoundException(string.Format("Order with ID {0} not found. Update aborted.", id));
-                }
-                if (originalOrder.Status == OrderStatus.Pending)
-                {
-                    var payment = await _paymentRepository.GetByOrderIdAsync(id)
-                        ?? throw new PaymentRequiredException("Waiting for payment.");
-                }
+            var originalOrder = await _orderRepository.GetByIdAsync(id)
+                ?? throw new EntityNotFoundException(string.Format("Order with ID {0} not found. Update aborted.", id));
 
-                var modifierOrder = _mapper.Map<UpdateOrderInputDto>(originalOrder);
-                modifierOrder.Status = originalOrder.Status.NextStatus();
+            if (originalOrder.Status == OrderStatus.WaitPayment)
+                _ = await _paymentRepository.GetByOrderIdAsync(id)
+                    ?? throw new PaymentRequiredException("Waiting for payment.");
 
-                _mapper.Map(modifierOrder, originalOrder);
+            originalOrder.SendToNextStatus();
 
-                await _orderRepository.UpdateAsync(originalOrder);
+            await _orderRepository.UpdateAsync(originalOrder);
 
-                return _mapper.Map<OrderOutputDto>(await _orderRepository.GetOrderByIdAsync(id));
-            }
-            catch (McTechException) { throw; }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Failed to update order with ID {OrderId}.", id);
-                throw;
-            }
+            return _mapper.Map<OrderOutputDto>(await _orderRepository.GetOrderByIdAsync(id));
+        }
+
+        /// <inheritdoc/>
+        public async Task<List<OrderOutputDto>> GetCurrrentOrders()
+        {
+            _logger.LogInformation("Retrieving all orders.");
+
+            var orders = await _orderRepository.GetCurrrentOrders();
+
+            if (orders == null || !orders.Any())
+                return new List<OrderOutputDto>();
+
+            _logger.LogInformation("All orders retrieved successfully.");
+
+            return _mapper.Map<List<OrderOutputDto>>(orders);
         }
     }
 }

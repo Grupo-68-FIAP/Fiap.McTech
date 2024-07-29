@@ -31,17 +31,19 @@ namespace Fiap.McTech.Application.Interfaces
         /// <summary>
         /// Adds a cart item to the specified shopping cart asynchronously.
         /// </summary>
-        /// <param name="id">The ID of the shopping cart to add the item to.</param>
+        /// <param name="cartId">The ID of the shopping cart to add the item to.</param>
         /// <param name="productId">The ID of the product to add to the shopping cart.</param>
+        /// <param name="quantities">The number of items to add to the shopping cart.</param>
         /// <returns>A <see cref="CartClientOutputDto"/> representing the updated shopping cart.</returns>
-        Task<CartClientOutputDto> AddCartItemToCartClientAsync(Guid id, Guid productId);
+        Task<CartClientOutputDto> AddCartItemToCartClientAsync(Guid cartId, Guid productId, int quantities = 1);
 
         /// <summary>
         /// Removes a cart item from the specified shopping cart asynchronously.
         /// </summary>
-        /// <param name="cartItemId">The ID of the cart item to remove from the shopping cart.</param>
+        /// <param name="cartId">The ID of the shopping cart to remove the item from.</param>
+        /// <param name="productId">The ID of the product to remove from the shopping cart.</param>
         /// <returns>A <see cref="CartClientOutputDto"/> representing the updated shopping cart.</returns>
-        Task<CartClientOutputDto> RemoveCartItemFromCartClientAsync(Guid cartItemId);
+        Task<CartClientOutputDto> RemoveCartItemFromCartClientAsync(Guid cartId, Guid productId);
 
         /// <summary>
         /// Deletes a shopping cart for a client asynchronously.

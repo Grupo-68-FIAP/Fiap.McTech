@@ -4,13 +4,13 @@ namespace Fiap.McTech.UnitTests.Utils
 {
     public class CpfUnitTests
     {
-        [Fact]
-        public void TestValidCpf()
+        [Theory]
+        [InlineData("12345678909")]
+        [InlineData("39349474093")]
+        [InlineData("52884751050")]
+        public void TestValidCpf(string validCpf)
         {
-            // Arrange
-            string validCpf = "12345678909";
-
-            // Act
+            // Arrange & Act
             bool isValid = validCpf.IsValidCpf();
 
             // Assert
@@ -18,10 +18,10 @@ namespace Fiap.McTech.UnitTests.Utils
         }
 
         [Theory]
-        [InlineData(null)]
         [InlineData("1234567890")]
         [InlineData("11111111111")]
         [InlineData("12345678901")]
+        [InlineData("1234*901")]
         public void TestInvalidCpf_InvalidData(string invalidCpf)
         {
             // Act

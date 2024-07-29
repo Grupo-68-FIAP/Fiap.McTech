@@ -8,7 +8,7 @@ using Fiap.McTech.Domain.Exceptions;
 using Fiap.McTech.Domain.Interfaces.Repositories.Products;
 using Microsoft.Extensions.Logging;
 
-namespace Fiap.McTech.Application.AppServices.Product
+namespace Fiap.McTech.Application.AppServices.Products
 {
     /// <summary>
     /// Service for managing products.
@@ -26,8 +26,8 @@ namespace Fiap.McTech.Application.AppServices.Product
         /// <param name="productRepository">The product repository.</param>
         /// <param name="mapper">The mapper.</param>
         public ProductAppService(
-            ILogger<ProductAppService> logger,
             IProductRepository productRepository,
+            ILogger<ProductAppService> logger,
             IMapper mapper)
         {
             _logger = logger;

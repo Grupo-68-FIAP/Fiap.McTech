@@ -8,6 +8,18 @@ namespace Fiap.McTech.Application.Dtos.Products
 	public class ProductOutputDto
     {
         /// <summary>
+        /// ProductOutputDto constructor.
+        /// </summary>
+        public ProductOutputDto(string name, decimal value, string description, string image, ProductCategory category)
+        {
+            Name = name;
+            Value = value;
+            Description = description;
+            Image = image;
+            Category = category;
+        }
+
+        /// <summary>
         /// Gets or sets the ID of the product.
         /// </summary>
 		public Guid Id { get; set; }

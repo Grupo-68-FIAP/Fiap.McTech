@@ -2,8 +2,8 @@
 using Fiap.McTech.Application.Interfaces;
 using Fiap.McTech.Application.ViewModels.Orders;
 using Fiap.McTech.Domain.Enums;
-using Fiap.McTech.Domain.Exceptions;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics.CodeAnalysis;
 using System.Net.Mime;
 
 namespace Fiap.McTech.Api.Controllers.Orders
@@ -14,6 +14,7 @@ namespace Fiap.McTech.Api.Controllers.Orders
     [Route("api/order")]
     [ApiController]
     [Produces(MediaTypeNames.Application.Json)]
+    [ExcludeFromCodeCoverage]
     public class OrderController : ControllerBase
     {
         private readonly IOrderAppService _orderAppService;
@@ -28,6 +29,20 @@ namespace Fiap.McTech.Api.Controllers.Orders
         }
 
         /// <summary>
+        /// Obtains a list of all orders.
+        /// </summary>
+        /// <response code="200">Returns all orders.</response>
+        /// <response code="204">If no orders are found.</response>
+        [HttpGet]
+        [ProducesResponseType(typeof(List<OrderOutputDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<IActionResult> GetOrders()
+        {
+            var orders = await _orderAppService.GetCurrrentOrders();
+            return (orders == null || !orders.Any()) ? new NoContentResult() : Ok(orders);
+        }
+
+        /// <summary>
         /// Retrieves an order by its unique identifier.
         /// </summary>
         /// <param name="id">The unique identifier of the order.</param>
@@ -39,14 +54,7 @@ namespace Fiap.McTech.Api.Controllers.Orders
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetOrderById(Guid id)
         {
-            try
-            {
-                return Ok(await _orderAppService.GetOrderByIdAsync(id));
-            }
-            catch (EntityNotFoundException ex)
-            {
-                return NotFound(new ProblemDetails() { Detail = ex.Message });
-            }
+            return Ok(await _orderAppService.GetOrderByIdAsync(id));
         }
 
         /// <summary>
@@ -95,15 +103,8 @@ namespace Fiap.McTech.Api.Controllers.Orders
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> CreateOrder(Guid cartId)
         {
-            try
-            {
-                var createdOrder = await _orderAppService.CreateOrderByCartAsync(cartId);
-                return CreatedAtAction(nameof(GetOrderById), new { id = createdOrder.Id }, createdOrder);
-            }
-            catch (EntityNotFoundException ex)
-            {
-                return NotFound(new ProblemDetails() { Detail = ex.Message });
-            }
+            var createdOrder = await _orderAppService.CreateOrderByCartAsync(cartId);
+            return CreatedAtAction(nameof(GetOrderById), new { id = createdOrder.Id }, createdOrder);
         }
 
         /// <summary>
@@ -112,11 +113,13 @@ namespace Fiap.McTech.Api.Controllers.Orders
         /// <param name="status">
         /// Status to filter orders. Possible values are:
         /// <list type="bullet">
+        /// <item><description><c>Canceled</c> (-2): Orders that are canceled.</description></item>
         /// <item><description><c>None</c> (-1): No specific status.</description></item>
-        /// <item><description><c>Pending</c> (0): Orders that are pending.</description></item>
-        /// <item><description><c>Processing</c> (1): Orders that are being processed.</description></item>
-        /// <item><description><c>Completed</c> (2): Orders that are completed.</description></item>
-        /// <item><description><c>Canceled</c> (3): Orders that are canceled.</description></item>
+        /// <item><description><c>WaitPayment</c> (0): Orders that are waiting for payment.</description></item>
+        /// <item><description><c>Received</c> (1): Orders that have been received.</description></item>
+        /// <item><description><c>InPreparation</c> (2): Orders that are being prepared.</description></item>
+        /// <item><description><c>Ready</c> (3): Orders that are ready.</description></item>
+        /// <item><description><c>Finished</c> (4): Orders that are completed and delivered.</description></item>
         /// </list>
         /// </param>
         /// <returns>A list of orders matching the specified status.</returns>

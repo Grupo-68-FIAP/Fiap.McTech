@@ -13,9 +13,22 @@ namespace Fiap.McTech.Application.Dtos.Cart
         /// <summary>
         /// Gets or sets the items in the shopping cart.
         /// </summary>
-        /// <remarks>
-        /// Overriding the base class property to use the derived type <see cref="NewCartItemDto"/>.
-        /// </remarks>
-        new public List<NewCartItemDto> Items { get; set; } = new List<NewCartItemDto>();
+        new public List<Item> Items { get; set; } = new();
+
+        /// <summary>
+        /// Represents the input data for a new item in a shopping cart.
+        /// </summary>
+        public new class Item : CartClientInputDto.Item
+        {
+            /// <summary>
+            /// Gets or sets the name of the product.
+            /// </summary>
+            public string Name { get; set; } = string.Empty;
+
+            /// <summary>
+            /// Gets or sets the value of the product.
+            /// </summary>
+            public decimal Value { get; set; } = decimal.Zero;
+        }
     }
 }

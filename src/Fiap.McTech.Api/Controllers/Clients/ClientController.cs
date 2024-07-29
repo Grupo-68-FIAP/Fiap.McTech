@@ -1,6 +1,5 @@
 ﻿using Fiap.McTech.Application.Dtos.Clients;
 using Fiap.McTech.Application.Interfaces;
-using Fiap.McTech.Domain.ValuesObjects;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Mime;
 
@@ -120,7 +119,7 @@ namespace Fiap.McTech.Api.Controllers.Clients
         [ProducesResponseType(typeof(ClientOutputDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> UpdateClient(Guid id, ClientInputDto client)
+        public async Task<IActionResult> UpdateClient(Guid id,[FromBody] ClientInputDto client)
         {
             return Ok(await _clientAppService.UpdateClientAsync(id, client));
         }

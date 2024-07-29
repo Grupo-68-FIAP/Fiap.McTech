@@ -1,5 +1,4 @@
-﻿using Fiap.McTech.Application.Dtos.Orders;
-using Fiap.McTech.Domain.Enums;
+﻿using Fiap.McTech.Domain.Enums;
 
 namespace Fiap.McTech.Application.ViewModels.Orders
 {
@@ -36,6 +35,42 @@ namespace Fiap.McTech.Application.ViewModels.Orders
         /// <summary>
         /// Gets or sets the items included in the order.
         /// </summary>
-		public List<OrderItemOutputDto> Items { get; set; } = new List<OrderItemOutputDto>();
+		public List<Item> Items { get; set; } = new();
+
+        /// <summary>
+        /// Represents the output data for an item in an order.
+        /// </summary>
+        public class Item
+        {
+            /// <summary>
+            /// Gets or sets the ID of the product.
+            /// </summary>
+            public Guid ProductId { get; set; }
+
+            /// <summary>
+            /// Gets or sets the ID of the order.
+            /// </summary>
+            public Guid OrderId { get; set; }
+
+            /// <summary>
+            /// Gets or sets the name of the product.
+            /// </summary>
+            public string ProductName { get; set; } = string.Empty;
+
+            /// <summary>
+            /// Gets or sets the price of the product.
+            /// </summary>
+            public decimal Price { get; set; }
+
+            /// <summary>
+            /// Gets or sets the quantity of the product.
+            /// </summary>
+            public int Quantity { get; set; }
+
+            /// <summary>
+            /// Gets or sets the total price of the item.
+            /// </summary>
+            public decimal TotalPrice { get; set; }
+        }
     }
 }

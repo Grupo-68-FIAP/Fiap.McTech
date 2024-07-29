@@ -1,17 +1,28 @@
 ﻿using Fiap.McTech.Domain.Entities.Clients;
 using Fiap.McTech.Domain.Enums;
+using Fiap.McTech.Domain.Utils.Extensions;
 
 namespace Fiap.McTech.Domain.Entities.Orders
 {
     /// <summary>
     /// Represents an order in the system.
     /// </summary>
-    public class Order : EntityBase
+    public partial class Order : EntityBase
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="Order"/> class.
+        /// Inicializa uma nova instância da classe <see cref="Order"/>.
         /// </summary>
-        public Order() { }
+        /// <param name="clientId">O ID do cliente.</param>
+        /// <param name="totalAmount">O valor total do pedido.</param>
+        /// <param name="client">O cliente associado ao pedido.</param>
+        public Order(Guid? clientId, decimal totalAmount, Client? client = null)
+        {
+            ClientId = clientId;
+            TotalAmount = totalAmount;
+            Status = OrderStatus.None;
+            Items = new List<Item>();
+            Client = client;
+        }
 
         /// <summary>
         /// Gets or sets the unique identifier of the client associated with the order.
@@ -31,12 +42,12 @@ namespace Fiap.McTech.Domain.Entities.Orders
         /// <summary>
         /// Gets or sets the status of the order.
         /// </summary>
-        public OrderStatus Status { get; private set; } = OrderStatus.None;
+        public OrderStatus Status { get; private set; }
 
         /// <summary>
         /// Gets the list of items in the order.
         /// </summary>
-        public List<OrderItem> Items { get; private set; } = new List<OrderItem>();
+        public ICollection<Item> Items { get; private set; }
 
         /// <summary>
         /// Determines whether the order is valid.
@@ -45,6 +56,22 @@ namespace Fiap.McTech.Domain.Entities.Orders
         public override bool IsValid()
         {
             return TotalAmount > 0;
+        }
+
+        /// <summary>
+        /// Sets the status of the order to the next status.
+        /// </summary>
+        public void SendToNextStatus()
+        {
+            Status = Status.NextStatus();
+        }
+
+        /// <summary>
+        /// Sets the status of the order to canceled.
+        /// </summary>
+        public void Cancel()
+        {
+            Status = OrderStatus.Canceled;
         }
     }
 }
