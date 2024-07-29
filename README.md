@@ -35,6 +35,9 @@ Utilizando tecnologias modernas e práticas arquiteturais, o MeTech oferece uma 
 
 ![DDD do Sistema](./ddd-sistema.jpg)
 
+## Visão Geral da Arquitetura 
+![image](https://github.com/user-attachments/assets/a9d9e5e4-46c9-4c6f-9a58-c8dd113d4382)
+
 ## Como Contribuir
 
 1 - Reportar Problemas: Encontrou um bug ou tem uma sugestão de melhoria? Por favor, abra uma issue e descreva detalhadamente o problema ou sua ideia.
