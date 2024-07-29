@@ -5,7 +5,7 @@ on:
     paths-ignore: [ '**/*.md', '.github/workflows/*', '!.github/workflows/sonarcloud.yml']
   pull_request:
     types: [opened, synchronize, reopened]
-    paths-ignore: [ '**/*.md', '.github/workflows/*', '!.github/workflows/sonarcloud.yml']
+    paths-ignore: [ '.github/workflows/*', '!.github/workflows/sonarcloud.yml']
 jobs:
   build:
     name: Build and analyze
