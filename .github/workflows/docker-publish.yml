@@ -15,10 +15,8 @@ env:
   # github.repository as <account>/<repo>
   IMAGE_NAME: Grupo-68-FIAP/mctech/api
 
-
 jobs:
   deploy:
-    #if: ${{ github.event.workflow_run.conclusion == 'success' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop') }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
