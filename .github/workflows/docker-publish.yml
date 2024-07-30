@@ -4,7 +4,7 @@ on:
   schedule:
     - cron: '27 19 * * *'
   workflow_run:
-    workflows: [" .NET"]
+    workflows: [ ".NET" ]
     types:
       - completed
 env:
