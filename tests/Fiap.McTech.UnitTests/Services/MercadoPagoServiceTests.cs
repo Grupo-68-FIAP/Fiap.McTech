@@ -80,8 +80,11 @@ namespace Fiap.McTech.UnitTests.Services
 
             var service = new MercadoPagoService(_mockLogger.Object, httpClient);
 
-            // Act & Assert
-            await Assert.ThrowsAsync<HttpRequestException>(() => service.GeneratePaymentLinkAsync(paymentRequest));
+            // Act
+            var result = await service.GeneratePaymentLinkAsync(paymentRequest);
+
+            // Assert
+            Assert.Empty(result);
         }
 
         [Fact]
