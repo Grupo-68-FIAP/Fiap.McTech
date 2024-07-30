@@ -6,8 +6,8 @@ on:
       - .NET
     types:
       - completed
-  schedule:
-    - cron: '27 19 * * *'
+  # schedule:
+  #   - cron: '27 19 * * *'
 
 env:
   # Use docker.io for Docker Hub if empty
