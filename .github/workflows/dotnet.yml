@@ -22,11 +22,11 @@ jobs:
         dotnet-version: 6.0.x
 
     - name: Restore dependencies
-      run: dotnet restore src/Fiap.McTech.Api/Fiap.McTech.Api.csproj
+      run: dotnet restore "Fiap.McTech.sln"
 
     - name: Build
-      run: dotnet build src/Fiap.McTech.Api/Fiap.McTech.Api.csproj --configuration Release
+      run: dotnet build "Fiap.McTech.sln" --configuration Release
 
     - name: Test
-      run: dotnet test src/Fiap.McTech.Api/Fiap.McTech.Api.csproj --verbosity normal
+      run: dotnet test "Fiap.McTech.sln" --verbosity normal
       

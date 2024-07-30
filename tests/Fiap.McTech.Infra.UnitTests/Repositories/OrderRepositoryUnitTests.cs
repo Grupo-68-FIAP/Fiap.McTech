@@ -31,7 +31,7 @@ namespace Fiap.McTech.Infra.UnitTests.Repositories
             products.Add(product1);
             products.Add(product2);
 
-            var order = new Order(null, 0);
+            var order = new Order(clientId: null, 0);
             var orderItem = new Order.Item(product1.Id, order.Id, product1.Name, product1.Value, 1);
             order.Items.Add(orderItem);
             return order;

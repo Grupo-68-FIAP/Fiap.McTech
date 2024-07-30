@@ -43,8 +43,7 @@ namespace Fiap.McTech.UnitTests.AppServices
             // Arrange
             var client = new Client("teste", new Cpf("12345678909"), new Email("john.doe@example.com"));
             var orderId = Guid.NewGuid();
-            var order = new Order(orderId, 100.0m, client) {};
-
+            var order = new Order(client, 100.0m) {};
 
             _mockOrderRepository
                 .Setup(repo => repo.GetByIdAsync(orderId))
