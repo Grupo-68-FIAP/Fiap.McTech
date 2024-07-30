@@ -51,6 +51,8 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
+    needs: build
+    if: ${{ needs.build.result == 'success' }} 
     permissions:
       contents: read
       packages: write
