@@ -3,14 +3,10 @@ name: Docker
 on:
   schedule:
     - cron: '27 19 * * *'
-  push:
-    branches: [ "master", "develop" ]
-    tags: [ 'v*.*.*' ]
-    paths-ignore: [ '**/*.md', '.github/workflows/*', '!.github/workflows/docker-publish.yml', '**/sonar-project.*']
-  pull_request:
-    branches: [ "master", "develop"  ]
-    paths-ignore: [ '**/*.md', '.github/workflows/*', '!.github/workflows/docker-publish.yml', '**/sonar-project.*']
-
+  workflow_run:
+    workflows: [" .NET"]
+    types:
+      - completed
 env:
   # Use docker.io for Docker Hub if empty
   REGISTRY: ghcr.io
@@ -20,7 +16,7 @@ env:
 
 jobs:
   build:
-
+    if: github.event.workflow_run.conclusion == 'success' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop')
     runs-on: ubuntu-latest
     permissions:
       contents: read
