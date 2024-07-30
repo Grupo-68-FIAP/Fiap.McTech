@@ -1,12 +1,13 @@
 name: Docker
 
 on:
-  schedule:
-    - cron: '27 19 * * *'
   workflow_run:
     workflows: [ ".NET" ]
     types:
       - completed
+  schedule:
+    - cron: '27 19 * * *'
+
 env:
   # Use docker.io for Docker Hub if empty
   REGISTRY: ghcr.io
@@ -16,7 +17,7 @@ env:
 
 jobs:
   build:
-    if: ${{ github.event.workflow_run.conclusion == 'success' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop') }}
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
