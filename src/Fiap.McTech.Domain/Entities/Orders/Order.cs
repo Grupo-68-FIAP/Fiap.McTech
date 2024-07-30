@@ -10,18 +10,30 @@ namespace Fiap.McTech.Domain.Entities.Orders
     public partial class Order : EntityBase
     {
         /// <summary>
-        /// Inicializa uma nova instância da classe <see cref="Order"/>.
+        /// Initializes a new instance of the <see cref="Order"/> class with the specified parameters.
         /// </summary>
-        /// <param name="clientId">O ID do cliente.</param>
-        /// <param name="totalAmount">O valor total do pedido.</param>
-        /// <param name="client">O cliente associado ao pedido.</param>
-        public Order(Guid? clientId, decimal totalAmount, Client? client = null)
+        /// <param name="clientId">The unique identifier of the client associated with the order.</param>
+        /// <param name="totalAmount">The total amount of the order.</param>
+        public Order(Guid? clientId, decimal totalAmount)
         {
             ClientId = clientId;
             TotalAmount = totalAmount;
             Status = OrderStatus.None;
             Items = new List<Item>();
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Order"/> class with the specified client and total amount.
+        /// </summary>
+        /// <param name="client">The client associated with the order.</param>
+        /// <param name="totalAmount">The total amount of the order.</param>
+        public Order(Client client, decimal totalAmount)
+        {
+            ClientId = client?.Id;
             Client = client;
+            TotalAmount = totalAmount;
+            Status = OrderStatus.None;
+            Items = new List<Item>();
         }
 
         /// <summary>

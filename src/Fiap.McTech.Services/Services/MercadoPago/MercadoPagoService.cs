@@ -47,7 +47,7 @@ namespace Fiap.McTech.Services.Services.MercadoPago
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to generate payment link for the amount {Amount}.", request.TransactionAmount);
-                return string.Empty;
+                throw;
             }
         }
 
