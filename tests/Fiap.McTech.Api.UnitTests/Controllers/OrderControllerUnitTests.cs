@@ -49,7 +49,7 @@ namespace Fiap.McTech.Api.UnitTests.Controllers
         public async Task GetOrderById_WithValidId_ReturnsOrder()
         {
             // Arrange
-            var order = new Order(null, 0);
+            var order = new Order(clientId: null, 0);
             order.Items.Add(new Order.Item(product.Id, order.Id, product.Name, product.Value, 1));
             _mockedOrderRepository
                 .Setup(x => x.GetOrderByIdAsync(order.Id))
@@ -124,7 +124,7 @@ namespace Fiap.McTech.Api.UnitTests.Controllers
         public async Task DeleteOrder_WithValidId_ReturnsNoContent()
         {
             // Arrange
-            var order = new Order(null, 0);
+            var order = new Order(clientId: null, 0);
             _mockedOrderRepository
                 .Setup(x => x.GetByIdAsync(order.Id))
                 .ReturnsAsync(order);
@@ -161,9 +161,10 @@ namespace Fiap.McTech.Api.UnitTests.Controllers
             // Arrange
             var orders = new List<Order>
             {
-                new (null, 10),
-                new (null, 20)
+                new (clientId: null, 10),
+                new (clientId: null, 20)
             };
+
             orders.ForEach(order => order.Items.Add(new Order.Item(product.Id, order.Id, product.Name, product.Value, 1)));
             _mockedOrderRepository
                 .Setup(x => x.GetOrderByStatusAsync(Domain.Enums.OrderStatus.None))
@@ -202,7 +203,7 @@ namespace Fiap.McTech.Api.UnitTests.Controllers
         public async Task MoveOrderToNextStatus_WithValidId_ReturnsOrder()
         {
             // Arrange
-            var order = new Order(null, 0);
+            var order = new Order(clientId: null, 0);
             _mockedOrderRepository
                 .Setup(x => x.GetByIdAsync(order.Id))
                 .ReturnsAsync(() => order);
@@ -240,7 +241,7 @@ namespace Fiap.McTech.Api.UnitTests.Controllers
         public async Task MoveOrderToNextStatus_WhenOrderNoPayed_ThrowsPaymentRequiredException()
         {
             // Arrange
-            var order = new Order(null, 0);
+            var order = new Order(clientId: null, 0);
             order.SendToNextStatus();
             _mockedOrderRepository
                 .Setup(x => x.GetByIdAsync(order.Id))
@@ -257,7 +258,7 @@ namespace Fiap.McTech.Api.UnitTests.Controllers
         public async Task MoveOrderToNextStatus_WhenOrderWasFinished_ThrowsInvalidOperationException()
         {
             // Arrange
-            var order = new Order(null, 0);
+            var order = new Order(clientId: null, 0);
             for (var i = 0; i <= 4; i++)
                 order.SendToNextStatus();
             _mockedOrderRepository
@@ -275,7 +276,7 @@ namespace Fiap.McTech.Api.UnitTests.Controllers
         public async Task MoveOrderToNextStatus_WhenOrderWasCanceled_ThrowsInvalidOperationException()
         {
             // Arrange
-            var order = new Order(null, 0);
+            var order = new Order(clientId: null, 0);
             order.Cancel();
             _mockedOrderRepository
                 .Setup(x => x.GetByIdAsync(order.Id))
@@ -294,8 +295,8 @@ namespace Fiap.McTech.Api.UnitTests.Controllers
             // Arrange
             var orders = new List<Order>
             {
-                new (null, 10),
-                new (null, 20)
+                new (clientId: null, 10),
+                new (clientId: null, 20)
             };
             orders.ForEach(order => order.Items.Add(new Order.Item(product.Id, order.Id, product.Name, product.Value, 1)));
             _mockedOrderRepository
