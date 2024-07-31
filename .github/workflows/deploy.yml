@@ -4,7 +4,7 @@ name: Workflow 2
 on:
   workflow_run:
     workflows: 
-      - workflow 1
+      - Workflow 1
     types: 
       - completed
     branches: 
