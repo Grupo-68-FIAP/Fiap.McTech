@@ -1,0 +1,20 @@
+# .github/workflows/deploy.yml
+name: Workflow 2
+
+on:
+  workflow_run:
+    workflows: 
+      - workflow 1
+    types: 
+      - completed
+    branches: 
+      - "*"
+
+jobs:
+  deploy:
+     runs-on: ubuntu-latest
+     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Deploy project
+        run: echo "Deploying the project..."
