@@ -4,8 +4,8 @@ metadata:
   name: mctechapi-secret
 type: Opaque
 data:
-  ASPNETCORE_Kestrel__Certificates__Default__Password: cHdzNG1jdGVjaCE=
-  CONNECTION_STRING: U2VydmVyPW1jdGVjaC1zcWxzZXJ2ZXItc3ZjLDE0MzM7SW5pdGlhbCBDYXRhbG9nPW1jdGVjaDtVc2VyIElkPXNhO1Bhc3N3b3JkPXB3czRtY3RlY2ghOw==
+  ASPNETCORE_Kestrel__Certificates__Default__Password: Y2hhbmdlaXQxMjM=
+  CONNECTION_STRING: U2VydmVyPW1jdGVjaC1zcWxzZXJ2ZXItcmRzLWluc3RhbmNlLmN0YTgybTZvbTh6NS51cy1lYXN0LTEucmRzLmFtYXpvbmF3cy5jb20sMTQzMztJbml0aWFsIENhdGFsb2c9bWN0ZWNoO1VzZXIgSWQ9bWN0ZWNoO1Bhc3N3b3JkPWNoYW5nZWl0MTIzOw==
   
 ---
 
@@ -35,7 +35,7 @@ spec:
     spec:
       containers:
         - name: mctechapi-container
-          image: ghcr.io/grupo-68-fiap/mctech/api:dev
+          image: ghcr.io/grupo-68-fiap/mctech/api:latest
           env:
             - name: ASPNETCORE_Kestrel__Certificates__Default__Password
               valueFrom:
