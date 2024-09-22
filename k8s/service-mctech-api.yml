@@ -1,0 +1,19 @@
+apiVersion: v1 # Service da API do tipo LoadBalancer
+kind: Service
+metadata:
+  labels:
+      app: mctechapi-svc
+  name: mctechapi-svc
+spec:
+  type: LoadBalancer
+  selector:
+    app: mctechapi
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 80
+      protocol: TCP
+    - name: https
+      port: 8443
+      targetPort: 443
+      protocol: TCP  
