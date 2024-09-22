@@ -1,5 +1,5 @@
 FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
-RUN groupadd -r mctech && useradd -r -g mctech mctech
+
 WORKDIR /app
 EXPOSE 80
 EXPOSE 443
@@ -27,5 +27,8 @@ RUN dotnet publish "./Fiap.McTech.Api.csproj" -c "$BUILD_CONFIGURATION" -o /app/
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+
+RUN groupadd -r mctech && useradd -r -g mctech mctech
 USER mctech
+
 ENTRYPOINT ["dotnet", "Fiap.McTech.Api.dll"]
