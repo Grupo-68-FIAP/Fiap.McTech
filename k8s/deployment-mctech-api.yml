@@ -15,13 +15,6 @@ spec:
         - name: mctechapi-container
           image: ghcr.io/grupo-68-fiap/mctech/api:latest
           env:
-            - name: ASPNETCORE_Kestrel__Certificates__Default__Password
-              valueFrom:
-                secretKeyRef:
-                  name: mctechapi-secret
-                  key: ASPNETCORE_Kestrel__Certificates__Default__Password
-            - name: ASPNETCORE_Kestrel__Certificates__Default__Path
-              value: /app/cert.pfx
             - name: CONNECTION_STRING
               valueFrom:
                 secretKeyRef:
