@@ -28,7 +28,13 @@ FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 
-RUN groupadd -r mctech && useradd -r -g mctech mctech
-USER mctech
+RUN addgroup --group mctech --gid 2000 \
+&& adduser \    
+    --uid 1000 \
+    --gid 2000 \
+    "mctech" 
+
+RUN chown mctech:mctech  /app /tmp
+USER mctech:mctech
 
 ENTRYPOINT ["dotnet", "Fiap.McTech.Api.dll"]
