@@ -24,19 +24,19 @@ spec:
             - configMapRef:
                 name: mctechapi-configmap
           ports:
-            - containerPort: 80
+            - containerPort: 8080
               name: http
           livenessProbe:
             httpGet:
               path: /swagger
-              port: 80
+              port: 8080
             periodSeconds: 10
             failureThreshold: 3
             initialDelaySeconds: 30
           readinessProbe:
             httpGet:
               path: /swagger
-              port: 80
+              port: 8080
             periodSeconds: 10
             failureThreshold: 5
             initialDelaySeconds: 30
