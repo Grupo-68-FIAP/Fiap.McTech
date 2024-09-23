@@ -1,8 +1,7 @@
 FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
 
 WORKDIR /app
-EXPOSE 80
-EXPOSE 443
+EXPOSE 8080
 ARG ALLOW_SWAGGER_UI=false
 ARG ALLOW_ORIGINS=*
 COPY ["src/Fiap.McTech.Api/cert.pfx", "/app"]

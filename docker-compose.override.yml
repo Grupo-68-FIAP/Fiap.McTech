@@ -3,14 +3,11 @@ services:
     container_name: mctech_api
     environment:
       ASPNETCORE_ENVIRONMENT: Development
-      ASPNETCORE_URLS: https://+:443;http://+:80
-      ASPNETCORE_Kestrel__Certificates__Default__Password: pws4mctech!
-      ASPNETCORE_Kestrel__Certificates__Default__Path: /app/cert.pfx
+      ASPNETCORE_URLS: http://+:8080
       CONNECTION_STRING: Server=sqlserver,1433;Initial Catalog=mctech;User Id=sa;Password=pws4mctech!;
       ALLOW_SWAGGER_UI: true
     ports:
-      - "8080:80"
-      - "8443:443"
+      - "8080:8080"
 
   sqlserver:
     container_name: sqlserver
