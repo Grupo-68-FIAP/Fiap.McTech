@@ -30,6 +30,31 @@ namespace Fiap.McTech.Api.Configurations
                 });
                 c.CustomSchemaIds(type => $"{type.FullName?.Replace($"{type.Namespace}.", "").Replace("+", ".")}");
 
+                // Definindo a segurança para JWT Bearer
+                c.AddSecurityDefinition("bearer", new OpenApiSecurityScheme
+                {
+                    In = ParameterLocation.Header,
+                    Description = "Insira 'Bearer' [espaço] e seu token JWT abaixo.",
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.ApiKey
+                });
+
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "bearer"
+                            }
+                        },
+                        new string[] {}
+                    }
+                });
+
+
                 var xmlFiles = new List<string> {
                     $"{Assembly.GetExecutingAssembly().GetName().Name}.xml",
                     "Fiap.McTech.Application.xml",
