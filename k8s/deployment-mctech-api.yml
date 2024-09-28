@@ -1,0 +1,53 @@
+apiVersion: apps/v1 # DeploymentConfig da API
+kind: Deployment
+metadata:
+  name: mctechapi
+  labels:
+    app: mctechapi
+spec:
+  template:
+    metadata:
+      name: mctechapi
+      labels:
+        app: mctechapi
+    spec:
+      containers:
+        - name: mctechapi-container
+          image: ghcr.io/grupo-68-fiap/mctech/api:latest
+          env:
+            - name: CONNECTION_STRING
+              valueFrom:
+                secretKeyRef:
+                  name: mctechapi-secret
+                  key: CONNECTION_STRING
+          envFrom:
+            - configMapRef:
+                name: mctechapi-configmap
+          ports:
+            - containerPort: 8080
+              name: http
+          livenessProbe:
+            httpGet:
+              path: /swagger
+              port: 8080
+            periodSeconds: 10
+            failureThreshold: 3
+            initialDelaySeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /swagger
+              port: 8080
+            periodSeconds: 10
+            failureThreshold: 5
+            initialDelaySeconds: 30
+          resources:
+            requests:
+              memory: 64Mi
+              cpu: 5m
+            limits:
+              memory: 256Mi
+              cpu: 200m
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mctechapi

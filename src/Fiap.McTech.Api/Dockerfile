@@ -1,7 +1,7 @@
 FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
 RUN groupadd -r mctech && useradd -r -g mctech mctech
 WORKDIR /app
-EXPOSE 80
+EXPOSE 8081
 EXPOSE 443
 ARG ALLOW_SWAGGER_UI=false
 ARG ALLOW_ORIGINS=*

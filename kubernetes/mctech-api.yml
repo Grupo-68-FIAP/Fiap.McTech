@@ -4,9 +4,8 @@ metadata:
   name: mctechapi-secret
 type: Opaque
 data:
-  ASPNETCORE_Kestrel__Certificates__Default__Password: cHdzNG1jdGVjaCE=
-  CONNECTION_STRING: U2VydmVyPW1jdGVjaC1zcWxzZXJ2ZXItc3ZjLDE0MzM7SW5pdGlhbCBDYXRhbG9nPW1jdGVjaDtVc2VyIElkPXNhO1Bhc3N3b3JkPXB3czRtY3RlY2ghOw==
-  
+  ASPNETCORE_Kestrel__Certificates__Default__Password: Y2hhbmdlaXQxMjM=
+  CONNECTION_STRING: U2VydmVyPW1jdGVjaC1zcWxzZXJ2ZXJkYi1yZHMtaW5zdGFuY2UuY2Q0ZmVhcjZ5aHhjLnVzLWVhc3QtMS5yZHMuYW1hem9uYXdzLmNvbSw4MDtJbml0aWFsIENhdGFsb2c9bWN0ZWNoO1VzZXIgSWQ9bWN0ZWNoO1Bhc3N3b3JkPWNoYW5nZWl0MTIzOw==
 ---
 
 apiVersion: v1 # ConfigMap com valores variáveis usados no deploymentConfig
@@ -92,7 +91,7 @@ metadata:
       app: mctechapi-svc
   name: mctechapi-svc
 spec:
-  type: NodePort
+  type: LoadBalancer
   selector:
     app: mctechapi
   ports:
