@@ -3,6 +3,7 @@ using Fiap.McTech.Application.Dtos.Products.Add;
 using Fiap.McTech.Application.Dtos.Products.Update;
 using Fiap.McTech.Application.Interfaces;
 using Fiap.McTech.Domain.Enums;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Mime;
 
@@ -14,6 +15,7 @@ namespace Fiap.McTech.Api.Controllers.Product
     [ApiController]
     [Route("api/product")]
     [Produces(MediaTypeNames.Application.Json)]
+    [Authorize]
     public class ProductController : Controller
     {
         private readonly IProductAppService _productAppService;
@@ -37,6 +39,7 @@ namespace Fiap.McTech.Api.Controllers.Product
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(ProductOutputDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [AllowAnonymous]
         public async Task<IActionResult> GetProduct(Guid id)
         {
             return Ok(await _productAppService.GetProductByIdAsync(id));
@@ -51,6 +54,7 @@ namespace Fiap.McTech.Api.Controllers.Product
         [HttpGet]
         [ProducesResponseType(typeof(List<ProductOutputDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [AllowAnonymous]
         public async Task<IActionResult> GetAllProducts()
         {
             var products = await _productAppService.GetAllProductsAsync();
@@ -77,6 +81,7 @@ namespace Fiap.McTech.Api.Controllers.Product
         [HttpPost]
         [ProducesResponseType(typeof(ProductOutputDto), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Authorize]
         public async Task<IActionResult> CreateProduct(CreateProductInputDto productDto)
         {
             var createdProduct = await _productAppService.CreateProductAsync(productDto);
@@ -94,6 +99,7 @@ namespace Fiap.McTech.Api.Controllers.Product
         [HttpPut("{id}")]
         [ProducesResponseType(typeof(ProductOutputDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Authorize]
         public async Task<IActionResult> UpdateProduct(Guid id, UpdateProductInputDto productDto)
         {
             return Ok(await _productAppService.UpdateProductAsync(id, productDto));
@@ -109,6 +115,7 @@ namespace Fiap.McTech.Api.Controllers.Product
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Authorize]
         public async Task<IActionResult> DeleteProduct(Guid id)
         {
             await _productAppService.DeleteProductAsync(id);
@@ -134,6 +141,7 @@ namespace Fiap.McTech.Api.Controllers.Product
         [HttpGet("category/{category}")]
         [ProducesResponseType(typeof(List<ProductOutputDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [AllowAnonymous]
         public async Task<IActionResult> GetProductsByCategory(ProductCategory category)
         {
             var products = await _productAppService.GetProductsByCategoryAsync(category);

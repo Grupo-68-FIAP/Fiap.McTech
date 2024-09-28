@@ -2,6 +2,7 @@
 using Fiap.McTech.Application.Interfaces;
 using Fiap.McTech.Application.ViewModels.Orders;
 using Fiap.McTech.Domain.Enums;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics.CodeAnalysis;
 using System.Net.Mime;
@@ -15,6 +16,7 @@ namespace Fiap.McTech.Api.Controllers.Orders
     [ApiController]
     [Produces(MediaTypeNames.Application.Json)]
     [ExcludeFromCodeCoverage]
+    [Authorize]
     public class OrderController : ControllerBase
     {
         private readonly IOrderAppService _orderAppService;
@@ -36,6 +38,7 @@ namespace Fiap.McTech.Api.Controllers.Orders
         [HttpGet]
         [ProducesResponseType(typeof(List<OrderOutputDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [AllowAnonymous]
         public async Task<IActionResult> GetOrders()
         {
             var orders = await _orderAppService.GetCurrrentOrders();
@@ -52,6 +55,7 @@ namespace Fiap.McTech.Api.Controllers.Orders
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(OrderOutputDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [AllowAnonymous]
         public async Task<IActionResult> GetOrderById(Guid id)
         {
             return Ok(await _orderAppService.GetOrderByIdAsync(id));
@@ -69,6 +73,7 @@ namespace Fiap.McTech.Api.Controllers.Orders
         [ProducesResponseType(typeof(OrderOutputDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status402PaymentRequired)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [AllowAnonymous]
         public async Task<IActionResult> MoveOrderToNextStatus(Guid id)
         {
             return Ok(await _orderAppService.MoveOrderToNextStatus(id));
@@ -83,6 +88,7 @@ namespace Fiap.McTech.Api.Controllers.Orders
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [AllowAnonymous]
         public async Task<IActionResult> DeleteOrder(Guid id)
         {
             await _orderAppService.DeleteOrderAsync(id);
@@ -101,6 +107,7 @@ namespace Fiap.McTech.Api.Controllers.Orders
         [ProducesResponseType(typeof(OrderOutputDto), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [AllowAnonymous]
         public async Task<IActionResult> CreateOrder(Guid cartId)
         {
             var createdOrder = await _orderAppService.CreateOrderByCartAsync(cartId);
@@ -128,6 +135,7 @@ namespace Fiap.McTech.Api.Controllers.Orders
         [HttpGet("status/{status}")]
         [ProducesResponseType(typeof(List<ClientOutputDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [AllowAnonymous]
         public async Task<IActionResult> GetOrderByStatus(OrderStatus status)
         {
             var orders = await _orderAppService.GetOrderByStatusAsync(status);

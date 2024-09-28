@@ -2,6 +2,7 @@ services:
   fiap.mctech.api:
     depends_on:
       - sqlserver
+      - keycloak
     image: ${DOCKER_REGISTRY-}mctech/api
     build:
       context: .
@@ -13,3 +14,10 @@ services:
     environment:
       ACCEPT_EULA: "Y"
       MSSQL_PID: "Developer"
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:22.0
+    restart: always
+    command: start-dev
+    environment:
+      KC_HOSTNAME: keycloak
