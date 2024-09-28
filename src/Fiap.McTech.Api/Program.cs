@@ -11,7 +11,7 @@ builder.Configuration.AddCommandLine(args);
 // Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddOpenId(builder.Configuration);
+builder.Services.AddJwtBearerAuthentication(builder.Configuration);
 builder.Services.AddSwagger();
 
 builder.Services.Configure<MercadoPagoConfig>(builder.Configuration.GetSection("MercadoPagoConfig"));
@@ -39,7 +39,7 @@ app.UseCors("CorsConfig");
 
 app.UseMiddleware<ErrorHandlerMiddleware>();
 
-app.UseOpenId();
+app.UseAuth();
 
 app.MapControllers();
 
