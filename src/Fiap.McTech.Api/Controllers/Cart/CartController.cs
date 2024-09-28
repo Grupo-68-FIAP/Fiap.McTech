@@ -1,5 +1,6 @@
 ﻿using Fiap.McTech.Application.Dtos.Cart;
 using Fiap.McTech.Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Mime;
 
@@ -11,6 +12,7 @@ namespace Fiap.McTech.Api.Controllers.Cart
     [ApiController]
     [Route("api/cart")]
     [Produces(MediaTypeNames.Application.Json)]
+    [Authorize]
     public class CartController : Controller
     {
         private readonly ICartAppService _cartAppService;
@@ -34,6 +36,7 @@ namespace Fiap.McTech.Api.Controllers.Cart
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(List<CartClientOutputDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [AllowAnonymous]
         public async Task<IActionResult> GetCart(Guid id)
         {
             return Ok(await _cartAppService.GetCartByIdAsync(id));
@@ -49,6 +52,7 @@ namespace Fiap.McTech.Api.Controllers.Cart
         [HttpGet("client/{clientId}")]
         [ProducesResponseType(typeof(List<CartClientOutputDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [AllowAnonymous]
         public async Task<IActionResult> GetCartByClientId(Guid clientId)
         {
             return Ok(await _cartAppService.GetCartByClientIdAsync(clientId));
@@ -65,6 +69,7 @@ namespace Fiap.McTech.Api.Controllers.Cart
         [ProducesResponseType(typeof(CartClientOutputDto), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [AllowAnonymous]
         public async Task<ActionResult<CartClientOutputDto>> CreateCart(CartClientInputDto cartClientDto)
         {
             var createdCart = await _cartAppService.CreateCartClientAsync(cartClientDto);
@@ -84,6 +89,7 @@ namespace Fiap.McTech.Api.Controllers.Cart
         [HttpPut("{id}/product/{productId}")]
         [ProducesResponseType(typeof(CartClientOutputDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [AllowAnonymous]
         public async Task<IActionResult> AddCartItemToCartClientAsync(Guid id, Guid productId, [FromQuery] int quantity = 1)
         {
             return Ok(await _cartAppService.AddCartItemToCartClientAsync(id, productId, quantity));
@@ -100,6 +106,7 @@ namespace Fiap.McTech.Api.Controllers.Cart
         [HttpDelete("{id}/product/{productId}")]
         [ProducesResponseType(typeof(CartClientOutputDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [AllowAnonymous]
         public async Task<IActionResult> RemoveCartItemFromCartClientAsync(Guid id, Guid productId)
         {
             return Ok(await _cartAppService.RemoveCartItemFromCartClientAsync(id, productId));
@@ -115,6 +122,7 @@ namespace Fiap.McTech.Api.Controllers.Cart
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [AllowAnonymous]
         public async Task<IActionResult> DeleteCart(Guid id)
         {
             await _cartAppService.DeleteCartClientAsync(id);
