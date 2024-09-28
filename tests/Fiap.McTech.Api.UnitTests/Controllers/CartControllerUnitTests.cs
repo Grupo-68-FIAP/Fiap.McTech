@@ -14,9 +14,13 @@ using Fiap.McTech.Domain.Interfaces.Repositories.Cart;
 using Fiap.McTech.Domain.Interfaces.Repositories.Clients;
 using Fiap.McTech.Domain.Interfaces.Repositories.Products;
 using Fiap.McTech.Domain.ValuesObjects;
+using Fiap.McTech.Infra.Repositories.Clients;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
+using System.Security.Claims;
+using System.Security.Principal;
 
 namespace Fiap.McTech.Api.UnitTests.Controllers
 {
@@ -149,7 +153,7 @@ namespace Fiap.McTech.Api.UnitTests.Controllers
             var controller = CreateCartController();
 
             // Act
-            var task = await controller.CreateCart(cartClientInputDto);
+            var task = await controller.CreateCart(cartClientInputDto, null);
 
             // Assert
             Assert.IsType<CreatedAtActionResult>(task.Result);
@@ -160,6 +164,83 @@ namespace Fiap.McTech.Api.UnitTests.Controllers
             Assert.Equal(50, objectResult?.AllValue);
             Assert.Equal(product.Name, objectResult?.Items[0].Name);
             Assert.Equal(product.Value, objectResult?.Items[0].Value);
+            _mockedCartClientRepository.Verify(repository => repository.AddAsync(It.IsAny<CartClient>()), Times.Exactly(1));
+        }
+
+        [Fact]
+        public async Task CreateCart_Returns_401InvalidToken()
+        {
+            // Arrange
+            var product = new Product("Prod 1", 10, "Prod desc 1", "img", ProductCategory.Snack);
+            var cartClientInputDto = new CartClientInputDto()
+            {
+                Items = new() {
+                    { new (){ ProductId = product.Id, Quantity = 5 } }
+                }
+            };
+            var controller = CreateCartController();
+            var identity = new ClaimsIdentity();
+            var principal = new ClaimsPrincipal(identity);
+            var httpContext = new DefaultHttpContext { User = principal };
+            controller.ControllerContext.HttpContext = httpContext;
+
+            // Act
+            var task = await controller.CreateCart(cartClientInputDto, "<invalid token>");
+
+            // Assert
+            Assert.IsType<UnauthorizedObjectResult>(task.Result);
+            var taskResult = task.Result as UnauthorizedObjectResult;
+            Assert.Equal(401, taskResult?.StatusCode);
+            _mockedCartClientRepository.Verify(repository => repository.AddAsync(It.IsAny<CartClient>()), Times.Never);
+        }
+
+
+        [Fact]
+        public async Task CreateCart_Returns_201_WithClientIsAuthenticated()
+        {
+            // Arrange
+            var product = new Product("Prod 1", 10, "Prod desc 1", "img", ProductCategory.Snack);
+            var cartClientInputDto = new CartClientInputDto()
+            {
+                Items = new() {
+                    { new (){ ProductId = product.Id, Quantity = 5 } }
+                }
+            };
+            var cpf = "49380966091";
+            var c = new Client("Test 2", new(cpf), new("test2@test.com"));
+            _mockedClientRepository
+                .Setup(iClientRepository => iClientRepository.GetClientAsync(c.Cpf))
+                .ReturnsAsync(() => c);
+            _mockedClientRepository
+                .Setup(iClientRepository => iClientRepository.GetByIdAsync(c.Id))
+                .ReturnsAsync(() => c);
+            _mockedProductRepository
+                .Setup(repository => repository.GetByIdAsync(product.Id))
+                .ReturnsAsync(() => product);
+            _mockedCartClientRepository
+                .Setup(repository => repository.AddAsync(It.IsAny<CartClient>()))
+                .ReturnsAsync<CartClient, ICartClientRepository, CartClient>(x => x);
+            var claims = new[]
+            {
+                new Claim(ClaimTypes.Name, "TestUser"),
+                new Claim("preferred_username", cpf)
+            };
+            var claimsIdentity = new ClaimsIdentity(claims, "TestAuthType");
+            var principal = new ClaimsPrincipal(claimsIdentity);
+            var httpContext = new DefaultHttpContext { User = principal };
+
+            var controller = CreateCartController();
+            controller.ControllerContext.HttpContext = httpContext;
+
+            // Act
+            var task = await controller.CreateCart(cartClientInputDto, "<fake valid token>");
+
+            // Assert
+            Assert.IsType<CreatedAtActionResult>(task.Result);
+            var taskResult = task.Result as CreatedAtActionResult;
+            Assert.IsType<CartClientOutputDto>(taskResult?.Value);
+            var objectResult = taskResult.Value as dynamic;
+            Assert.Equal(c.Id, objectResult?.ClientId);
             _mockedCartClientRepository.Verify(repository => repository.AddAsync(It.IsAny<CartClient>()), Times.Exactly(1));
         }
 
@@ -192,7 +273,7 @@ namespace Fiap.McTech.Api.UnitTests.Controllers
             var controller = CreateCartController();
 
             // Act & Assert
-            await Assert.ThrowsAsync(expectedExceptionType, () => controller.CreateCart(cartClientInputDto));
+            await Assert.ThrowsAsync(expectedExceptionType, () => controller.CreateCart(cartClientInputDto, null));
             _mockedCartClientRepository.Verify(repository => repository.AddAsync(It.IsAny<CartClient>()), Times.Never);
         }
 
@@ -325,7 +406,7 @@ namespace Fiap.McTech.Api.UnitTests.Controllers
             var clientAppService = new ClientAppService(_mockedClientRepository.Object, new Mock<ILogger<ClientAppService>>().Object, _mapper);
 
             var cartAppService = new CartAppService(_mockedCartClientRepository.Object, productAppService, clientAppService, _mockedLogger.Object, _mapper);
-            return new CartController(cartAppService);
+            return new CartController(cartAppService, clientAppService);
         }
     }
 }
