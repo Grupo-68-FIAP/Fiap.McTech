@@ -7,13 +7,14 @@ services:
       CONNECTION_STRING: Server=sqlserver,1433;Initial Catalog=mctech;User Id=sa;Password=pws4mctech!;
       ALLOW_SWAGGER_UI: true
 
-      OPENID_AUTHORITY: http://keycloak-oid:8080/realms/master
+      OPENID_AUTHORITY: http://keycloak:8080/realms/McTech
       OPENID_CLIENT_ID: mctech-api
-      OPENID_CLIENT_SECRET: CkU9QCaPGDmdtA5nkvrTapXpX8M0Bt5B
+      OPENID_CLIENT_SECRET: w7FPSkF3IcA8ibmQivri3nznqZIMMExf
     ports:
       - "8081:8081"
     networks:
-      - mectech
+      - local_network 
+      - db_network
 
   sqlserver:
     container_name: sqlserver
@@ -24,25 +25,27 @@ services:
     volumes:
       - sqlserver_data:/var/opt/mssql
     networks:
-      - mectech
+      - db_network
 
-  keycloak-oid:
-    image: keycloak/keycloak
+  keycloak:
+    image: quay.io/keycloak/keycloak:22.0
+    command: start-dev
     container_name: keycloak
     environment:
-      - KEYCLOAK_ADMIN=admin
-      - KEYCLOAK_ADMIN_PASSWORD=admin
+     - KEYCLOAK_ADMIN=admin
+     - KEYCLOAK_ADMIN_PASSWORD=admin
+     - KC_HOSTNAME=keycloak
     ports:
       - "8080:8080"
-    command: start-dev
     volumes:
       - keycloak_data:/opt/jboss/keycloak/standalone/data
     networks:
-      - mectech
+      - local_network
 
 networks:
-  mectech:
-   driver: bridge
+  local_network:
+    driver: bridge
+  db_network:
 
 volumes:
   sqlserver_data:
