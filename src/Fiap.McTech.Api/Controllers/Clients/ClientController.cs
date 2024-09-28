@@ -1,5 +1,6 @@
 ﻿using Fiap.McTech.Application.Dtos.Clients;
 using Fiap.McTech.Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Mime;
 
@@ -11,6 +12,7 @@ namespace Fiap.McTech.Api.Controllers.Clients
     [ApiController]
     [Route("api/client")]
     [Produces(MediaTypeNames.Application.Json)]
+    [Authorize]
     public class ClientController : Controller
     {
         private readonly IClientAppService _clientAppService;
@@ -33,6 +35,7 @@ namespace Fiap.McTech.Api.Controllers.Clients
         [HttpGet]
         [ProducesResponseType(typeof(List<ClientOutputDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [Authorize]
         public async Task<IActionResult> GetAllClients()
         {
             var clients = await _clientAppService.GetAllClientsAsync();
@@ -49,6 +52,7 @@ namespace Fiap.McTech.Api.Controllers.Clients
         [HttpGet("id/{id}")]
         [ProducesResponseType(typeof(ClientOutputDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [AllowAnonymous]
         public async Task<IActionResult> GetClient(Guid id)
         {
             return Ok(await _clientAppService.GetClientByIdAsync(id));
@@ -66,6 +70,7 @@ namespace Fiap.McTech.Api.Controllers.Clients
         [ProducesResponseType(typeof(ClientOutputDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [AllowAnonymous]
         public async Task<IActionResult> GetClientByCpf(string cpf)
         {
             return Ok(await _clientAppService.GetClientByCpfAsync(cpf));
@@ -83,6 +88,7 @@ namespace Fiap.McTech.Api.Controllers.Clients
         [ProducesResponseType(typeof(ClientOutputDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [AllowAnonymous]
         public async Task<IActionResult> GetClientByEmail(string email)
         {
             return Ok(await _clientAppService.GetClientByEmailAsync(email));
@@ -100,6 +106,7 @@ namespace Fiap.McTech.Api.Controllers.Clients
         [ProducesResponseType(typeof(ClientOutputDto), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [AllowAnonymous]
         public async Task<IActionResult> CreateClient(ClientInputDto client)
         {
             var createdClient = await _clientAppService.CreateClientAsync(client);
@@ -119,7 +126,8 @@ namespace Fiap.McTech.Api.Controllers.Clients
         [ProducesResponseType(typeof(ClientOutputDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> UpdateClient(Guid id,[FromBody] ClientInputDto client)
+        [Authorize]
+        public async Task<IActionResult> UpdateClient(Guid id, [FromBody] ClientInputDto client)
         {
             return Ok(await _clientAppService.UpdateClientAsync(id, client));
         }
@@ -133,6 +141,7 @@ namespace Fiap.McTech.Api.Controllers.Clients
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Authorize]
         public async Task<IActionResult> DeleteClient(Guid id)
         {
             await _clientAppService.DeleteClientAsync(id);

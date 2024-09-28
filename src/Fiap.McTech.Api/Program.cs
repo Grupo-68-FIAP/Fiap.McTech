@@ -11,6 +11,7 @@ builder.Configuration.AddCommandLine(args);
 // Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddJwtBearerAuthentication();
 builder.Services.AddSwagger();
 
 builder.Services.Configure<MercadoPagoConfig>(builder.Configuration.GetSection("MercadoPagoConfig"));
@@ -32,13 +33,10 @@ var app = builder.Build();
 using var scope = app.Services.CreateScope();
 scope.McTechDatabaseInitialize();
 
-app.UseSwagger(builder.Configuration);
-
+app.UseSwaggerV3();
 app.UseCors("CorsConfig");
-
 app.UseMiddleware<ErrorHandlerMiddleware>();
-
-app.UseAuthorization();
+app.UseAuth();
 
 app.MapControllers();
 
