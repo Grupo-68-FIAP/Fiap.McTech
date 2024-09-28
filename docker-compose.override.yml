@@ -4,12 +4,12 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       ASPNETCORE_URLS: http://+:8081
-      CONNECTION_STRING: Server=sqlserver,1433;Initial Catalog=mctech;User Id=sa;Password=pws4mctech!;
+      CONNECTION_STRING: Server=sqlserver,1433;Initial Catalog=mctech;User Id=sa;Password=${SA_PASSWORD};
       ALLOW_SWAGGER_UI: true
 
       OPENID_AUTHORITY: http://keycloak:8080/realms/McTech
-      OPENID_CLIENT_ID: mctech-api
-      OPENID_CLIENT_SECRET: w7FPSkF3IcA8ibmQivri3nznqZIMMExf
+      OPENID_CLIENT_ID: ${OPENID_CLIENT_ID}
+      OPENID_CLIENT_SECRET: ${OPENID_CLIENT_SECRET}
     ports:
       - "8081:8081"
     networks:
@@ -19,7 +19,7 @@ services:
   sqlserver:
     container_name: sqlserver
     environment:
-      SA_PASSWORD: pws4mctech!
+      SA_PASSWORD: ${SA_PASSWORD}
     ports:
       - "1433:1433"
     volumes:
@@ -32,9 +32,9 @@ services:
     command: start-dev
     container_name: keycloak
     environment:
-     - KEYCLOAK_ADMIN=admin
-     - KEYCLOAK_ADMIN_PASSWORD=admin
-     - KC_HOSTNAME=keycloak
+     KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN_PASSWORD}
+     KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+     KC_HOSTNAME: keycloak
     ports:
       - "8080:8080"
     volumes:
