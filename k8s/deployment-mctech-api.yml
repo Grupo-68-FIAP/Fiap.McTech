@@ -1,5 +1,4 @@
-apiVersion: apps/v1 # DeploymentConfig da API
-
+apiVersion: v1
 kind: LimitRange
 metadata:
   name: storage-limit-range
@@ -12,18 +11,22 @@ spec:
 
 ---
 
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: mctechapi
+  namespace: mctech-api-space
   labels:
     app: mctechapi
 spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mctechapi
   template:
     metadata:
-      name: mctechapi
       labels:
         app: mctechapi
-      namespace: mctech-api-space
     spec:
       containers:
         - name: mctechapi-container
@@ -62,7 +65,3 @@ spec:
               memory: 256Mi
               cpu: 200m
       automountServiceAccountToken: false
-  replicas: 1
-  selector:
-    matchLabels:
-      app: mctechapi
