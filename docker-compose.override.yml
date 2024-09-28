@@ -7,9 +7,8 @@ services:
       CONNECTION_STRING: Server=sqlserver,1433;Initial Catalog=mctech;User Id=sa;Password=${SA_PASSWORD};
       ALLOW_SWAGGER_UI: true
 
-      OPENID_AUTHORITY: http://keycloak:8080/realms/McTech
-      OPENID_CLIENT_ID: ${OPENID_CLIENT_ID}
-      OPENID_CLIENT_SECRET: ${OPENID_CLIENT_SECRET}
+      OPENID_AUTHORITY: ${OPENID_AUTHORITY}
+      OPENID_AUDIENCE: ${OPENID_AUDIENCE}
     ports:
       - "8081:8081"
     networks:
@@ -28,13 +27,10 @@ services:
       - db_network
 
   keycloak:
-    image: quay.io/keycloak/keycloak:22.0
-    command: start-dev
     container_name: keycloak
     environment:
-     KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN_PASSWORD}
-     KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
-     KC_HOSTNAME: keycloak
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
     ports:
       - "8080:8080"
     volumes:

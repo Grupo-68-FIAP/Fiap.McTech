@@ -9,25 +9,17 @@ namespace Fiap.McTech.Api.Configurations
     /// </summary>
     public static class OpenIdConfig
     {
-        private static bool UseOpenIdConnect = false;
-
         /// <summary>
         /// Add OpenIdConnect configuration to the application.
         /// </summary>
         /// <param name="services">ServiceCollection instance.</param>
-        /// <param name="configuration">ConfigurationManager instance.</param>
-        public static void AddJwtBearerAuthentication(this IServiceCollection services, ConfigurationManager configuration)
+        public static void AddJwtBearerAuthentication(this IServiceCollection services)
         {
-            var openIdAuthority = configuration.GetValue<string>("OPENID_AUTHORITY");
-            var clientId = configuration.GetValue<string>("OPENID_CLIENT_ID");
-            var clientSecret = configuration.GetValue<string>("OPENID_CLIENT_SECRET");
+            string openIdAuthority = Environment.GetEnvironmentVariable("OPENID_AUTHORITY")
+                ?? throw new MissingFieldException("Need to configure a Open Id Authority and Audiance");
 
-            UseOpenIdConnect = !string.IsNullOrEmpty(openIdAuthority) && !string.IsNullOrEmpty(clientId) && !string.IsNullOrEmpty(clientSecret);
+            var clientId = Environment.GetEnvironmentVariable("OPENID_AUDIENCE");
 
-            if (!UseOpenIdConnect)
-            {
-                return;
-            }
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
@@ -52,11 +44,6 @@ namespace Fiap.McTech.Api.Configurations
         /// <param name="app">WebApplication instance.</param>
         public static void UseAuth(this IApplicationBuilder app)
         {
-            if (!UseOpenIdConnect)
-            {
-                return;
-            }
-
             app.UseAuthentication();
             app.UseAuthorization();
         }

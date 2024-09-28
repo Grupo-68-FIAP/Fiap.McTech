@@ -30,7 +30,7 @@ namespace Fiap.McTech.Api.Configurations
                 });
                 c.CustomSchemaIds(type => $"{type.FullName?.Replace($"{type.Namespace}.", "").Replace("+", ".")}");
 
-                // Definindo a segurança para JWT Bearer
+
                 c.AddSecurityDefinition("bearer", new OpenApiSecurityScheme
                 {
                     In = ParameterLocation.Header,
@@ -44,13 +44,9 @@ namespace Fiap.McTech.Api.Configurations
                     {
                         new OpenApiSecurityScheme
                         {
-                            Reference = new OpenApiReference
-                            {
-                                Type = ReferenceType.SecurityScheme,
-                                Id = "bearer"
-                            }
+                            Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "bearer" }
                         },
-                        new string[] {}
+                        Array.Empty<string>()
                     }
                 });
 
@@ -60,6 +56,7 @@ namespace Fiap.McTech.Api.Configurations
                     "Fiap.McTech.Application.xml",
                     "Fiap.McTech.Domain.xml"
                 };
+
                 foreach (var xmlFile in xmlFiles)
                 {
                     var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
@@ -75,11 +72,10 @@ namespace Fiap.McTech.Api.Configurations
         /// Use Swagger configuration in the application.
         /// </summary>
         /// <param name="app">WebApplication instance.</param>
-        /// <param name="configuration">ConfigurationManager instance.</param>
-        public static void UseSwagger(this WebApplication app, ConfigurationManager configuration)
+        public static void UseSwaggerV3(this WebApplication app)
         {
             app.UseSwagger();
-            var allowSwaggerUi = configuration.GetValue<bool>("ALLOW_SWAGGER_UI");
+            var allowSwaggerUi = Environment.GetEnvironmentVariable("ALLOW_SWAGGER_UI") == "true";
             if (app.Environment.IsDevelopment() || allowSwaggerUi)
             {
                 app.UseSwaggerUI();

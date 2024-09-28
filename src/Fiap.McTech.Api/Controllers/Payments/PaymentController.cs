@@ -1,5 +1,6 @@
 ﻿using Fiap.McTech.Application.Dtos.Payments;
 using Fiap.McTech.Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics.CodeAnalysis;
 using System.Net.Mime;
@@ -13,6 +14,7 @@ namespace Fiap.McTech.Api.Controllers.Payments
     [ApiController]
     [Produces(MediaTypeNames.Application.Json)]
     [ExcludeFromCodeCoverage]
+    [Authorize]
     public class PaymentController : Controller
     {
         private readonly IPaymentAppService _paymentAppService;
@@ -36,6 +38,7 @@ namespace Fiap.McTech.Api.Controllers.Payments
         [HttpGet("GenerateQRCode/{orderId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [AllowAnonymous]
         public async Task<IActionResult> GenerateQRCode([FromRoute] Guid orderId)
         {
             var qrCodeUrl = await _paymentAppService.GenerateQRCodeAsync(orderId);
@@ -56,6 +59,7 @@ namespace Fiap.McTech.Api.Controllers.Payments
         [HttpPost("{paymentId}/checkout")]
         [ProducesResponseType(typeof(PaymentOutputDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Authorize]
         public async Task<IActionResult> UpdatePayment([FromRoute] Guid paymentId, [FromBody] string status)
         {
             var paymentResult = await _paymentAppService.UpdatePayment(paymentId, status);

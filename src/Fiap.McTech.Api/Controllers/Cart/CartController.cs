@@ -16,14 +16,17 @@ namespace Fiap.McTech.Api.Controllers.Cart
     public class CartController : Controller
     {
         private readonly ICartAppService _cartAppService;
+        private readonly IClientAppService _clientAppService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CartController"/> class.
         /// </summary>
         /// <param name="cartAppService">The shopping cart application service.</param>
-        public CartController(ICartAppService cartAppService)
+        /// <param name="clientAppService">The client application service.</param>
+        public CartController(ICartAppService cartAppService, IClientAppService clientAppService)
         {
             _cartAppService = cartAppService;
+            _clientAppService = clientAppService;
         }
 
         /// <summary>
@@ -62,6 +65,7 @@ namespace Fiap.McTech.Api.Controllers.Cart
         /// Creates a new shopping cart for a client.
         /// </summary>
         /// <param name="cartClientDto">The data of the shopping cart to be created.</param>
+        /// <param name="authorization">The authorization token.</param>
         /// <returns>The created shopping cart.</returns>
         /// <response code="201">Returns the newly created shopping cart.</response>
         /// <response code="400">If there are issues with the input data.</response>
@@ -70,8 +74,23 @@ namespace Fiap.McTech.Api.Controllers.Cart
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [AllowAnonymous]
-        public async Task<ActionResult<CartClientOutputDto>> CreateCart(CartClientInputDto cartClientDto)
+        public async Task<ActionResult<CartClientOutputDto>> CreateCart(CartClientInputDto cartClientDto, [FromHeader] string? authorization)
         {
+            var IsAuthenticated = User.Identity?.IsAuthenticated ?? false;
+
+            if (!string.IsNullOrEmpty(authorization) && !IsAuthenticated)
+            {
+                return Unauthorized(new { status = 401, detail = "Invalid token." });
+            }
+            else if (User.Identity?.IsAuthenticated ?? false)
+            {
+                var preferredUsername = User.FindFirst("preferred_username")?.Value ?? "";
+
+                var client = await _clientAppService.GetClientByCpfAsync(preferredUsername);
+
+                cartClientDto.ClientId = client?.Id;
+            }
+
             var createdCart = await _cartAppService.CreateCartClientAsync(cartClientDto);
             return CreatedAtAction(nameof(GetCart), new { id = createdCart.Id }, createdCart);
         }
