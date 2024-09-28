@@ -1,4 +1,17 @@
 apiVersion: apps/v1 # DeploymentConfig da API
+
+kind: LimitRange
+metadata:
+  name: storage-limit-range
+  namespace: mctech-api-space
+spec:
+  limits:
+  - default:
+      ephemeral-storage: "2Gi"
+    type: Container
+
+---
+
 kind: Deployment
 metadata:
   name: mctechapi
@@ -10,6 +23,7 @@ spec:
       name: mctechapi
       labels:
         app: mctechapi
+      namespace: mctech-api-space
     spec:
       containers:
         - name: mctechapi-container
@@ -44,11 +58,9 @@ spec:
             requests:
               memory: 64Mi
               cpu: 5m
-              ephemeral-storage: 2Gi
             limits:
               memory: 256Mi
               cpu: 200m
-              ephemeral-storage: 2Gi
       automountServiceAccountToken: false
   replicas: 1
   selector:
