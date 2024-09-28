@@ -44,8 +44,8 @@ spec:
             requests:
               memory: 64Mi
               cpu: 5m
-            limits:
               ephemeral-storage: 2Gi
+            limits:
               memory: 256Mi
               cpu: 200m
       automountServiceAccountToken: false
