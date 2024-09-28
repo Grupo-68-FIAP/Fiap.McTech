@@ -76,15 +76,15 @@ namespace Fiap.McTech.Api.Controllers.Cart
         [AllowAnonymous]
         public async Task<ActionResult<CartClientOutputDto>> CreateCart(CartClientInputDto cartClientDto, [FromHeader] string? authorization)
         {
-            var IsAuthenticated = User.Identity?.IsAuthenticated ?? false;
+            var IsAuthenticated = User?.Identity?.IsAuthenticated ?? false;
 
             if (!string.IsNullOrEmpty(authorization) && !IsAuthenticated)
             {
                 return Unauthorized(new { status = 401, detail = "Invalid token." });
             }
-            else if (User.Identity?.IsAuthenticated ?? false)
+            else if (IsAuthenticated)
             {
-                var preferredUsername = User.FindFirst("preferred_username")?.Value ?? "";
+                var preferredUsername = User?.FindFirst("preferred_username")?.Value ?? "";
 
                 var client = await _clientAppService.GetClientByCpfAsync(preferredUsername);
 
