@@ -32,7 +32,7 @@ namespace Fiap.McTech.Api.Configurations
                         ValidIssuer = openIdAuthority,
                         ValidAudience = clientId,
                         ValidateIssuer = true,
-                        ValidateAudience = true,
+                        ValidateAudience = false,
                         ValidateLifetime = true,
                     };
                 });
