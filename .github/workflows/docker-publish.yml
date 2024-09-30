@@ -14,10 +14,9 @@ env:
   # github.repository as <account>/<repo>
   IMAGE_NAME: Grupo-68-FIAP/mctech/api
 
-
 jobs:
-  build:
 
+  container-publish:
     runs-on: ubuntu-latest
     permissions:
       contents: read
