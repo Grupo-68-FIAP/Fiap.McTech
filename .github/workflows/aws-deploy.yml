@@ -16,7 +16,6 @@ jobs:
 
   deploy-to-aws:
     runs-on: ubuntu-latest
-    needs: container-publish
     
     steps:
       - name: Checkout
