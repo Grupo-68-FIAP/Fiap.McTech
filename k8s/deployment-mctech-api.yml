@@ -20,6 +20,16 @@ spec:
                 secretKeyRef:
                   name: mctechapi-secret
                   key: CONNECTION_STRING
+            - name: OPENID_AUTHORITY
+              valueFrom:
+                secretKeyRef:
+                  name: cognito-secrets
+                  key: OPENID_AUTHORITY
+            - name: OPENID_AUDIENCE
+              valueFrom:
+                secretKeyRef:
+                  name: cognito-secrets
+                  key: OPENID_AUDIENCE
           envFrom:
             - configMapRef:
                 name: mctechapi-configmap
