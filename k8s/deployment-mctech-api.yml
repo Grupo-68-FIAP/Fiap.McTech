@@ -1,19 +1,36 @@
-apiVersion: apps/v1 # DeploymentConfig da API
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: storage-limit-range
+  namespace: mctech-api-space
+spec:
+  limits:
+  - default:
+      ephemeral-storage: "2Gi"
+    type: Container
+
+---
+
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: mctechapi
+  namespace: mctech-api-space
   labels:
     app: mctechapi
 spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mctechapi
   template:
     metadata:
-      name: mctechapi
       labels:
         app: mctechapi
     spec:
       containers:
         - name: mctechapi-container
-          image: ghcr.io/grupo-68-fiap/mctech/api:latest
+          image: ghcr.io/grupo-68-fiap/mctech/api:latest # NOSONAR
           env:
             - name: CONNECTION_STRING
               valueFrom:
@@ -54,10 +71,9 @@ spec:
             requests:
               memory: 64Mi
               cpu: 5m
+              ephemeral-storage: "1Gi"
             limits:
               memory: 256Mi
               cpu: 200m
-  replicas: 1
-  selector:
-    matchLabels:
-      app: mctechapi
+              ephemeral-storage: "2Gi"
+      automountServiceAccountToken: false

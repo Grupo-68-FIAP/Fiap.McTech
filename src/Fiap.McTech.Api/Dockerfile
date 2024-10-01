@@ -1,7 +1,8 @@
 FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
-
+RUN groupadd -r mctech && useradd -r -g mctech mctech
 WORKDIR /app
-EXPOSE 8080
+EXPOSE 8081
+EXPOSE 443
 ARG ALLOW_SWAGGER_UI=false
 ARG ALLOW_ORIGINS=*
 COPY ["src/Fiap.McTech.Api/cert.pfx", "/app"]
@@ -26,14 +27,5 @@ RUN dotnet publish "./Fiap.McTech.Api.csproj" -c "$BUILD_CONFIGURATION" -o /app/
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-
-RUN addgroup --group mctech --gid 2000 \
-&& adduser \    
-    --uid 1000 \
-    --gid 2000 \
-    "mctech" 
-
-RUN chown mctech:mctech  /app /tmp
-USER mctech:mctech
-
+USER mctech
 ENTRYPOINT ["dotnet", "Fiap.McTech.Api.dll"]

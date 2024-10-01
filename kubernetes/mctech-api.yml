@@ -34,7 +34,7 @@ spec:
     spec:
       containers:
         - name: mctechapi-container
-          image: ghcr.io/grupo-68-fiap/mctech/api:latest
+          image: ghcr.io/grupo-68-fiap/mctech/api:dev
           env:
             - name: ASPNETCORE_Kestrel__Certificates__Default__Password
               valueFrom:
@@ -98,6 +98,10 @@ spec:
     - name: http
       port: 8080
       targetPort: 80
+      protocol: TCP
+    - name: https
+      port: 8443
+      targetPort: 443
       protocol: TCP
 
 ---
