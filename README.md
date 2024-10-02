@@ -45,7 +45,7 @@ Para mais detalhes sobre arquitetura, consulte a nossa Wiki: [Fase 2 ‐ Tech Ch
 ### Fase 03 (Terraform/AWS/EKS)
 A arquitetura se encontra na AWS (conta academy) e contempla os entregáveis para a fase 03 do projeto
 
-![image](pos-fiap-fase03-arquitetura.png)
+![image](./pos-fiap-fase03-arquitetura.png)
 
 ## Como Contribuir
 
