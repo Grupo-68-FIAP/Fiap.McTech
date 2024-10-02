@@ -36,9 +36,16 @@ Utilizando tecnologias modernas e práticas arquiteturais, o MeTech oferece uma 
 ![DDD do Sistema](./ddd-sistema.jpg)
 
 ## Visão Geral da Arquitetura
+
+### Fase 02 (K8s/Minikube)
 ![image](https://github.com/user-attachments/assets/a9d9e5e4-46c9-4c6f-9a58-c8dd113d4382)
 
 Para mais detalhes sobre arquitetura, consulte a nossa Wiki: [Fase 2 ‐ Tech Challenge](https://github.com/Grupo-68-FIAP/Fiap.McTech/wiki/Fase-2-%E2%80%90-Tech-Challenge)
+
+### Fase 03 (Terraform/AWS/EKS)
+A arquitetura se encontra na AWS (conta academy) e contempla os entregáveis para a fase 03 do projeto
+
+![image](pos-fiap-fase03-arquitetura.png)
 
 ## Como Contribuir
 
