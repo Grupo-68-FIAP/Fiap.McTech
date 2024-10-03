@@ -4,6 +4,7 @@ using Fiap.McTech.Domain.Interfaces.Repositories.Clients;
 using Fiap.McTech.Domain.Interfaces.Repositories.Orders;
 using Fiap.McTech.Domain.Interfaces.Repositories.Payments;
 using Fiap.McTech.Domain.Interfaces.Repositories.Products;
+using Fiap.McTech.Infra.Context;
 using Fiap.McTech.Infra.Repositories.Cart;
 using Fiap.McTech.Infra.Repositories.Clients;
 using Fiap.McTech.Infra.Repositories.Orders;
@@ -15,7 +16,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace Fiap.McTech.Infra.Context
+namespace Fiap.McTech.CrossCutting.Ioc.Infra
 {
     public static class DbConfiguration
     {
@@ -29,7 +30,10 @@ namespace Fiap.McTech.Infra.Context
                 if (string.IsNullOrWhiteSpace(connectionString))
                     throw new DatabaseException("Database is not configured. Please inform your connection string.");
 
-                services.AddDbContext<DataContext>(options => options.UseSqlServer(connectionString));
+                if ("in-memory".Equals(connectionString))
+                    services.AddDbContext<DataContext>(options => options.UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString()));
+                else
+                    services.AddDbContext<DataContext>(options => options.UseSqlServer(connectionString));
             }
             catch (Exception ex)
             {
@@ -55,6 +59,13 @@ namespace Fiap.McTech.Infra.Context
             const int maxRetryAttempts = 3;
             var tryCount = 0;
             var dbConnection = false;
+
+            bool isInMemory = dbContext.Database.ProviderName == "Microsoft.EntityFrameworkCore.InMemory";
+            if (isInMemory)
+            {
+                logger.LogInformation("Using In-Memory database. Skipping migration and connection checks.");
+                return;
+            }
 
             do
             {

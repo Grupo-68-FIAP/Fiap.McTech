@@ -4,7 +4,7 @@ using Fiap.McTech.Application.AppServices.Orders;
 using Fiap.McTech.Application.AppServices.Payment;
 using Fiap.McTech.Application.AppServices.Products;
 using Fiap.McTech.Application.Interfaces;
-using Fiap.McTech.Infra.Context;
+using Fiap.McTech.CrossCutting.Ioc.Infra;
 using Fiap.McTech.Infra.Services.Interfaces;
 using Fiap.McTech.Services.Services.MercadoPago;
 using Microsoft.Extensions.Configuration;
