@@ -34,7 +34,7 @@ spec:
     spec:
       containers:
         - name: mctechapi-container
-          image: ghcr.io/grupo-68-fiap/mctech/api:dev
+          image: ghcr.io/grupo-68-fiap/mctech/api:latest # NO SONAR
           env:
             - name: ASPNETCORE_Kestrel__Certificates__Default__Password
               valueFrom:
