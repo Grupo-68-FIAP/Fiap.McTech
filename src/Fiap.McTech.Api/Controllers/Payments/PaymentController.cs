@@ -15,6 +15,7 @@ namespace Fiap.McTech.Api.Controllers.Payments
     [Produces(MediaTypeNames.Application.Json)]
     [ExcludeFromCodeCoverage]
     [Authorize]
+    [Obsolete]
     public class PaymentController : Controller
     {
         private readonly IPaymentAppService _paymentAppService;

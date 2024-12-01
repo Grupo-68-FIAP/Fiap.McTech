@@ -17,6 +17,7 @@ namespace Fiap.McTech.Api.Controllers.Orders
     [Produces(MediaTypeNames.Application.Json)]
     [ExcludeFromCodeCoverage]
     [Authorize]
+    [Obsolete]
     public class OrderController : ControllerBase
     {
         private readonly IOrderAppService _orderAppService;
