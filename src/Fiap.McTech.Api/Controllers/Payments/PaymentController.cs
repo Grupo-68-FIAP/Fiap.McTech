@@ -15,7 +15,7 @@ namespace Fiap.McTech.Api.Controllers.Payments
     [Produces(MediaTypeNames.Application.Json)]
     [ExcludeFromCodeCoverage]
     [Authorize]
-    [Obsolete]
+    [Obsolete("Rotas descontinuadas")]
     public class PaymentController : Controller
     {
         private readonly IPaymentAppService _paymentAppService;

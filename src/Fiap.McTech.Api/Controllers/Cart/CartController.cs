@@ -13,7 +13,7 @@ namespace Fiap.McTech.Api.Controllers.Cart
     [Route("api/cart")]
     [Produces(MediaTypeNames.Application.Json)]
     [Authorize]
-    [Obsolete]
+    [Obsolete("Rotas descontinuadas")]
     public class CartController : Controller
     {
         private readonly ICartAppService _cartAppService;
