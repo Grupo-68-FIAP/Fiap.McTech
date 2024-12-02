@@ -1,8 +1,8 @@
 using Fiap.McTech.Api.Configurations;
 using Fiap.McTech.Api.Handlers;
 using Fiap.McTech.CrossCutting.Ioc;
+using Fiap.McTech.CrossCutting.Ioc.Infra;
 using Fiap.McTech.CrossCutting.Ioc.Mappers;
-using Fiap.McTech.Infra.Context;
 using Fiap.McTech.Services.Services.MercadoPago;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -41,3 +41,8 @@ app.UseAuth();
 app.MapControllers();
 
 await app.RunAsync();
+
+/// <summary>
+/// Startup class
+/// </summary>
+public partial class Program { }
