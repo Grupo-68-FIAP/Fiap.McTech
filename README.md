@@ -47,6 +47,10 @@ A arquitetura se encontra na AWS e contempla os entregáveis para a fase 03 do p
 
 ![Arquitetura Fase 03](pos-fiap-fase03-arquitetura.jpg)
 
+### Fase 04 (Microsserviços)
+Este projeto evoluiu de uma arquitetura monolítica para microsserviços, segmentando as funcionalidades em serviços independentes de pagamentos ([Payments](https://github.com/Grupo-68-FIAP/Fiap.McTech.Payments)), pedidos ([Orders](https://github.com/Grupo-68-FIAP/Fiap.McTech.Orders)) e carrinho ([Cart](https://github.com/Grupo-68-FIAP/Fiap.McTech.Cart)).
+![Arquitetura Fase 04](microsservicos.png)
+
 ## Como Contribuir
 
 1 - Reportar Problemas: Encontrou um bug ou tem uma sugestão de melhoria? Por favor, abra uma issue e descreva detalhadamente o problema ou sua ideia.
